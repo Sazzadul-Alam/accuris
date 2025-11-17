@@ -108,15 +108,23 @@
 }
 
 .auth-social-login-button {    
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: .7rem;
+    color: #424242;
     appearance: none;
-    -webkit-appearance: none;
-    /* Crucial for WebKit/Chrome/Safari */
+    -webkit-appearance: none;    
     border: none;
     padding: 1rem;
     margin: 0;
-    font-weight: 400;
-    color: #424242;
+    font-weight: 400;    
     background-color: var.$color-primary-social-login-button;
     cursor: pointer;
     border-radius: 3rem;
+}
+
+.copyright-text {
+    color: #9E9E9E;
+    font-weight: 400;
 }
