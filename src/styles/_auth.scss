@@ -1,0 +1,122 @@
+@use 'variables' as var;
+
+.auth-dark-top-text {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.auth-light-top-text {
+    font-weight: 400;
+    font-size: .8rem;
+    color: var.$color-text-light;
+    text-transform: capitalize;
+}
+
+.auth-input-field {
+    all: unset;
+    /* Reset all browser styles */
+    box-sizing: border-box;
+    /* Keep padding inside width */
+
+    /* Full width */
+    // padding: 8px 10px;
+    /* Simple spacing */
+    border: 1.5px solid var.$color-border-neutral;
+    /* Simple border */
+    /* Basic rounding */
+    font-size: 14px;
+    padding-left: 1rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+
+.auth-all-form-parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .3rem;
+}
+
+.auth-all-form-title-parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.all-form-horizontal-item {
+    flex: 1;
+    width: 100%;
+}
+
+.auth-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var.$color-transparent;
+    border-radius: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var.$color-border-neutral;
+    position: relative;
+    cursor: pointer;
+    vertical-align: middle;
+    transform: translateY(-1px);
+}
+
+.auth-checkbox:checked {
+    border-color: var.$color-primary-teal;
+    color: var.$color-primary-teal;
+}
+
+.auth-checkbox:checked::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 3px;
+    height: 10px;
+    border: solid currentColor;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.auth-green-button {
+    appearance: none;
+    -webkit-appearance: none;
+    /* Crucial for WebKit/Chrome/Safari */
+    border: none;
+    padding: .8rem;
+    margin: 0;
+    font-weight: 700;
+    color: var.$color-white;
+    background-color: var.$color-primary-teal;
+    cursor: pointer;
+
+    &--locked {
+        appearance: none;
+        -webkit-appearance: none;
+        /* Crucial for WebKit/Chrome/Safari */
+        border: none;
+        padding: .8rem;
+        margin: 0;
+        font-weight: 700;
+        color: var.$color-white;
+        background-color: var.$color-primary-teal-locked;
+        cursor: auto;
+    }
+}
+
+.auth-social-login-button {    
+    appearance: none;
+    -webkit-appearance: none;
+    /* Crucial for WebKit/Chrome/Safari */
+    border: none;
+    padding: 1rem;
+    margin: 0;
+    font-weight: 400;
+    color: #424242;
+    background-color: var.$color-primary-social-login-button;
+    cursor: pointer;
+    border-radius: 3rem;
+}

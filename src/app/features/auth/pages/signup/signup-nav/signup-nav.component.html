@@ -1,0 +1,28 @@
+<div class="nav">
+    <div class="nav-item" 
+        [class.active]="activeStep === '1'"
+        [class.completed]="activeStep !== '1'" 
+        >
+        <img class="nav-icon" [src]="(activeStep === '1') ? 'assets/images/auth/personal-info-active.png' : 
+               'assets/images/auth/personal-info-completed.png'" alt="">
+        <div class="nav-text">Personal Info</div>
+    </div>
+    
+    <div class="nav-item" 
+        [class.completed]="activeStep === '3'"
+        [class.active]="activeStep === '2'"
+        [class.left]="activeStep === '1'">
+        <img [src]="(activeStep === '2') ? 'assets/images/auth/2t-auth-active.png' : 
+               (activeStep === '1') ? 'assets/images/auth/2t-auth-left.png' :
+               'assets/images/auth/2t-auth-completed.png'" alt="">
+        <div class="nav-text">2 Tier Authentication</div>
+    </div>
+    
+    <div class="nav-item"     
+        [class.active]="activeStep === '3'"
+        [class.left]="activeStep !== '3'">
+        <img [src]="(activeStep === '3') ? 'assets/images/auth/user-consent-active.png' : 
+               'assets/images/auth/user-consent-left.png'" alt="">
+        <div class="nav-text">User Consent</div>
+    </div>
+</div>

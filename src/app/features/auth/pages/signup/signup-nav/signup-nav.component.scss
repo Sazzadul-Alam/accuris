@@ -1,0 +1,41 @@
+.nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-item {
+    margin: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: .7rem;
+    font-weight: 400;
+    letter-spacing: .13rem;
+    gap: .7rem;
+    color: #616161;
+}
+
+.left {
+    color: #616161;;
+    font-weight: 400;
+}
+
+.active{
+    color: #008080;
+    font-weight: 900;
+}
+
+.completed {
+    color: #000000;
+    font-weight: 900;
+}
+
+.nav-text {
+    text-align: center;
+}
+
+// .nav-icon {
+//     width: 1rem;
+//     height: auto
+// }
