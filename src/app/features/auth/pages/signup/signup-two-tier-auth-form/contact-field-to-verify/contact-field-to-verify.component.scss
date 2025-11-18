@@ -1,0 +1,14 @@
+.field-container {
+    // background-color: red;
+    display: flex;    
+    width: 100%;
+}
+
+.send-button {
+    width: 3rem;
+    background-color: #00808080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #9E9E9E;
+}

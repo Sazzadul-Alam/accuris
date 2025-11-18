@@ -2,8 +2,25 @@
     <div class="auth-dark-top-text">Your account is secured by our 2 Tier Authentication</div>
     <div class="auth-light-top-text">VERIFICATION CODE WILL BE SENT TO EMAIL AND AN OTP TO YOUR PHONE</div>
 </div>
-<form class="auth-all-form-parent">  
-    <div class="all-form-horizontal-item">
-        
-    </div>    
+
+<form class="auth-all-form-parent two-tier-form" [formGroup]="form">
+    <div class="all-form-horizontal-item contact-otp-container">
+        <app-contact-field-to-verify placeholder="Enter your Email address" type="email" formControlName="email">            
+        </app-contact-field-to-verify>
+
+        <app-otp-field-to-verify formControlName="emailOtp"></app-otp-field-to-verify>
+    </div>
+
+    <div class="all-form-horizontal-item contact-otp-container">
+        <app-contact-field-to-verify placeholder="Enter your Phone number" type="tel" formControlName="phone">
+        </app-contact-field-to-verify>
+
+        <app-otp-field-to-verify formControlName="phoneOtp"></app-otp-field-to-verify>
+    </div>
+
+    <div class="buttons-container">
+        <button class="auth-light-button button-below">GO BACK</button>
+        <button class="auth-green-button button-below">NEXT</button>    
+    </div>
+
 </form>

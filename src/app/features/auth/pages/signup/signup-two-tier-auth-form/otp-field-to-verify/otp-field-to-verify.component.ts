@@ -2,13 +2,13 @@ import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-contact-field-to-verify',
+  selector: 'app-otp-field-to-verify',
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './contact-field-to-verify.component.html',
-  styleUrls: ['./contact-field-to-verify.component.scss']
+  templateUrl: './otp-field-to-verify.component.html',
+  styleUrls: ['./otp-field-to-verify.component.scss']
 })
-export class ContactFieldToVerifyComponent {
+export class OtpFieldToVerifyComponent {
   @Input() placeholder: string = '';
   @Input() type: string = 'text';
   @Input() formControlName!: string;

@@ -1,5 +1,5 @@
-<div class="signup-container">
-    <app-signup-nav [activeStep]="activeStep" />
+<div class="signup-container" >
+    <app-signup-nav [activeStep]="activeStep"/>   
     <app-signup-personal-info-form *ngIf="activeStep === '1'"></app-signup-personal-info-form>
     <app-signup-two-tier-auth-form *ngIf="activeStep === '2'"></app-signup-two-tier-auth-form>
     <app-signup-user-consent-form *ngIf="activeStep === '3'"></app-signup-user-consent-form>
