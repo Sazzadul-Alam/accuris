@@ -1,0 +1,33 @@
+.send-button {
+    width: 3rem;
+    
+    background-color: #00808080; 
+    display: flex;   
+    align-items: center;
+    justify-content: center;
+}
+
+.send-contact-field-container {
+    display: flex;    
+    
+}
+
+.otp-field-container {
+    display: flex;
+    align-items: center;            
+}
+
+.contact-otp {
+    display: flex;
+    gap: .3rem;        
+    flex: 1;
+    justify-content: center;
+}
+
+.otp-image-container {
+      
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -2rem;
+}
