@@ -4,9 +4,22 @@
         [type]="type"
         [placeholder]="placeholder"
         [formControl]="control"
+        maxlength="6"
     >
 
-    <div class="otp-correct">
-        <img src="assets/images/auth/otp-correct-active.svg" alt="">
+    <div 
+        class="otp-correct"
+        [class.otp-correct-active]="hasValue"
+    >
+        <img 
+            *ngIf="hasValue" 
+            src="assets/images/auth/otp-correct-active.svg" 
+            alt="Verified"
+        >
+        <img 
+            *ngIf="!hasValue" 
+            src="assets/images/auth/otp-correct-inactive.svg" 
+            alt="Not Verified"
+        >
     </div>
 </div>

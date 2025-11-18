@@ -6,7 +6,12 @@
         [formControl]="control"
     >
 
-    <div class="send-button">
+    <div 
+        class="send-button"
+        [class.send-button-active]="isValidInput"
+        (click)="onSendClick()"
+        [style.cursor]="isValidInput ? 'pointer' : 'not-allowed'"
+    >
         <img src="assets/images/auth/send-contact-arrow.svg" alt="">
     </div>
 </div>

@@ -21,7 +21,8 @@
 
     <div class="buttons-container">
         <button class="auth-light-button button-below" type="button">GO BACK</button>
-        <button class="auth-green-button button-below" type="submit">NEXT</button>
+        <button class="auth-green-button button-below" [ngClass]="{'auth-green-button--locked': form.invalid}" type="submit"
+            [disabled]="form.invalid">NEXT</button>
     </div>
 
 </form>
