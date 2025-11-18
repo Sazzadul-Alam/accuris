@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-otp-field-to-verify',
@@ -11,5 +11,5 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class OtpFieldToVerifyComponent {
   @Input() placeholder: string = '';
   @Input() type: string = 'text';
-  @Input() formControlName!: string;
+  @Input() control!: FormControl; // Changed from formControlName to control
 }
