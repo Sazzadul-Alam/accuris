@@ -49,6 +49,8 @@
 .buttons-container {
     display: flex;
     justify-content: space-between;
+    // background-color: aqua;
     /* Push buttons to edges */
     margin-top: 10px;
+    gap: 10px;
 }

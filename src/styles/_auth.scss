@@ -7,7 +7,7 @@
 
 .auth-light-top-text {
     font-weight: 400;
-    font-size: .8rem;
+    font-size: .7rem;
     letter-spacing: .1rem;
     color: var.$color-text-light;
     text-transform: capitalize;
@@ -55,35 +55,36 @@
 }
 
 .auth-checkbox {
+    // Completely remove native checkbox
     appearance: none;
     -webkit-appearance: none;
-    background-color: var.$color-transparent;
-    border-radius: 0;
-    width: 18px;
-    height: 18px;
-    border: 2px solid var.$color-border-neutral;
-    position: relative;
+    -moz-appearance: none;
+
+    // Fixed size
+    width: 25px;
+    height: 25px;
+    min-width: 25px;
+    box-sizing: border-box;
+
+    // Interaction
     cursor: pointer;
+    margin: 0;
+    padding: 0;
     vertical-align: middle;
-    transform: translateY(-1px);
+
+    // Default (unchecked) → show the empty box image
+    background: transparent url('/assets/images/auth/checkmark-unticked.svg') center / 100% 100% no-repeat;
+
+    // Accessibility focus ring
+    &:focus-visible {
+        outline: 2px solid #000;
+        outline-offset: 2px;
+    }
 }
 
+/* Checked → show the full checked image (box + tick) */
 .auth-checkbox:checked {
-    border-color: var.$color-primary-teal;
-    color: var.$color-primary-teal;
-}
-
-.auth-checkbox:checked::after {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 5px;
-    top: 1px;
-    width: 3px;
-    height: 10px;
-    border: solid currentColor;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    background: transparent url('/assets/images/auth/checkmark-ticked.svg') center / 100% 100% no-repeat;
 }
 
 .auth-green-button {
