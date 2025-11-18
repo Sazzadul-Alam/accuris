@@ -1,100 +1,161 @@
+/* --- 1. Layout Containers --- */
 
+/* Use this same class for the Title and Form to ensure alignment */
+.centered-container {
+    width: 100%;
+    max-width: 500px;
+    /* Limits width */
+    margin: 0 auto;
+    /* Centers horizontally */
+    box-sizing: border-box;
+}
 
-.first-last-name {
+.title-section {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* The main form flex container */
+.simple-signup-form {
     display: flex;
-    gap: .3rem;
-    width: 100%;        
+    flex-direction: column;
+    /* Stacks inputs vertically */
+    gap: 15px;
+    /* Adds consistent space between all elements */
 }
 
-.first-last-name-item {
-    width: 100%;    
+
+/* --- 2. Form Elements --- */
+
+/* First Name / Last Name Row */
+.form-row-split {
+    display: flex;
+    gap: 10px;
+
+    /* Ensure both inputs take equal width */
+    .auth-input-field {
+        width: 100%;
+    }
 }
 
-.password-toggle-icon {    
+/* Ensure all standard inputs fill the container */
+.auth-input-field {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* --- 3. Password Specifics --- */
+
+.password-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.password-input-wrapper {
+    position: relative;
+    /* Anchor for the icon */
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle-icon {
     position: absolute;
     right: 12px;
     height: 15px;
     width: 15px;
-    cursor: pointer;    
+    cursor: pointer;
+    transition: opacity 0.2s;
+
     &:hover {
         opacity: 0.7;
     }
 }
 
-.password-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
+/* Strength Bars */
 .strength-indicators {
     display: flex;
-    align-items: center;
-    width: 100%;
-    height: 1rem;
-    gap: .2rem;
+    gap: 4px;
+    margin-top: 2px;
 }
 
 .strength-bar {
-    flex: 1;            
+    flex: 1;
+    /* Distribute equal width */
+    height: 4px;
+    /* Fixed height */
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
 }
 
+/* Colors */
 .strength-grey {
-    background-color: #BDBDBD;
-    height: .1rem;  
+    background-color: #E0E0E0;
 }
+
+/* Lighter grey looks cleaner */
 .strength-red {
     background-color: #D7353C;
-    height: .2rem;
 }
+
 .strength-orange {
     background-color: orange;
-    height: .2rem;
 }
+
 .strength-green {
     background-color: #64E15D;
-    height: .2rem;
 }
 
-.password-strength-text {    
-    margin-top: -.6rem;
-    // background-color: #64E15D;
-    width: 100%;
-    text-align: right;    
+.password-strength-text {
+    text-align: right;
     color: #616161;
-    font-weight: 400;
-    font-size: .7rem;    
+    font-size: 0.75rem;
 }
 
 
+/* --- 4. Terms & Bottom Section --- */
 
-.agree-policy {    
-    display: flex;    
-    align-items: center;        
-    // background-color: #64E15D;    
-    gap: .3rem;        
-}
-
-.agree-policy-text {          
-    font-size: .7rem;    
-    text-decoration: underline;
-    text-decoration-color: #9E9E9E;
-}
-
-.agree-policy-text-light {
-    color: #9E9E9E;        
-}
-
-.agree-policy-text-dark {      
-    color: #424242;    
-}
-
-.next-button {
-    margin-top: 1rem;
-}
-
-.login-buttons-container {
+.terms-container {
     display: flex;
-    gap: 1rem;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 5px 0;
+
+    .terms-text {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .text-light {
+        color: #666;
+    }
+
+    .text-dark {
+        color: #000;
+        font-weight: 500;
+    }
+}
+
+.separator-text {
+    text-align: center;
+    color: #888;
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+
+.social-buttons-container {
+    display: flex;
+    gap: 15px;
+
+    /* Make buttons equal width */
+    .auth-social-login-button {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        /* Add padding/borders here if not in your global class */
+    }
 }

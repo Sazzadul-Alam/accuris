@@ -38,6 +38,7 @@
     flex-direction: column;
     align-items: center;
     gap: .3rem;
+    background-color: red;    
 }
 
 .auth-all-form-title-parent {
@@ -160,4 +161,39 @@
 .copyright-text {
     color: #9E9E9E;
     font-weight: 400;
+}
+
+.agree-policy {
+    display: flex;
+    align-items: center;
+    // background-color: #64E15D;    
+    gap: .3rem;
+}
+
+.agree-policy-text {
+    font-size: .7rem;
+    text-decoration: underline;
+    text-decoration-color: #9E9E9E;
+}
+
+.agree-policy-text-light {
+    color: #9E9E9E;
+}
+
+.agree-policy-text-dark {
+    color: #424242;
+}
+
+.buttons-container-back-next {
+    display: flex;
+    // background-color: aqua;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: .3rem;
+    margin-top: 2rem;
+}
+
+.button-back-or-next {
+    width: 50%;
 }

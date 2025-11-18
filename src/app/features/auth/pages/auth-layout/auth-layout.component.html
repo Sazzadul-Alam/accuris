@@ -1,41 +1,35 @@
-<div class="layout">
-    <!-- LEFT SIDE -->
-    <div class="left">
-        <!-- HEADER -->
-        <div class="left-header">
-            <div class="logo header-item">
-                <img src="assets/images/auth/auth-logo.png" alt="Logo">
-            </div>            
-            <div class="right-actions header-item">
-                <div>Already a Member?</div>
-                <button class="login-button">
-                    Log In
-                </button>      
-            </div>
-        </div>
+<div class="split-layout">
 
-        <!-- MAIN CONTENT -->
-        <div class="left-main">
+    <section class="left-panel">
+
+        <header class="auth-header">
+            <img class="logo" src="assets/images/auth/auth-logo.png" alt="Logo">
+
+            <div class="header-actions">
+                <span>Already a Member?</span>
+                <button class="login-button">Log In</button>
+            </div>
+        </header>
+
+        <main class="auth-content">
             <router-outlet></router-outlet>
-        </div>
+        </main>
 
-        <!-- FOOTER -->
-        <div class="left-footer">
-            <div class="footer-item">
-                <div class="return-home">
-                    <img src="assets/images/auth/return-home-arrow.png" alt="">
-                    <div>Return Home</div>
-                </div>                
+        <footer class="auth-footer">
+            <div class="return-home">
+                <img src="assets/images/auth/return-home-arrow.png" alt="Arrow">
+                <span>Return Home</span>
             </div>
-            <div class="footer-item copyright-text">Copyright 2025 - 2026 Accuris Inc. All rights Reserved</div>
-            <div class="footer-item">
-                <img class="chat-button" src="assets/images/auth/chat-button.png">
-            </div>
-        </div>
-    </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="right">
+            <div class="copyright-text">Copyright 2025 - 2026 Accuris Inc. All rights Reserved</div>
+
+            <img class="chat-button" src="assets/images/auth/chat-button.png" alt="Chat">
+        </footer>
+
+    </section>
+
+    <aside class="right-panel">
         <img src="assets/images/auth/auth-banner.png" alt="Banner">
-    </div>
+    </aside>
+
 </div>

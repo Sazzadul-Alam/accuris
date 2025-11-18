@@ -1,34 +1,54 @@
-.contact-otp-container {
+/* --- 1. Layout Containers --- */
+
+/* Shared container for Title and Form */
+.centered-container {
+    width: 100%;
+    max-width: 500px;
+    /* Consistent width with previous screens */
+    margin: 0 auto;
+    /* Centers horizontally */
+    padding: 0 15px;
+    /* Mobile safe area */
+    box-sizing: border-box;
+}
+
+.title-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* The Form Wrapper */
+.simple-auth-form {
     display: flex;
-    gap: .3rem;        
-    flex: 1;
-    // margin-right: 2rem;
-    // margin-left: 2rem;
-    // flex-direction: column;
-    justify-content: center;
-    
-    >* {
-            flex: 1;
-        }
-    
+    flex-direction: column;
+    /* Stack rows vertically */
+    gap: 20px;
+    /* Space between rows */
 }
 
 
+/* --- 2. Verification Rows (Input + OTP) --- */
+
+.verification-row {
+    display: flex;
+    align-items: flex-start;
+    /* Aligns items to top incase heights differ */
+    gap: 10px;
+    /* Space between Contact Input and OTP Input */
+    width: 100%;
+
+    /* This ensures the custom components share the width equally/correctly */
+    >* {
+        flex: 1;
+    }
+}
+
+
+/* --- 3. Buttons --- */
 
 .buttons-container {
     display: flex;
-    // background-color: aqua;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: .3rem;
-    margin-top: 2rem;
+    justify-content: space-between;
+    /* Push buttons to edges */
+    margin-top: 10px;
 }
-
-.button-below {
-  width: 50%;  
-}
-
-// .auth-all-form-parent.two-tier-form {
-    
-// }
