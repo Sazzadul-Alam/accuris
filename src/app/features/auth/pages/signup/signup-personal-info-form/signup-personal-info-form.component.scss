@@ -145,17 +145,3 @@
     font-size: 0.9rem;
 }
 
-.social-buttons-container {
-    display: flex;
-    gap: 15px;
-
-    /* Make buttons equal width */
-    .auth-social-login-button {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        /* Add padding/borders here if not in your global class */
-    }
-}
