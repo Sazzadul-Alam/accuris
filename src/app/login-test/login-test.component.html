@@ -1,0 +1,35 @@
+<div class="test-login-container">
+    <h2>Backend Authentication Test</h2>
+    <p>Enter credentials for {{ environment.baseUrl }}/security/authenticate</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="signIn()">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input id="username" formControlName="username" type="text" placeholder="DSAfsheen" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input id="password" formControlName="password" type="password" placeholder="bKash123" />
+        </div>
+
+        <div class="form-group" style="display: none;">
+            <label for="grant_type">Grant Type:</label>
+            <input id="grant_type" formControlName="grant_type" type="text" value="password" readonly />
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid">
+            Sign In & Test Backend
+        </button>
+    </form>
+
+    <p *ngIf="message" [style.color]="isError ? 'red' : 'green'">
+        {{ message }}
+    </p>
+
+    <div class="storage-info">
+        <h3>Storage Check:</h3>
+        <p>Token: {{ getTokenStatus() }}</p>
+        <p>User: {{ localStorage.getItem('username') || 'N/A' }}</p>
+    </div>
+</div>

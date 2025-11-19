@@ -1,10 +1,11 @@
 /* --- NAV CONTAINER --- */
 .nav {
     display: flex;
-    gap: 2rem;
-    justify-content: center;
+    gap: 3rem;
+    justify-content: space-evenly;
     /* Ensure it stays centered */
     width: 100%;
+    padding: 1rem 2rem;
 
     /* RESPONSIVE: Tighten the gap on mobile */
     @media (max-width: 600px) {
@@ -17,7 +18,7 @@
 /* --- NAV ITEM --- */
 .nav-item {
     /* Default Desktop Margins */
-    margin: 3rem;
+    // margin: 3rem;
 
     display: flex;
     flex-direction: column;
@@ -51,7 +52,7 @@
 
     /* Optional: Force specific icon size on mobile */
     @media (max-width: 600px) {
-        height: 24px;
+        // height: 24px;
         width: auto;
     }
 }

@@ -77,9 +77,12 @@ body {
                 color: #555;
 
                 /* RESPONSIVE: Hide text on mobile */
-                @media (max-width: 600px) {
-                    display: none;
-                }
+                @media (max-width: 400px) {
+                     display: none;
+                 }
+            }
+            @media (max-width: 600px) {
+                gap: .5rem;
             }
 
             /* Login Button */
