@@ -7,7 +7,7 @@
 
     /* RESPONSIVE: Ensure form doesn't touch edges on mobile */
     @media (max-width: 600px) {
-        padding: 0 5px;
+        padding: 0 2rem;
         /* Add slight internal padding if needed */
         max-width: 100%;
     }
@@ -16,6 +16,11 @@
 .title-section {
     text-align: center;
     margin-bottom: 25px;
+
+    display: flex;
+    flex-direction: column;
+    gap: .14rem;
+
 
     /* RESPONSIVE: Adjust font sizes for title */
     @media (max-width: 600px) {
@@ -36,7 +41,7 @@
 /* First Name / Last Name Row */
 .form-row-split {
     display: flex;
-    gap: 10px;
+    gap: .7rem;
 
     .auth-input-field {
         width: 100%;        
@@ -51,17 +56,7 @@
         }
 }
 
-.auth-input-field {
-    width: 100%;
-    box-sizing: border-box;
-    /* Ensure inputs are tall enough for fingers */
-    padding: 12px;
-    border: 1px solid #ccc;
-    /* Assuming border style */
-    border-radius: 4px;
-    font-size: .6rem;
-    /* Assuming radius */
-}
+
 
 /* --- 3. Password Specifics --- */
 .password-group {
@@ -155,26 +150,26 @@
 
 }
 
-.auth-green-button {
-    /* Basic button styles inferred */
-    width: 100%;
-    padding: 12px;
-    background-color: #008080;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
+// .auth-green-button {
+//     /* Basic button styles inferred */
+//     width: 100%;
+//     padding: 12px;
+//     background-color: #008080;
+//     color: white;
+//     border: none;
+//     border-radius: 4px;
+//     font-weight: bold;
+//     cursor: pointer;
 
-    &--locked {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
+//     &--locked {
+//         opacity: 0.6;
+//         cursor: not-allowed;
+//     }
 
-    @media (max-width: 600px) {
-        font-size: .6rem;
-    }
-}
+//     @media (max-width: 600px) {
+//         font-size: .6rem;
+//     }
+// }
 
 .separator-text {
     text-align: center;

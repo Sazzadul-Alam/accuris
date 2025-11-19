@@ -116,6 +116,11 @@ body {
         flex-direction: column;
         justify-content: flex-start;
         // padding:  0;
+
+        @media (max-width: 600px) and (min-height: 830px) {
+            padding-top: 10vh;
+        }
+
     }
 
     /* --- 3. Footer --- */

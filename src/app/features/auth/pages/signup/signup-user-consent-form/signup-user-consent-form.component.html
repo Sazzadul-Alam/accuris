@@ -6,14 +6,22 @@
 
 <form class="simple-consent-form centered-container" [formGroup]="form" (ngSubmit)="onSubmit()">
 
-    <div class="terms-scrollbox">
-        <h3>Privacy Policy and Terms of Use</h3>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti excepturi laboriosam atque reprehenderit
-            modi aut. Explicabo amet fuga deserunt quis ipsa, minima aliquid. Aspernatur eius amet officiis ducimus,
-            saepe nemo?</p>
-        <p>More text to demonstrate scrolling...</p>
-        <p>Even more text...</p>
-    </div>
+    
+        <div class="terms-scrollbox">
+            <h3>Privacy Policy and Terms of Use</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti excepturi laboriosam atque reprehenderit
+                modi aut. Explicabo amet fuga deserunt quis ipsa, minima aliquid. Aspernatur eius amet officiis ducimus,
+                saepe nemo?</p>
+            <p>More text to demonstrate scrolling...</p>
+            <p>Even more text...</p>
+            <h3>Privacy Policy and Terms of Use</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti excepturi laboriosam atque reprehenderit
+                modi aut. Explicabo amet fuga deserunt quis ipsa, minima aliquid. Aspernatur eius amet officiis ducimus,
+                saepe nemo?</p>
+            <p>More text to demonstrate scrolling...</p>
+            <p>Even more text...</p>
+        </div>
+    
 
     <div class="checkbox-container">
         <input class="auth-checkbox" type="checkbox" formControlName="acceptTerms">
@@ -29,4 +37,6 @@
             type="submit" [disabled]="form.invalid">NEXT</button>
     </div>
 
+
+    
 </form>
