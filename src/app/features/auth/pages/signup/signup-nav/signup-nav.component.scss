@@ -1,15 +1,24 @@
-* {
-    // background-color: #008080;
-    
-}
-
+/* --- NAV CONTAINER --- */
 .nav {
     display: flex;
     gap: 2rem;
+    justify-content: center;
+    /* Ensure it stays centered */
+    width: 100%;
+
+    /* RESPONSIVE: Tighten the gap on mobile */
+    @media (max-width: 600px) {
+        gap: 0.5rem;
+        padding: 0 10px;
+        /* Prevent touching edges */
+    }
 }
 
+/* --- NAV ITEM --- */
 .nav-item {
+    /* Default Desktop Margins */
     margin: 3rem;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,14 +28,54 @@
     letter-spacing: .13rem;
     gap: .7rem;
     color: #616161;
+    cursor: default;
+
+    /* RESPONSIVE: Remove huge margins and scale down */
+    @media (max-width: 600px) {
+        margin: 1.5rem 0;
+        /* Keep vertical breathing room, kill horizontal margin */
+        flex: 1;
+        /* Distribute space evenly */
+        font-size: 0.6rem;
+        /* Smaller text */
+        letter-spacing: 0.05rem;
+        /* Tighter letters */
+    }
 }
 
+/* --- ICONS --- */
+/* Ensure icons resize if they aren't SVGs with internal sizing */
+.nav-item img {
+    height: auto;
+    max-width: 100%;
+
+    /* Optional: Force specific icon size on mobile */
+    @media (max-width: 600px) {
+        height: 24px;
+        width: auto;
+    }
+}
+
+/* --- NAV TEXT --- */
+.nav-text {
+    text-align: center;
+    /* Prevent text from breaking awkwardly on very small screens */
+    white-space: nowrap;
+
+    /* On extremely small screens (like iPhone SE), allow wrapping or hide */
+    @media (max-width: 350px) {
+        white-space: normal;
+        line-height: 1.2;
+    }
+}
+
+/* --- STATES --- */
 .left {
-    color: #616161;;
+    color: #616161;
     font-weight: 400;
 }
 
-.active{
+.active {
     color: #008080;
     font-weight: 900;
 }
@@ -35,12 +84,3 @@
     color: #000000;
     font-weight: 900;
 }
-
-.nav-text {
-    text-align: center;
-}
-
-// .nav-icon {
-//     width: 1rem;
-//     height: auto
-// }

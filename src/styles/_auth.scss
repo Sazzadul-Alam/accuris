@@ -1,200 +1,218 @@
-@use 'variables' as var;
+// @use 'variables' as var;
 
 .auth-dark-top-text {
     font-weight: 700;
     font-size: 1.5rem;
+    @media (max-width: 600px) {
+    font-size: 1rem;
+    }
 }
 
 .auth-light-top-text {
     font-weight: 400;
     font-size: .7rem;
     letter-spacing: .1rem;
-    color: var.$color-text-light;
+    // color: var.$color-text-light;
     text-transform: capitalize;
-}
-
-.auth-input-field {
-    all: unset;
-
-    /* Reset all browser styles */
-    box-sizing: border-box;
-    /* Keep padding inside width */
-    width: 100%;
-    /* Full width */
-    // padding: 8px 10px;
-    /* Simple spacing */
-    border: 1.5px solid var.$color-border-neutral;
-    /* Simple border */
-    /* Basic rounding */
-    font-size: 14px;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-top: .7rem;
-    padding-bottom: .7rem;
-}
-
-.auth-all-form-parent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .3rem;
-    background-color: red;    
-}
-
-.auth-all-form-title-parent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.all-form-horizontal-item {    
-    flex: 1;
-    width: 100%;
-    // background-color: red;
-}
-
-.auth-checkbox {
-    // Completely remove native checkbox
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    // Fixed size
-    width: 25px;
-    height: 25px;
-    min-width: 25px;
-    box-sizing: border-box;
-
-    // Interaction
-    cursor: pointer;
-    margin: 0;
-    padding: 0;
-    vertical-align: middle;
-
-    // Default (unchecked) → show the empty box image
-    background: transparent url('/assets/images/auth/checkmark-unticked.svg') center / 100% 100% no-repeat;
-
-    // Accessibility focus ring
-    &:focus-visible {
-        outline: 2px solid #000;
-        outline-offset: 2px;
+    @media (max-width: 600px) {
+            font-size: .4rem;
+        }
     }
-}
 
-/* Checked → show the full checked image (box + tick) */
-.auth-checkbox:checked {
-    background: transparent url('/assets/images/auth/checkmark-ticked.svg') center / 100% 100% no-repeat;
-}
 
-.auth-green-button {
-    appearance: none;
-    -webkit-appearance: none;
-    /* Crucial for WebKit/Chrome/Safari */
-    border: none;
-    padding: .8rem;
-    margin: 0;
-    font-weight: 700;
-    color: var.$color-white;
-    background-color: var.$color-primary-teal;
-    cursor: pointer;
+// .auth-input-field {
+//     all: unset;
 
-    &--locked {
-        appearance: none;
-        -webkit-appearance: none;
-        /* Crucial for WebKit/Chrome/Safari */
-        border: none;
-        padding: .8rem;
-        margin: 0;
-        font-weight: 700;
-        color: var.$color-white;
-        background-color: var.$color-primary-teal-locked;
-        cursor: auto;
-    }
-}
+//     /* Reset all browser styles */
+//     box-sizing: border-box;
+//     /* Keep padding inside width */
+//     width: 100%;
+//     /* Full width */
+//     // padding: 8px 10px;
+//     /* Simple spacing */
+//     border: 1.5px solid var.$color-border-neutral;
+//     /* Simple border */
+//     /* Basic rounding */
+//     font-size: 14px;
+//     padding-left: 1rem;
+//     padding-right: 1rem;
+//     padding-top: .7rem;
+//     padding-bottom: .7rem;
+// }
 
-.auth-light-button {
-    appearance: none;
-    -webkit-appearance: none;
-    /* Crucial for WebKit/Chrome/Safari */
-    border: none;
-    padding: .8rem;
-    margin: 0;
-    font-weight: 700;
-    color: var.$color-white;
-    // background-color: var.$color-primary-teal;
-    border: 1.5px solid #008080;
-    color: #008080;
-    cursor: pointer;
+// .auth-all-form-parent {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     gap: .3rem;
+//     background-color: red;    
+// }
 
-    // &--locked {
-    //     appearance: none;
-    //     -webkit-appearance: none;
-    //     /* Crucial for WebKit/Chrome/Safari */
-    //     border: none;
-    //     padding: .8rem;
-    //     margin: 0;
-    //     font-weight: 700;
-    //     color: var.$color-white;
-    //     background-color: var.$color-primary-teal-locked;
-    //     cursor: auto;
-    // }
-}
+// .auth-all-form-title-parent {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     margin-bottom: 1rem;
+// }
 
-.auth-social-login-button {    
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: .7rem;
-    justify-content: space-around;
-    color: #424242;
-    appearance: none;
-    -webkit-appearance: none;    
-    border: none;
-    padding: 1rem;
-    margin: 0;
-    font-weight: 400;    
-    background-color: var.$color-primary-social-login-button;
-    cursor: pointer;
-    border-radius: 3rem;
-}
+// .all-form-horizontal-item {    
+//     flex: 1;
+//     width: 100%;
+//     // background-color: red;
+// }
 
-.copyright-text {
-    color: #9E9E9E;
-    font-weight: 400;
-}
+// .auth-checkbox {
+//     // Completely remove native checkbox
+//     appearance: none;
+//     -webkit-appearance: none;
+//     -moz-appearance: none;
 
-.agree-policy {
-    display: flex;
-    align-items: center;
-    // background-color: #64E15D;    
-    gap: .3rem;
-}
+//     // Fixed size
+//     width: 25px;
+//     height: 25px;
+//     min-width: 25px;
+//     box-sizing: border-box;
 
-.agree-policy-text {
-    font-size: .7rem;
-    text-decoration: underline;
-    text-decoration-color: #9E9E9E;
-}
+//     // Interaction
+//     cursor: pointer;
+//     margin: 0;
+//     padding: 0;
+//     vertical-align: middle;
 
-.agree-policy-text-light {
-    color: #9E9E9E;
-}
+//     // Default (unchecked) → show the empty box image
+//     background: transparent url('/assets/images/auth/checkmark-unticked.svg') center / 100% 100% no-repeat;
 
-.agree-policy-text-dark {
-    color: #424242;
-}
+//     // Accessibility focus ring
+//     &:focus-visible {
+//         outline: 2px solid #000;
+//         outline-offset: 2px;
+//     }
+// }
 
-.buttons-container-back-next {
-    display: flex;
-    // background-color: aqua;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: .3rem;
-    margin-top: 2rem;
-}
+// /* Checked → show the full checked image (box + tick) */
+// .auth-checkbox:checked {
+//     background: transparent url('/assets/images/auth/checkmark-ticked.svg') center / 100% 100% no-repeat;
+// }
 
-.button-back-or-next {
-    width: 50%;
-}
+// // .auth-green-button {
+// //     appearance: none;
+// //     -webkit-appearance: none;
+// //     /* Crucial for WebKit/Chrome/Safari */
+// //     border: none;
+// //     padding: .8rem;
+// //     margin: 0;
+// //     font-weight: 700;
+// //     color: var.$color-white;
+// //     background-color: var.$color-primary-teal;
+// //     cursor: pointer;
+
+// //     &--locked {
+// //         appearance: none;
+// //         -webkit-appearance: none;
+// //         /* Crucial for WebKit/Chrome/Safari */
+// //         border: none;
+// //         padding: .8rem;
+// //         margin: 0;
+// //         font-weight: 700;
+// //         color: var.$color-white;
+// //         background-color: var.$color-primary-teal-locked;
+// //         cursor: auto;
+// //     }
+// // }
+
+// // .auth-light-button {
+// //     appearance: none;
+// //     -webkit-appearance: none;
+// //     /* Crucial for WebKit/Chrome/Safari */
+// //     border: none;
+// //     padding: .8rem;
+// //     margin: 0;
+// //     font-weight: 700;
+// //     color: var.$color-white;
+// //     // background-color: var.$color-primary-teal;
+// //     border: 1.5px solid #008080;
+// //     color: #008080;
+// //     cursor: pointer;
+// // }
+
+// // .auth-social-login-button {    
+// //     display: flex;
+// //     align-items: center;
+// //     gap: 1rem;
+// //     font-size: .7rem;
+// //     justify-content: space-around;
+// //     color: #424242;
+// //     appearance: none;
+// //     -webkit-appearance: none;    
+// //     border: none;
+// //     padding: 1rem;
+// //     margin: 0;
+// //     font-weight: 400;    
+// //     background-color: var.$color-primary-social-login-button;
+// //     cursor: pointer;
+// //     border-radius: 3rem;
+// // }
+
+// .copyright-text {
+//     color: #9E9E9E;
+//     font-weight: 400;
+// }
+
+// .agree-policy {
+//     display: flex;
+//     align-items: center;
+//     // background-color: #64E15D;    
+//     gap: .3rem;
+// }
+
+// .agree-policy-text {
+//     font-size: .7rem;
+//     text-decoration: underline;
+//     text-decoration-color: #9E9E9E;
+// }
+
+// .agree-policy-text-light {
+//     color: #9E9E9E;
+// }
+
+// .agree-policy-text-dark {
+//     color: #424242;
+// }
+
+// .buttons-container-back-next {
+//     display: flex;
+//     // background-color: aqua;
+//     width: 100%;
+//     justify-content: center;
+//     align-items: center;
+//     gap: .3rem;
+//     margin-top: 2rem;
+// }
+
+// .button-back-or-next {
+//     width: 50%;
+// }
+
+// // .social-buttons-container {
+// //     display: flex;
+// //     gap: 15px;
+
+// //     /* Make buttons equal width */
+// //     .auth-social-login-button {
+// //         flex: 1;
+// //         display: flex;
+// //         align-items: center;
+// //         justify-content: center;
+// //         gap: 8px;
+// //         /* Add padding/borders here if not in your global class */
+// //     }
+// // }
+
+// .buttons-container {
+//     display: flex;
+//     justify-content: space-between;
+//     // background-color: aqua;
+//     /* Push buttons to edges */
+//     margin-top: 10px;
+//     gap: 10px;
+// }

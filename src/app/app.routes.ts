@@ -9,10 +9,15 @@ export const routes: Routes = [
                 path: 'signup/:step',
                 loadComponent: () => import('./features/auth/pages/signup/signup.component').then(m => m.SignupComponent)
             },
+            {
+                // New login route
+                path: 'login/:step',
+                loadComponent: () => import('./features/auth/pages/login/login.component').then(m => m.LoginComponent)
+            },
         ]
     },
     {
         path: '**',
-        redirectTo: '/auth/signup/1'
+        redirectTo: '/auth/login' // Often good to redirect to login if the user hasn't specified a valid route
     }
 ];
