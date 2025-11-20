@@ -13,21 +13,21 @@
     }
 }
 
-.title-section {
-    text-align: center;
-    margin-bottom: 25px;
+// .title-section {
+//     text-align: center;
+//     margin-bottom: 25px;
 
-    display: flex;
-    flex-direction: column;
-    gap: .14rem;
+//     display: flex;
+//     flex-direction: column;
+//     gap: .14rem;
 
 
-    /* RESPONSIVE: Adjust font sizes for title */
-    @media (max-width: 600px) {
-        margin-bottom: 20px;
-        padding: 0 10px;
-    }
-}
+//     /* RESPONSIVE: Adjust font sizes for title */
+//     @media (max-width: 600px) {
+//         margin-bottom: 20px;
+//         padding: 0 10px;
+//     }
+// }
 
 /* The main form flex container */
 .simple-signup-form {
@@ -65,25 +65,25 @@
     gap: 5px;
 }
 
-.password-input-wrapper {
-    position: relative;
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
+// .password-input-wrapper {
+//     position: relative;
+//     width: 100%;
+//     display: flex;
+//     align-items: center;
+// }
 
-.password-toggle-icon {
-    position: absolute;
-    right: 12px;
-    height: 15px;
-    width: 15px;
-    cursor: pointer;
-    transition: opacity 0.2s;
+// .password-toggle-icon {
+//     position: absolute;
+//     right: 12px;
+//     height: 15px;
+//     width: 15px;
+//     cursor: pointer;
+//     transition: opacity 0.2s;
 
-    &:hover {
-        opacity: 0.7;
-    }
-}
+//     &:hover {
+//         opacity: 0.7;
+//     }
+// }
 
 /* Strength Bars */
 .strength-indicators {
@@ -171,61 +171,61 @@
 //     }
 // }
 
-.separator-text {
-    text-align: center;
-    color: #888;
-    margin: 10px 0;
-    font-size: 0.9rem;
+// .separator-text {
+//     text-align: center;
+//     color: #888;
+//     margin: 10px 0;
+//     font-size: 0.9rem;
 
-    @media (max-width: 600px) {
-            font-size: .6rem;
-        }
-}
+//     @media (max-width: 600px) {
+//             font-size: .6rem;
+//         }
+// }
 
 /* --- 5. Social Buttons (Added styles) --- */
-.social-buttons-container {
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
+// .social-buttons-container {
+//     display: flex;
+//     gap: 10px;
+//     justify-content: space-between;
 
-    /* RESPONSIVE: Stack buttons vertically on Mobile */
-    @media (max-width: 600px) {
-        flex-direction: column;
+//     /* RESPONSIVE: Stack buttons vertically on Mobile */
+//     @media (max-width: 600px) {
+//         flex-direction: column;
 
         
-    }
-}
+//     }
+// }
 
-.auth-social-login-button {
-    flex: 1;
-    /* Buttons take equal width */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
+// .auth-social-login-button {
+//     flex: 1;
+//     /* Buttons take equal width */
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     gap: 10px;
+//     padding: 10px;
+//     background-color: white;
+//     border: 1px solid #ccc;
+//     border-radius: 4px;
+//     cursor: pointer;
+//     font-size: 0.9rem;
+//     transition: background-color 0.2s;
 
-    &:hover {
-        background-color: #f9f9f9;
-    }
+//     &:hover {
+//         background-color: #f9f9f9;
+//     }
 
-    img {
-        height: 18px;
-        width: 18px;
-    }
+//     img {
+//         height: 18px;
+//         width: 18px;
+//     }
 
-        @media (max-width: 600px) {
-            font-size: .6rem;
-        }
-}
+//         @media (max-width: 600px) {
+//             font-size: .6rem;
+//         }
+// }
 
-.social-icon {
-    width: 2rem;
-    height: 2rem;
-}
+// .social-icon {
+//     width: 2rem;
+//     height: 2rem;
+// }

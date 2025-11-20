@@ -1,3 +1,38 @@
-<div class="login-container">        
-    <app-login-main-form *ngIf="activeStep === '1'"></app-login-main-form>
-</div>
+<form class="login-container" [formGroup]="form" (ngSubmit)="onSubmit()">        
+    <div class="title-section">
+        <div class="auth-dark-top-text">Account Login</div>
+        <div class="auth-light-top-text">PLEASE LOGIN TO CONTINUE TO YOUR ACCOUNT</div>
+    </div>        
+    <div style="display: flex; flex-direction: column; gap: .7rem;">
+        <input class="auth-input-field" type="text" placeholder="Email Address" formControlName="email">
+        <div class="password-input-wrapper">
+            <input class="auth-input-field" [type]="showPassword ? 'text' : 'password'" placeholder="Password"
+                formControlName="password">
+            <img class="password-toggle-icon"
+                [src]="showPassword ? 'assets/images/auth/password-shown.png' : 'assets/images/auth/password-hidden.png'"
+                alt="Toggle Password" (click)="togglePasswordVisibility()">
+        </div>    
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0rem">
+        <div style="display: flex; align-items: center; gap: .7rem">
+            <input type="checkbox" formcontrolname="RememberMe" class="auth-checkbox">
+            <div>Remember Me</div>
+        </div>
+        <!-- <div style="flex: 1;"></div> -->
+        <div>
+            Forgot Password?
+        </div>
+    </div>
+    <button class="auth-green-button" [ngClass]="{'auth-green-button--locked': form.invalid}">LOG IN</button>    
+    <div class="separator-text">OR</div>
+    <div class="social-buttons-container">
+        <button type="button" class="auth-social-login-button">
+            <img class="social-icon" src="assets/images/auth/google-social.svg" alt="Google">
+            Log in with Google
+        </button>
+        <button type="button" class="auth-social-login-button">
+            <img class="social-icon" src="assets/images/auth/microsoft-social.svg" alt="Microsoft">
+            Log in with Microsoft
+        </button>
+    </div>
+</form>

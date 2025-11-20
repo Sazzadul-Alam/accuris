@@ -11,7 +11,7 @@ export const routes: Routes = [
             },
             {
                 // New login route
-                path: 'login/:step',
+                path: 'login',
                 loadComponent: () => import('./features/auth/pages/login/login.component').then(m => m.LoginComponent)
             },
             {
