@@ -25,6 +25,10 @@
     &:hover {
         background-color: #f9f9f9;
     }
+
+        @media (max-width: 600px) {
+            font-size: .6rem;
+        }
 }
 
 .field-container {
@@ -47,6 +51,10 @@
         opacity: 0.6;
         cursor: not-allowed;
     }
+
+        @media (max-width: 600px) {
+            font-size: .6rem;
+        }
 }
 
 .auth-dark-top-text {
