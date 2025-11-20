@@ -1,35 +1,24 @@
-<div class="test-login-container">
-    <h2>Backend Authentication Test</h2>
-    <p>Enter credentials for {{ environment.baseUrl }}/security/authenticate</p>
+<div class="login-wrapper">
+    <form (ngSubmit)="onSubmit()" [formGroup]="form" class="login-form">
+        <h2>Sign In</h2>
 
-    <form [formGroup]="loginForm" (ngSubmit)="signIn()">
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input id="username" formControlName="username" type="text" placeholder="DSAfsheen" />
-        </div>
+        <label>Username</label>
+        <input type="text" placeholder="DSAfsheen" formControlName="username" />
 
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input id="password" formControlName="password" type="password" placeholder="bKash123" />
-        </div>
+        <label>Password</label>
+        <input type="text" placeholder="bKash123" formControlName="password" />
 
-        <div class="form-group" style="display: none;">
-            <label for="grant_type">Grant Type:</label>
-            <input id="grant_type" formControlName="grant_type" type="text" value="password" readonly />
-        </div>
-
-        <button type="submit" [disabled]="loginForm.invalid">
-            Sign In & Test Backend
+        <button type="submit" [disabled]="loading || form.invalid">
+            {{ loading ? 'Signing in...' : 'Sign In' }}
         </button>
     </form>
 
-    <p *ngIf="message" [style.color]="isError ? 'red' : 'green'">
-        {{ message }}
-    </p>
+    <div class="divider">OR</div>
 
-    <div class="storage-info">
-        <h3>Storage Check:</h3>
-        <p>Token: {{ getTokenStatus() }}</p>
-        <p>User: {{ localStorage.getItem('username') || 'N/A' }}</p>
+    <!-- Google button will be rendered into this div by google.accounts.id.renderButton -->
+    <div id="googleBtn"></div>
+
+    <div style="margin-top:12px; text-align:center;">
+        <small>Testing: Google token will be logged in console. When backend is ready, send id_token to backend.</small>
     </div>
 </div>

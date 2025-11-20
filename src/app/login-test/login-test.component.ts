@@ -1,112 +1,125 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Component, AfterViewInit } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment'; // adjust path if needed
+
+declare const google: any; // avoid TS errors for google.accounts
 
 @Component({
   selector: 'app-login-test',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './login-test.component.html',
   styleUrls: ['./login-test.component.scss']
 })
-export class LoginTestComponent {
-  // Form group for reactive forms
-  loginForm: FormGroup;
+export class LoginTestComponent implements AfterViewInit {
 
-  // For displaying status messages to the user
-  message: string = '';
-  isError: boolean = false;
+  loading = false;
 
-  // Expose environment and localStorage for display within the HTML template
-  environment = environment;
-  localStorage = localStorage;
+  form = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+    grant_type: ['password', Validators.required]
+  });
 
-  constructor(
-    private fb: FormBuilder,
-    private httpClient: HttpClient,
-    private router: Router
-  ) {
-    // Initialize the form with validators
-    this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      grant_type: ['password', Validators.required]
+  constructor(private fb: FormBuilder, private http: HttpClient) { }
+
+  ngAfterViewInit(): void {
+    // Initialize Google Identity Services
+    // NOTE: ensure environment.googleClientId is set
+    google.accounts.id.initialize({
+      client_id: environment.googleClientId,
+      callback: (response: any) => this.handleCredentialResponse(response),
+      // optional UX mode: "popup" or "redirect". default behaviour of renderButton will open a popup.
+      // ux_mode: 'popup'
     });
+
+    // Render the button inside the div with id "googleBtn"
+    google.accounts.id.renderButton(
+      document.getElementById('googleBtn'),
+      {
+        theme: 'outline',
+        size: 'large',
+        width: 300
+      }
+    );
+
+    // Optional: show One Tap (comment out if you don't want it)
+    // google.accounts.id.prompt();
   }
 
-  /**
-   * Checks local storage for the token and returns a formatted status string.
-   */
-  getTokenStatus(): string {
-    const token = localStorage.getItem('access_token');
-    return token ? '✅ Stored (' + token.substring(0, 10) + '...)' : '❌ Missing';
-  }
+  // ---------- Username / Password login (existing flow) ----------
+  onSubmit() {
+    if (this.form.invalid) return;
 
-  /**
-   * Executes the backend authentication call.
-   */
-  signIn() {
-    // Check if form is valid
-    if (this.loginForm.invalid) {
-      return;
-    }
+    this.loading = true;
+    const payload = this.form.value;
 
-    this.message = 'Attempting sign-in...';
-    this.isError = false;
-
-    // Get form values
-    const user = this.loginForm.value;
-
-    // 1. Prepare headers with Basic Auth
     const headers = new HttpHeaders({
       'Authorization': `Basic ${btoa('web:webpass')}`
     });
 
-    // 2. Prepare request body
-    const body = {
-      username: user.username,
-      password: user.password,
-      grant_type: user.grant_type
-    };
-
-    // 3. Make the API call
-    this.httpClient.post(`${environment.baseUrl}/security/authenticate`, body, { headers })
+    this.http.post(`${environment.baseUrl}/security/authenticate`, payload, { headers })
       .subscribe({
-        next: (result: any) => {
-          // Check for OAuth2 response format
-          if (result && result['access_token']) {
-            // 4. Success: Store OAuth2 tokens
-            localStorage.setItem('username', user.username);
-            localStorage.setItem('access_token', result['access_token']);
-            localStorage.setItem('refresh_token', result['refresh_token']);
-            localStorage.setItem('id_token', result['id_token']);
-            localStorage.setItem('token_type', result['token_type']);
-            localStorage.setItem('expires_in', result['expires_in']);
-            localStorage.setItem('scope', result['scope']);
-
-            this.message = 'SUCCESS! OAuth2 tokens stored and routing to dashboard.';
-
-            // 5. Navigate on success
-            setTimeout(() => {
-              this.router.navigate(['/dashboard/home']);
-            }, 1000);
-
-          } else {
-            // Success response, but missing expected token/data
-            this.isError = true;
-            this.message = 'Login failed: Authentication successful, but response format unexpected.';
-            console.log('Response received:', result);
-          }
+        next: (res) => {
+          console.log('Login success:', res);
+          // TODO: store token, redirect, etc.
+          this.loading = false;
         },
         error: (err) => {
-          // 6. Error: Handle server or bad credential error
-          this.isError = true;
-          this.message = `Login failed: Server error or bad credentials. (Status: ${err.status})`;
-          console.error('Authentication Error:', err);
+          console.error('Login failed:', err);
+          this.loading = false;
         }
       });
+  }
+
+  // ---------- Google credential handler ----------
+  handleCredentialResponse(response: { credential?: string }) {
+    // response.credential is the ID token (JWT)
+    if (!response || !response.credential) {
+      console.error('No credential returned from Google');
+      return;
+    }
+    const idToken = response.credential;
+    console.log('Google ID token (raw):', idToken);
+
+    const decoded = this.decodeJwt(idToken);
+    console.log('Decoded ID token payload:', decoded);
+
+    // Option A: If you want to test client-side, just keep token in console.
+    // Option B: To log in via your backend, send the idToken to your backend endpoint:
+    // Example (uncomment when backend is ready):
+    //
+    // this.http.post(`${environment.baseUrl}/security/authenticate/google`, { id_token: idToken })
+    //   .subscribe({
+    //     next: (res) => {
+    //       console.log('Backend accepted Google token, returned:', res);
+    //       // store access_token, refresh_token etc.
+    //     },
+    //     error: (err) => console.error('Backend error verifying Google token', err)
+    //   });
+
+    // For now we just stop loading if it was set
+    this.loading = false;
+  }
+
+  decodeJwt(token: string | null) {
+    if (!token) return null;
+    try {
+      const payload = token.split('.')[1];
+      // atob can throw for incorrect input; wrap in try/catch
+      const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decodeURIComponent(escape(json)));
+    } catch (e) {
+      console.error('Failed to decode JWT', e);
+      return null;
+    }
+  }
+
+  // Optional method: If you want a manual "Sign in with Google" click that triggers the popup
+  // rather than relying on the rendered button, use this:
+  promptGooglePopup() {
+    google.accounts.id.prompt(); // may show One Tap or prompt
   }
 }
