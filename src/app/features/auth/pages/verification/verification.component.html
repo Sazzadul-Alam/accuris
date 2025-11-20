@@ -1,0 +1,33 @@
+<div style="margin-top: 5rem;">
+    <div class="title-section">
+        <div class="auth-dark-top-text">2 Step Verification</div>
+        <div class="auth-light-top-text">Choose how you want to verify your account and enter the code below</div>
+    </div>
+
+    <form class="verification-container" [formGroup]="form" (ngSubmit)="onSubmit()">    
+        <div class="vertical-stacker">
+            <div style="display: flex; gap: .6rem; align-items: center;">
+                <div class="radio-container">                         
+                    <div style="display: flex; align-items: center; gap: .5rem; justify-content: start;">
+                        <input type="radio" value="email" formControlName="verificationType">          
+                        <div class="responsive-text">Email Address</div>          
+                    </div>
+                    <div style="display: flex; align-items: center; gap: .5rem;">
+                        <input type="radio" value="phone" formControlName="verificationType">            
+                        <div class="responsive-text">Phone</div>
+                    </div>
+                </div>
+                <div style="flex: 1">                
+                </div>
+                <div>
+                    <button class="auth-green-button" style="display: flex;">
+                        <div>Send Code</div>
+                        <div>-></div>
+                    </button>
+                </div>
+            </div>
+            <input class="auth-input-field" type="text" placeholder="Enter Code" formControlName="code">        
+            <button class="auth-green-button" [ngClass]="{'auth-green-button--locked': form.invalid}">Submit</button>        
+        </div>
+    </form>
+</div>

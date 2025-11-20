@@ -1,0 +1,72 @@
+.verification-container {
+    // background-color: aqua;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    // max-width: 500px;
+    align-items: center;        
+}
+
+.vertical-stacker {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    gap:.8rem;
+    @media (max-width: 425px) {
+        width: 90%;
+    }
+}
+
+.input[type="radio"] {
+    border-color: aqua;
+}
+
+
+.radio-label input[type="radio"] {
+    margin-right: 8px;
+
+    /* 1. Reset/Hide the default browser appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.2s;
+
+    /* 2. Define the base (unselected) border color */
+    border: 2px solid #9ca3af;
+    /* Gray border when unselected */
+}
+
+/* 3. Define the style when the radio button IS checked */
+.radio-label input[type="radio"]:checked {
+    /* To make it look "aqua", you define the checked border color */
+    border: 5px solid aqua;
+    /* Or, if you want the outer ring to be aqua, and the inner fill transparent:
+    border-color: aqua; */
+
+    /* If you wanted a solid aqua fill with a white dot, you'd use a different technique
+       involving background-color and box-shadow, but border is simpler here. */
+}
+
+.radio-container {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: start;
+    // align-items: center;
+
+    @media (max-width: 600px) {
+        gap: .7rem;
+        // flex-direction: column;
+    }
+}
+
+.responsive-text {
+    @media (max-width: 600px) {
+            font-size: .6rem;
+        }
+}
