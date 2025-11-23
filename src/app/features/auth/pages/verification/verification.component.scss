@@ -81,9 +81,119 @@
     justify-content: center;
     padding: .5rem;
 
-    // @media (max-width: 600px)
-    // {
-    //     width: .5rem;
-    //     height: .5rem;
-    // }
+    @media (max-width: 600px)
+    {
+        padding: .5rem;
+    }
+}
+
+/* Layout Styling for the wrapper */
+.radio-container {
+    display: flex;
+    
+    gap: 1rem;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    justify-content: start;
+}
+
+/* --- CUSTOM RADIO STYLES --- */
+
+/* The main container for input and label */
+.container {
+    display: flex;
+    align-items: center;
+    /* Vertically aligns text */
+    position: relative;
+    padding-left: 35px;
+    /* Space for the custom radio */
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    min-height: 25px;
+    /* Ensure container is at least as tall as the radio */
+}
+
+/* Hide the browser's default radio button */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button (Unchecked State) */
+.checkmark {
+    position: absolute;
+    top: 50%;
+    /* Center vertically relative to container */
+    left: 0;
+    transform: translateY(-50%);
+    /* perfect vertical centering */
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    /* White background */
+    border: 2px solid #008080;;
+    /* Green border */
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    /* Ensures border doesn't expand size */
+
+    /* FLEXBOX CENTERING (Keeps the inner dot centered) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* On mouse-over, add a light green background color */
+.container:hover input~.checkmark {
+    background-color: #f1f8f1;
+}
+
+/* When the radio button is checked */
+.container input:checked~.checkmark {
+    background-color: #fff;
+    /* Background stays white */
+    border-color: #008080;;
+    /* Green border */
+}
+
+/* Create the indicator (the dot - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    display: none;
+    width: 13px;
+    /* Size of inner circle */
+    height: 13px;
+    border-radius: 50%;
+    background: #008080;
+    /* GREEN DOT */
+}
+
+/* Show the indicator (dot) when checked */
+.container input:checked~.checkmark:after {
+    display: block;
+}
+
+// /* Focus style for accessibility (Keyboard navigation) */
+// .container input:focus~.checkmark {
+//     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4);
+// }
+
+/* Style for the text next to the radio button */
+.responsive-text {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+    margin-top: 2px;
+    /* Tiny adjustment for visual baseline balance */
 }

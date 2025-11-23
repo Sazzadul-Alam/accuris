@@ -7,15 +7,24 @@
     <form class="verification-container" [formGroup]="form" (ngSubmit)="onSubmit()">    
         <div class="vertical-stacker">
             <div style="display: flex; gap: .6rem; align-items: center;">
-                <div class="radio-container">                         
-                    <div style="display: flex; align-items: center; gap: .5rem; justify-content: start;">
-                        <input type="radio" value="email" formControlName="verificationType">          
-                        <div class="responsive-text">Email Address</div>          
+                <div class="radio-container">
+                
+                    <div class="radio-option">
+                        <label class="container">
+                            <input type="radio" name="verify" value="email">
+                            <span class="checkmark"></span>
+                            <div class="responsive-text">Email Address</div>
+                        </label>
                     </div>
-                    <div style="display: flex; align-items: center; gap: .5rem;">
-                        <input type="radio" value="phone" formControlName="verificationType">            
-                        <div class="responsive-text">Phone</div>
+                
+                    <div class="radio-option">
+                        <label class="container">
+                            <input type="radio" name="verify" value="phone">
+                            <span class="checkmark"></span>
+                            <div class="responsive-text">Phone</div>
+                        </label>
                     </div>
+                
                 </div>
                 <div style="flex: 1">                
                 </div>

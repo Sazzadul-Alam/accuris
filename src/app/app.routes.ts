@@ -18,6 +18,11 @@ export const routes: Routes = [
                 // New login route
                 path: 'login-test',
                 loadComponent: () => import('./login-test/login-test.component').then(m => m.LoginTestComponent)
+            },
+            {
+                // New login route
+                path: '2fa',
+                loadComponent: () => import('./features/auth/pages/verification/verification.component').then(m => m.VerificationComponent)
             }
         ]
     },
