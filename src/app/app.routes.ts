@@ -20,11 +20,22 @@ export const routes: Routes = [
                 loadComponent: () => import('./login-test/login-test.component').then(m => m.LoginTestComponent)
             },
             {
-                // New login route
+                // 2fa route
                 path: '2fa',
                 loadComponent: () => import('./features/auth/pages/verification/verification.component').then(m => m.VerificationComponent)
+            },
+            {
+                // forgot password route
+                path: 'forgot-password',
+                loadComponent: () => import('./features/auth/pages/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
             }
+            
         ]
+    },
+    {
+        // forgot password route
+        path: 'product-page',
+        loadComponent: () => import('./features/product-page/product-page.component').then(m => m.ProductPageComponent)
     },
     {
         path: '**',

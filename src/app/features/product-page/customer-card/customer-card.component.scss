@@ -1,0 +1,76 @@
+/* Default styles for customer-card */
+.customer-card {
+    background-color: white;
+    border: 0.1rem solid #D5DDDD;
+    padding: 1rem;
+    
+    border-top-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+    box-sizing: border-box;
+    height: 20rem;
+    width: 20rem;
+}
+
+/* Light theme styles */
+.customer-card.light {
+    background-color: white;
+    color: #333;
+    
+    border: 0.3rem solid #D5DDDD;
+}
+
+/* Name color for light theme */
+.customer-card.light .name {
+    color: #1E1E1E;
+    
+    /* Darker shade for the name */
+}
+
+.name {
+    font-family: 'Inter', sans-serif;    
+}
+
+.position {    
+    font-family: 'Roboto', sans-serif;       
+}
+
+.review {
+    font-family: 'Poppins';
+}
+/* Position color for light theme */
+.customer-card.light .position {
+    color: #B0B0B0;
+    /* Lighter gray for the position */
+}
+
+/* Review color for light theme */
+.customer-card.light .review {
+    color: #575757;
+    /* Red for the review */
+}
+
+/* Dark theme styles */
+.customer-card.dark {
+    background-color: #008080;
+    color: #fff;
+    border: none;
+    
+}
+
+/* Name color for dark theme */
+.customer-card.dark .name {
+    color: #FFFFFF;
+    /* Yellow for the name */
+}
+
+/* Position color for dark theme */
+.customer-card.dark .position {
+    color: #E1E1E1;
+    /* Light gray for the position */
+}
+
+/* Review color for dark theme */
+.customer-card.dark .review {
+    color: #FFFFFF;
+    /* Green for the review */
+}

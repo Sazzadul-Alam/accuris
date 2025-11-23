@@ -11,7 +11,7 @@
 }
 
 .nav-button-font-size {    
-    font-weight: 600;    
+    font-weight: 500;    
 }
 
 .border-radius-1 {
@@ -31,8 +31,8 @@
 }
 
 h1 {
-    font-weight: 600;
-    font-size: 3rem;
+    font-weight: 500;
+    font-size: 5rem;
 }
 
 input[type='text'] {
@@ -51,6 +51,8 @@ input:focus {
 p {
     font-weight: 500;
     font-size: 1.2rem;    
+    color: #575757;
+    margin: 0;
 }
 
 .input-shadow-1 {
@@ -64,4 +66,28 @@ p {
     padding: 10px;
     filter: grayscale(100%) contrast(0);
     
+}
+
+.body-container-margin-1 {
+    margin-bottom: 4rem;
+    margin-top: 4rem;
+}
+
+.explore-services-button {
+    all: unset;
+    display: inline-block;
+    background-color: #ffffff;
+    border: .2rem solid #D5DDDD;
+    color: #1E1E1E;
+    text-align: center;
+    cursor: pointer;
+    padding: 1rem 1.5rem; 
+    width: 10rem;   
+}
+
+.icon-class-1 {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 20rem;
 }

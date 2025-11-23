@@ -1,0 +1,15 @@
+
+    
+<div [ngClass]="theme" class="customer-card" style="display: flex; flex-direction: column; justify-items: center; align-items: start;">
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <div style="width: 2rem;">
+            <img [src]="avatar_image_src" alt="Avatar">
+        </div>
+        <div style="display: flex; flex-direction: column;">
+            <div class="name">{{ name }}</div>
+            <div class="position">{{ position }}</div>
+        </div>
+    </div>
+    <div class="review">{{ review }}</div>
+</div>
+    
