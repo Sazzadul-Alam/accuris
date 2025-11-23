@@ -1,0 +1,67 @@
+// * {
+//     
+//     * {
+//             all: unset;
+//         }
+// }
+
+* {
+    // all: unset;
+    font-family: 'Inter', sans-serif;        
+}
+
+.nav-button-font-size {    
+    font-weight: 600;    
+}
+
+.border-radius-1 {
+    border-radius: .2rem;
+}
+
+.get-started-button {
+    all: unset;
+    display: inline-block;
+    background-color: #008080;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    border: none;
+
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 3rem;
+}
+
+input[type='text'] {
+    border: none;
+    background-color: white;
+
+}
+
+input:focus {
+    outline: none;
+    /* Removes the default outline */
+    box-shadow: none;
+    /* Removes any focus-related box-shadow */
+}
+
+p {
+    font-weight: 500;
+    font-size: 1.2rem;    
+}
+
+.input-shadow-1 {
+    box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
+}
+
+.brand-item {
+    flex: 1 1 16%;
+    padding: 10px;
+    filter: grayscale(100%) contrast(0);
+    
+}
