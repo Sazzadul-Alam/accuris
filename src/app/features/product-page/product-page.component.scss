@@ -30,6 +30,22 @@
 
 }
 
+.get-started-button2 {
+    all: unset;
+    display: inline-block;
+    background-color: #20CFC6;
+    color: #FFFFFF;
+    text-align: center;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    border: none;
+    font-family: 'Poppins';
+    border-radius: .2rem;
+}
+
+
+
+
 h1 {
     font-weight: 500;
     font-size: 5rem;
@@ -57,8 +73,16 @@ p {
 
 .input-shadow-1 {
     box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
-        -webkit-box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
-        -moz-box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* Keep box-shadow on focus */
+.input-shadow-1:focus {
+    box-shadow: -1px 10px 50px -10px rgba(0, 0, 0, 0.3);
+    /* Ensure the box-shadow stays */
+    outline: none;
+    /* Optional: Remove the default outline when focused */
 }
 
 .brand-item {
@@ -90,4 +114,30 @@ p {
     gap: 1rem;
     align-items: center;
     width: 20rem;
+}.social-media {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    /* Align items with space between */
+}
+
+.social-media-item {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.social-media-icon {
+    width: 2rem;
+    /* Optional: Control size of icons */
+    height: auto;
+}
+
+.social-media-label {
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.gap-1 {
+    gap: 1rem;
 }
