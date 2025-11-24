@@ -38,7 +38,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/product-page/product-page.component').then(m => m.ProductPageComponent)
     },
     {
+        // New login route
+        path: 'emailotpdemo',
+        loadComponent: () => import('./emailotpdemo/emailotpdemo.component').then(m => m.EmailOtpDemoComponent)
+    },
+    {
         path: '**',
         redirectTo: '/auth/login' // Often good to redirect to login if the user hasn't specified a valid route
-    }
+    },    
 ];
