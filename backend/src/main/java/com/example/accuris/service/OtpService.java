@@ -26,9 +26,10 @@ public class OtpService {
         message.setSubject("Your OTP Code");
         message.setText("Your OTP is: " + otp);
 
-        mailSender.send(message);
+        // mailSender.send(message);
+        System.out.println("MOCK EMAIL: " + email + " -> " + otp);
 
-        System.out.println("DEBUG OTP: " + otp);
+        // System.out.println("DEBUG OTP: " + otp);
     }
 
     public boolean verifyOtp(String email, String otp) {
@@ -42,6 +43,7 @@ public class OtpService {
     }
 
     private String generateOtp() {
-        return String.format("%06d", new Random().nextInt(999999));
+        // return String.format("%06d", new Random().nextInt(999999));
+        return "123456";
     }
 }

@@ -34,7 +34,7 @@ export const routes: Routes = [
     },
     {
         // forgot password route
-        path: 'product-page',
+        path: 'landing-page',
         loadComponent: () => import('./features/product-page/product-page.component').then(m => m.ProductPageComponent)
     },
     {
