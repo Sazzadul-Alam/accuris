@@ -1,1 +1,46 @@
 /* You can add global styles to this file, and also import other style files */
+.modal-max {
+  max-width: 98vw !important;
+}
+
+.modal-media {
+  padding: 0 !important;
+  z-index: 999999999999999999;
+}
+.modal-media .modal-dialog {
+  max-width: 100%;
+  margin: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  z-index: 100000;
+  background-color:rgba(26, 24, 24, 0.5)!important;
+}
+.modal-media .modal-header {
+  border:none;
+
+}
+.modal-media .modal-content {
+  background-color:rgba(26, 24, 24, 0.5) !important;
+}
+.modal-media .modal-body {
+  overflow-y: auto;
+}
+@font-face {
+  font-family: "zenKaku-Regular";
+  src: url("assets/fonts/ZenKakuGothicAntique-Regular.ttf");
+}
+@font-face {
+  font-family: "zenKaku-Medium";
+  src: url("assets/fonts/ZenKakuGothicAntique-Medium.ttf");
+}
+.zenKaku-font-Regular {
+  font-family: zenKaku-Regular;
+}
+.zenKaku-font-Medium {
+  font-family: zenKaku-Medium;
+}
