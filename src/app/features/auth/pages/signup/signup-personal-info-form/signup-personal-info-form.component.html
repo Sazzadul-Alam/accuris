@@ -1,0 +1,67 @@
+<div class="title-section">
+    <div class="auth-dark-top-text">Create an account to use Accuris for your Business</div>
+    <div class="auth-light-top-text">NO PAYMENT REQUIRED TO OPEN ACCOUNT AND SEE OUR SERVICES!</div>
+</div>
+
+<form class="centered-container simple-signup-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-row-split">
+        <input class="auth-input-field" type="text" placeholder="First Name" formControlName="firstName">
+        <input class="auth-input-field" type="text" placeholder="Last Name" formControlName="lastName">
+    </div>
+
+    <input class="auth-input-field" type="email" placeholder="Email Address" formControlName="email">
+
+    <div class="password-group">
+        <div class="password-input-wrapper">
+            <input class="auth-input-field" [type]="showPassword ? 'text' : 'password'" placeholder="Password"
+                formControlName="password">
+            <img class="password-toggle-icon"
+                [src]="showPassword ? 'assets/images/auth/password-shown.png' : 'assets/images/auth/password-hidden.png'"
+                alt="Toggle Password" (click)="togglePasswordVisibility()">
+        </div>
+
+        <div class="strength-indicators">
+            <div class="strength-bar"
+                [ngClass]="{'strength-grey': passwordStrength === 'None', 'strength-red': passwordStrength === 'Weak', 'strength-orange': passwordStrength === 'Medium', 'strength-green': passwordStrength === 'Strong'}">
+            </div>
+            <div class="strength-bar"
+                [ngClass]="{'strength-grey': ['None', 'Weak'].includes(passwordStrength), 'strength-orange': passwordStrength === 'Medium', 'strength-green': passwordStrength === 'Strong'}">
+            </div>
+            <div class="strength-bar"
+                [ngClass]="{'strength-grey': ['None', 'Weak', 'Medium'].includes(passwordStrength), 'strength-green': passwordStrength === 'Strong'}">
+            </div>
+        </div>
+
+        <div class="password-strength-text">Password Strength</div>
+    </div>
+
+    <div class="terms-container">
+        <input class="auth-checkbox" type="checkbox" formControlName="acceptTerms">
+        <div class="terms-text">
+            <span class="text-light">By Creating an Account, it means you agree to our </span>
+            <span class="text-dark">Privacy Policy</span>
+            <span class="text-light"> and </span>
+            <span class="text-dark">Terms of Service</span>
+        </div>
+    </div>
+
+    <button class="auth-green-button" type="submit" [ngClass]="{'auth-green-button--locked': signupForm.invalid}"
+        [disabled]="signupForm.invalid">
+        NEXT
+    </button>
+
+    <p class="separator-text">OR</p>
+
+    <div class="social-buttons-container">
+        <button type="button" class="auth-social-login-button">
+            <img class="social-icon" src="assets/images/auth/google-social.svg" alt="Google">
+            Log in with Google
+        </button>
+        <button type="button" class="auth-social-login-button">
+            <img class="social-icon" src="assets/images/auth/microsoft-social.svg" alt="Microsoft">
+            Log in with Microsoft
+        </button>
+    </div>
+
+</form>

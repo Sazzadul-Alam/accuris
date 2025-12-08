@@ -1,0 +1,34 @@
+<form class="login-container" [formGroup]="form" (ngSubmit)="onSubmit()">    
+    <div style="width: 40%; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <div class="title-section">
+            <div class="auth-dark-top-text">Verify Code</div>
+            <div class="auth-light-top-text">An authentication code is sent to your email</div>
+        </div>    
+        <div style="display: flex; flex-direction: column; gap: .7rem; width: 70%;">
+            <div class="password-input-wrapper">
+                <input class="auth-input-field" [type]="showCode ? 'text' : 'password'" placeholder="Enter Code"
+                    formControlName="code">
+                <img class="password-toggle-icon"
+                    [src]="showCode ? 'assets/images/auth/password-shown.png' : 'assets/images/auth/password-hidden.png'"
+                    alt="Toggle Password" (click)="togglePasswordVisibility()">
+            </div>            
+            <div style="display: flex; justify-content: center;">
+                <span>Didn’t receive a code?  </span> <span>Resend in 00:59s</span>
+            </div>
+            <div class="two-button-container">                
+                <button class="auth-green-button" [ngClass]="{'auth-green-button--locked': form.invalid}">Submit</button>
+            </div>
+        </div>
+        <!-- <div class="separator-text">OR</div>
+        <div class="social-buttons-container" style="width: 70%;">
+            <button type="button" class="auth-social-login-button">
+                <img class="social-icon" src="assets/images/auth/google-social.svg" alt="Google">
+                Log in with Google
+            </button>
+            <button type="button" class="auth-social-login-button">
+                <img class="social-icon" src="assets/images/auth/microsoft-social.svg" alt="Microsoft">
+                Log in with Microsoft
+            </button>
+        </div> -->
+    </div>  
+</form>

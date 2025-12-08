@@ -1,0 +1,44 @@
+<div style="margin-top: 5rem;">
+    <div class="title-section">
+        <div class="auth-dark-top-text">2 Step Verification</div>
+        <div class="auth-light-top-text">Choose how you want to verify your account and enter the code below</div>
+    </div>
+
+    <form class="verification-container" [formGroup]="form" (ngSubmit)="onSubmit()">    
+        <div class="vertical-stacker">
+            <div style="display: flex; gap: .6rem; align-items: center;">
+                <div class="radio-container">
+                
+                    <div class="radio-option">
+                        <label class="container">
+                            <input type="radio" name="verify" value="email">
+                            <span class="checkmark"></span>
+                            <div class="responsive-text">Email Address</div>
+                        </label>
+                    </div>
+                
+                    <div class="radio-option">
+                        <label class="container">
+                            <input type="radio" name="verify" value="phone">
+                            <span class="checkmark"></span>
+                            <div class="responsive-text">Phone</div>
+                        </label>
+                    </div>
+                
+                </div>
+                <div style="flex: 1">                
+                </div>
+                <div>
+                    <button class="auth-green-button remove-padding-button" style="display: flex;">
+                        <div style="display: flex; justify-content: center; align-items: center;  ">Send Code</div>
+                        <div class="send-arrow-container">
+                            <img src="assets/images/auth/send-contact-arrow.svg" alt="">
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <input class="auth-input-field" type="text" placeholder="Enter Code" formControlName="code">        
+            <button class="auth-green-button" [ngClass]="{'auth-green-button--locked': form.invalid}">Submit</button>        
+        </div>
+    </form>
+</div>

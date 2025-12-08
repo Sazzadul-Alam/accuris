@@ -1,0 +1,33 @@
+<div class="title-section">
+    <div class="auth-dark-top-text">Your account is secured by our 2 Tier Authentication</div>
+    <div class="auth-light-top-text">VERIFICATION CODE WILL BE SENT TO EMAIL AND AN OTP TO YOUR PHONE</div>
+</div>
+
+<form class="centered-container simple-auth-form" [formGroup]="form">
+
+    <div class="verification-row-container">
+        <div class="verification-row">
+            <app-contact-field-to-verify style="width: 100%;" placeholder="Enter your Email address" type="email"
+                [control]="form.controls.email">
+            </app-contact-field-to-verify>
+
+            <app-otp-field-to-verify style="width: 100%;" [control]="form.controls.emailOtp">
+            </app-otp-field-to-verify>
+        </div>
+
+        <div class="verification-row">
+            <app-contact-field-to-verify style="width: 100%;" placeholder="Enter your Phone number" type="tel" [control]="form.controls.phone">
+            </app-contact-field-to-verify>
+
+            <app-otp-field-to-verify style="width: 100%;" [control]="form.controls.phoneOtp">
+            </app-otp-field-to-verify>
+        </div>
+    </div>
+
+    <div class="buttons-container">        
+        <button class="auth-light-button button-back-or-next" type="button">GO BACK</button>
+        <button class="auth-green-button button-back-or-next" [ngClass]="{'auth-green-button--locked': form.invalid}"
+            type="submit" [disabled]="form.invalid">NEXT</button>
+    </div>
+
+</form>

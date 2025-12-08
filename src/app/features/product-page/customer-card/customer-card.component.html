@@ -1,0 +1,25 @@
+
+    
+<div [ngClass]="theme" class="customer-card" style="display: flex; flex-direction: column; justify-items: center; align-items: start; gap: 1rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">        
+        <img [src]="avatar_image_src" alt="Avatar">        
+        <div style="display: flex; flex-direction: column;">
+            <div class="name">{{ name }}</div>
+            <div class="position">{{ position }}</div>
+            
+            
+        </div>
+    </div>
+    <div class="review">{{ review }}</div>
+    <div style="flex: 1;"></div>
+    <div style="display: flex; width: 100%;">
+        <div style="flex: 1; height: 1rem;"></div>
+        <img style="margin-right: .5rem; margin-bottom: .5rem; width: 2rem;"
+            [src]="theme === 'dark' ? 'assets/images/product-page/comma-dark.svg' : 'assets/images/product-page/comma-light.svg'"
+            alt="">
+
+    </div>
+    
+    
+</div>
+    

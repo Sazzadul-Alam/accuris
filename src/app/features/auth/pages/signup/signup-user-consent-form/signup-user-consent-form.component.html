@@ -1,0 +1,42 @@
+<div class="auth-all-form-title-parent ">
+    <div class="auth-dark-top-text">Please go through the Privacy Policy and Terms of Use</div>
+    <div class="auth-light-top-text">YOUR DATA IS SACRED TO US AND WE DO NOT DISCLOSE IT TO ANY THRID PARTY EXCEPT OUR
+        AI ENGINE</div>
+</div>
+
+<form class="simple-consent-form centered-container" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    
+        <div class="terms-scrollbox">
+            <h3>Privacy Policy and Terms of Use</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti excepturi laboriosam atque reprehenderit
+                modi aut. Explicabo amet fuga deserunt quis ipsa, minima aliquid. Aspernatur eius amet officiis ducimus,
+                saepe nemo?</p>
+            <p>More text to demonstrate scrolling...</p>
+            <p>Even more text...</p>
+            <h3>Privacy Policy and Terms of Use</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti excepturi laboriosam atque reprehenderit
+                modi aut. Explicabo amet fuga deserunt quis ipsa, minima aliquid. Aspernatur eius amet officiis ducimus,
+                saepe nemo?</p>
+            <p>More text to demonstrate scrolling...</p>
+            <p>Even more text...</p>
+        </div>
+    
+
+    <div class="checkbox-container">
+        <input class="auth-checkbox" type="checkbox" formControlName="acceptTerms">
+
+        <div class="checkbox-text">
+            I have read the privacy policy and terms of service and agree to open my account regardless.
+        </div>
+    </div>
+
+    <div class="buttons-container">
+        <button class="auth-light-button button-back-or-next" type="button" (click)="onGoBack()">GO BACK</button>
+        <button class="auth-green-button button-back-or-next" [ngClass]="{'auth-green-button--locked': form.invalid}"
+            type="submit" [disabled]="form.invalid">NEXT</button>
+    </div>
+
+
+    
+</form>
