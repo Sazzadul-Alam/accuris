@@ -47,7 +47,7 @@
     </div>
 
     <button class="auth-green-button" type="submit" [ngClass]="{'auth-green-button--locked': signupForm.invalid}"
-        [disabled]="signupForm.invalid">
+        [disabled]="signupForm.invalid" [routerLink]="['/auth/signup/2']">
         NEXT
     </button>
 

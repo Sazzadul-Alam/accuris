@@ -3,11 +3,11 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { ContactFieldToVerifyComponent } from "./contact-field-to-verify/contact-field-to-verify.component";
 import { OtpFieldToVerifyComponent } from './otp-field-to-verify/otp-field-to-verify.component';
 import { CommonModule } from '@angular/common';
-
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-signup-two-tier-auth-form',
   standalone: true,
-  imports: [ReactiveFormsModule, ContactFieldToVerifyComponent, OtpFieldToVerifyComponent, CommonModule],
+  imports: [ReactiveFormsModule, ContactFieldToVerifyComponent, OtpFieldToVerifyComponent, CommonModule, RouterModule],
   templateUrl: './signup-two-tier-auth-form.component.html',
   styleUrls: ['./signup-two-tier-auth-form.component.css']
 })

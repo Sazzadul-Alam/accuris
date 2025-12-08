@@ -32,7 +32,7 @@
     </div>
 
     <div class="buttons-container">
-        <button class="auth-light-button button-back-or-next" type="button" (click)="onGoBack()">GO BACK</button>
+        <button class="auth-light-button button-back-or-next" [routerLink]="['/auth/signup/2']" type="button" (click)="onGoBack()">GO BACK</button>
         <button class="auth-green-button button-back-or-next" [ngClass]="{'auth-green-button--locked': form.invalid}"
             type="submit" [disabled]="form.invalid">NEXT</button>
     </div>

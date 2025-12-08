@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-signup-personal-info-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './signup-personal-info-form.component.html',
   styleUrls: ['./signup-personal-info-form.component.css']
 })

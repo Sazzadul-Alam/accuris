@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signup-user-consent-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './signup-user-consent-form.component.html',
   styleUrls: ['./signup-user-consent-form.component.css']
 })

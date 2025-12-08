@@ -31,6 +31,7 @@
     background-color: #008080;
     color: white;
     border: none;
+    cursor: pointer;
 }
 
 .auth-green-button--locked {

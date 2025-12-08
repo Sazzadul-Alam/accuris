@@ -25,8 +25,8 @@
     </div>
 
     <div class="buttons-container">        
-        <button class="auth-light-button button-back-or-next" type="button">GO BACK</button>
-        <button class="auth-green-button button-back-or-next" [ngClass]="{'auth-green-button--locked': form.invalid}"
+        <button class="auth-light-button button-back-or-next" [routerLink]="['/auth/signup/1']" type="button">GO BACK</button>
+        <button class="auth-green-button button-back-or-next" [routerLink]="['/auth/signup/3']" [ngClass]="{'auth-green-button--locked': form.invalid}"
             type="submit" [disabled]="form.invalid">NEXT</button>
     </div>
 
