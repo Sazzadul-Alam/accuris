@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './signup-user-consent-form.component.html',
-  styleUrls: ['./signup-user-consent-form.component.scss']
+  styleUrls: ['./signup-user-consent-form.component.css']
 })
 export class SignupUserConsentFormComponent {
   form: FormGroup;

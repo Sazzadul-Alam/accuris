@@ -11,7 +11,7 @@ declare const google: any; // avoid TS errors for google.accounts
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './login-test.component.html',
-  styleUrls: ['./login-test.component.scss']
+  styleUrls: ['./login-test.component.css']
 })
 export class LoginTestComponent implements AfterViewInit {
 

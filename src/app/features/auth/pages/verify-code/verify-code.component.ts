@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common'; // Needed for things like *ngIf
     ReactiveFormsModule // Import required module for forms
   ],
   templateUrl: './verify-code.component.html',
-  styleUrls: ['./verify-code.component.scss']
+  styleUrls: ['./verify-code.component.css']
 })
 export class VerifyCodeComponent implements OnInit {
   form!: FormGroup;    

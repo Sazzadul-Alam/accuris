@@ -12,7 +12,7 @@ import { SignupUserConsentFormComponent } from "./signup-user-consent-form/signu
     standalone: true,
     imports: [CommonModule, FormsModule, RouterLink, SignupNavComponent, SignupPersonalInfoFormComponent, SignupTwoTierAuthFormComponent, SignupUserConsentFormComponent],
     templateUrl: './signup.component.html',
-    styleUrls: ['./signup.component.scss']
+    styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
     activeStep: string = '1';

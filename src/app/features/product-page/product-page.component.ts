@@ -5,7 +5,7 @@ import { CustomerCardComponent } from './customer-card/customer-card.component';
   standalone: true,
   imports: [CustomerCardComponent],
   templateUrl: './product-page.component.html',
-  styleUrls: ['./product-page.component.scss']
+  styleUrls: ['./product-page.component.css']
 })
 export class ProductPageComponent {
 

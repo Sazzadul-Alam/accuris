@@ -45,7 +45,7 @@ interface Log {
     </div>
   </div>
   `,
-  styleUrls: ['./emailotpdemo.component.scss']
+  styleUrls: ['./emailotpdemo.component.css']
 })
 export class EmailOtpDemoComponent {
   email: string = 'aiengineteam@gmail.com';

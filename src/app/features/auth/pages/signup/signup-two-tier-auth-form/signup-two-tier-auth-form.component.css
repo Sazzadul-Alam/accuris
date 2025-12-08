@@ -1,0 +1,69 @@
+/* --- 1. Layout Containers --- */
+
+/* Shared container for Title and Form */
+.centered-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .centered-container {
+        padding: 0 10px;
+        max-width: 100%;
+    }
+}
+
+/* The Form Wrapper */
+.simple-auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .simple-auth-form {
+        gap: 15px;
+    }
+}
+
+/* --- 2. Verification Rows (Input + OTP) --- */
+.verification-row-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .verification-row-container {
+        gap: 2rem;
+    }
+}
+
+.verification-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+}
+
+/* Responsive adjustments for verification row */
+@media (max-width: 600px) {
+    .verification-row {
+        flex-direction: column;
+    }
+
+    .verification-row>* {
+        width: 100%;
+    }
+}
+
+/* --- 3. Buttons --- */
+
+/* The commented SCSS button styles can be uncommented and converted similarly if needed */

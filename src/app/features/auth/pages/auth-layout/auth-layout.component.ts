@@ -9,7 +9,7 @@ import { SignupComponent } from '../signup/signup.component';
     standalone: true,
     imports: [CommonModule, RouterOutlet, SignupComponent],
     templateUrl: './auth-layout.component.html',
-    styleUrls: ['./auth-layout.component.scss']
+    styleUrls: ['./auth-layout.component.css']
 })
 export class AuthLayoutComponent {
     // Your layout logic here

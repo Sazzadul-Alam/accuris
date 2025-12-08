@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, ContactFieldToVerifyComponent, OtpFieldToVerifyComponent, CommonModule],
   templateUrl: './signup-two-tier-auth-form.component.html',
-  styleUrls: ['./signup-two-tier-auth-form.component.scss']
+  styleUrls: ['./signup-two-tier-auth-form.component.css']
 })
 export class SignupTwoTierAuthFormComponent {
 

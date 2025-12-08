@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common'; // Needed for things like *ngIf
     ReactiveFormsModule // Import required module for forms
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;

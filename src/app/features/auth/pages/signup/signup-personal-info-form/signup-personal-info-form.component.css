@@ -1,0 +1,114 @@
+/* --- 1. Layout Containers --- */
+.centered-container {
+    width: 100%;
+    max-width: 90%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Responsive adjustments for centered-container */
+@media (max-width: 600px) {
+    .centered-container {
+        padding: 0 2rem;
+        max-width: 100%;
+    }
+}
+
+/* The main form flex container */
+.simple-signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+/* --- 2. Form Elements --- */
+/* First Name / Last Name Row */
+.form-row-split {
+    display: flex;
+    gap: 0.7rem;
+}
+
+/* Nested input field */
+.form-row-split .auth-input-field {
+    width: 100%;
+}
+
+/* Responsive adjustments for form row */
+@media (max-width: 600px) and (min-height: 685px) {
+    .form-row-split {
+        flex-direction: column;
+    }
+}
+
+/* --- 3. Password Specifics --- */
+.password-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Strength Bars */
+.strength-indicators {
+    display: flex;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+}
+
+/* Colors */
+.strength-grey {
+    background-color: #E0E0E0;
+}
+
+.strength-red {
+    background-color: #D7353C;
+}
+
+.strength-orange {
+    background-color: orange;
+}
+
+.strength-green {
+    background-color: #64E15D;
+}
+
+.password-strength-text {
+    text-align: right;
+    color: #616161;
+    font-size: 0.75rem;
+}
+
+/* --- 4. Terms & Bottom Section --- */
+.terms-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 5px 0;
+}
+
+.terms-container .terms-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Responsive adjustments for terms text */
+@media (max-width: 600px) {
+    .terms-container .terms-text {
+        font-size: 0.7rem;
+    }
+}
+
+.terms-container .text-light {
+    color: #666;
+}
+
+.terms-container .text-dark {
+    color: #000;
+    font-weight: 500;
+}

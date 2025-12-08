@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './otp-field-to-verify.component.html',
-  styleUrls: ['./otp-field-to-verify.component.scss']
+  styleUrls: ['./otp-field-to-verify.component.css']
 })
 export class OtpFieldToVerifyComponent {
   @Input() placeholder: string = 'Enter OTP';

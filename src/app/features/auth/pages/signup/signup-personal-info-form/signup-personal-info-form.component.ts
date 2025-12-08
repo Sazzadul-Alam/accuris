@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './signup-personal-info-form.component.html',
-  styleUrls: ['./signup-personal-info-form.component.scss']
+  styleUrls: ['./signup-personal-info-form.component.css']
 })
 export class SignupPersonalInfoFormComponent {
   showPassword = false;

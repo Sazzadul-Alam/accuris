@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './customer-card.component.html',
-  styleUrls: ['./customer-card.component.scss']
+  styleUrls: ['./customer-card.component.css']
 })
 export class CustomerCardComponent {
   // Inputs for the component

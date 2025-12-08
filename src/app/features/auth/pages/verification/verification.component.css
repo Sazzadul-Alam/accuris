@@ -1,10 +1,9 @@
-.verification-container {
-    // background-color: aqua;
+.verification-container {    
     display: flex;
     justify-content: center;
     flex-direction: column;
     gap: 1rem;
-    // max-width: 500px;
+    
     align-items: center;        
 }
 
@@ -56,12 +55,10 @@
 .radio-container {
     display: flex;
     gap: 1.5rem;
-    justify-content: start;
-    // align-items: center;
+    justify-content: start;    
 
     @media (max-width: 600px) {
-        gap: .7rem;
-        // flex-direction: column;
+        gap: .7rem;        
     }
 }
 
@@ -184,10 +181,7 @@
     display: block;
 }
 
-// /* Focus style for accessibility (Keyboard navigation) */
-// .container input:focus~.checkmark {
-//     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4);
-// }
+
 
 /* Style for the text next to the radio button */
 .responsive-text {

@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common'; // Needed for things like *ngIf
     ReactiveFormsModule // Import required module for forms
   ],
   templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.scss']
+  styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
   form!: FormGroup;  

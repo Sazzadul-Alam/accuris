@@ -1,0 +1,82 @@
+/* 1. The Magic Class for Centering and Width */
+.centered-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+/* 2. Title Spacing */
+.auth-all-form-title-parent {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 3. The Form Container */
+.simple-consent-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 4. Terms Scrollbox */
+.terms-scrollbox {
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+}
+
+/* Responsive height adjustments */
+@media (max-height: 800px) {
+    .terms-scrollbox {
+        max-height: 200px;
+    }
+}
+
+@media (max-height: 700px) {
+    .terms-scrollbox {
+        max-height: 150px;
+    }
+}
+
+@media (max-height: 600px) {
+    .terms-scrollbox {
+        max-height: 100px;
+    }
+}
+
+/* Headings and paragraphs inside scrollbox */
+.terms-scrollbox h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.terms-scrollbox p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* 5. Checkbox Section */
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+/* Checkbox text */
+.checkbox-container .checkbox-text {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Responsive adjustment for checkbox text */
+@media (max-width: 600px) {
+    .checkbox-container .checkbox-text {
+        font-size: 0.7rem;
+    }
+}

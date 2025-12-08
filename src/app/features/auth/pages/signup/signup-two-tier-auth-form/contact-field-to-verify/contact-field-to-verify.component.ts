@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './contact-field-to-verify.component.html',
-  styleUrls: ['./contact-field-to-verify.component.scss']
+  styleUrls: ['./contact-field-to-verify.component.css']
 })
 export class ContactFieldToVerifyComponent {
   @Input() placeholder: string = '';

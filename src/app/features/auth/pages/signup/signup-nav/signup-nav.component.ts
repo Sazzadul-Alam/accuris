@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [],
   templateUrl: './signup-nav.component.html',
-  styleUrls: ['./signup-nav.component.scss']
+  styleUrls: ['./signup-nav.component.css']
 })
 
 // possible activeSteps:

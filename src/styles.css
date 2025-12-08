@@ -9,4 +9,4 @@ body {
     padding: 0;
 }
 
-@import 'styles/auth';
+@import 'styles/_auth.css';
