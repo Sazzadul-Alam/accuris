@@ -1,0 +1,194 @@
+<div class="auth-container">
+  <!-- Left Section -->
+  <div class="left-section">
+    <div class="auth-content">
+      
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-container">
+          <img src="assets/images/accuris-logo.png" class="logo-image" alt="Accuris Logo" 
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="logo-fallback">
+            <div class="logo-icon">A</div>
+            <span class="logo-text">ACCURIS</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <span>Already a Member?</span>
+          <button class="log-in-btn" type="button" (click)="navigateToLogin()">Log In</button>
+        </div>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step-item completed">
+          <div class="step-icon">
+            <img src="assets/images/icons/personal-info-icon.png" alt="Personal Info">
+          </div>
+        </div>
+        
+        <div class="step-item active">
+          <div class="step-icon">
+            <img src="assets/images/icons/2fa-icon.png" alt="2 Tier Authentication">
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-icon">
+            <img src="assets/images/icons/user-consent-icon.png" alt="User Consent">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2FA Form -->
+      <div class="form-container">
+        <h1>Your account is secured by our 2 Tier Authentication</h1>
+        <p class="subtitle">VERIFICATION CODE WILL BE SENT TO EMAIL AND AN OTP TO YOUR PHONE</p>
+
+        <form [formGroup]="twoFactorForm" (ngSubmit)="onSubmit()">
+
+          <!-- Email Verification Row -->
+          <div class="verification-row">
+            <div class="input-group">
+              <input 
+                type="email"
+                formControlName="email"
+                placeholder="Type your Email address"
+                class="form-control"
+                [class.verified]="emailVerified"
+              />
+              <button 
+                type="button" 
+                class="send-btn"
+                (click)="sendEmailOTP()"
+                [disabled]="emailOTPSent"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="otp-group">
+              <input 
+                type="text"
+                formControlName="emailOTP"
+                placeholder="Type OTP here"
+                class="form-control otp-input"
+                maxlength="6"
+              />
+              <button 
+                type="button" 
+                class="verify-btn"
+                (click)="verifyEmailOTP()"
+                [class.verified]="emailVerified"
+              >
+                <svg *ngIf="!emailVerified" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <svg *ngIf="emailVerified" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#20C0A0"/>
+                  <polyline points="8 12 11 15 16 10" stroke="white" stroke-width="2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Phone Verification Row -->
+          <div class="verification-row">
+            <div class="input-group">
+              <input 
+                type="tel"
+                formControlName="phone"
+                placeholder="Type your phone number"
+                class="form-control"
+                [class.verified]="phoneVerified"
+              />
+              <button 
+                type="button" 
+                class="send-btn"
+                (click)="sendPhoneOTP()"
+                [disabled]="phoneOTPSent"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="otp-group">
+              <input 
+                type="text"
+                formControlName="phoneOTP"
+                placeholder="Type OTP Here"
+                class="form-control otp-input"
+                maxlength="6"
+              />
+              <button 
+                type="button" 
+                class="verify-btn"
+                (click)="verifyPhoneOTP()"
+                [class.verified]="phoneVerified"
+              >
+                <svg *ngIf="!phoneVerified" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <svg *ngIf="phoneVerified" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#20C0A0"/>
+                  <polyline points="8 12 11 15 16 10" stroke="white" stroke-width="2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button type="button" class="btn-back" (click)="goBack()">
+              GO BACK
+            </button>
+            <button 
+              type="submit" 
+              class="btn-next"
+              [disabled]="!emailVerified || !phoneVerified"
+            >
+              NEXT
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <a 
+          href="javascript:void(0)" 
+          class="return-link"
+          (click)="returnHome()"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4" 
+                  stroke="#666" 
+                  stroke-width="2" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round"/>
+          </svg>
+          Return Home
+        </a>
+
+        <p class="copyright">
+          Copyright 2025 - 2026 Accuris Inc. All rights Reserved
+        </p>
+
+         <img style="overflow: hidden; margin-top: -5rem; margin-bottom: -2rem; margin-right: -2.5rem;" src="assets/images/icons/chat-icon.svg" alt="">
+         
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section -->
+  <div class="right-section">
+    <img src="assets/images/signup-image.jpg" alt="Background" class="background-image"
+         onerror="this.style.display='none';" />
+  </div>
+</div>

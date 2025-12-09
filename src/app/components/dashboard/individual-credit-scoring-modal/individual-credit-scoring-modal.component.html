@@ -1,0 +1,201 @@
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-left">
+        <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="modal-logo" />
+      </div>
+      <h2 class="modal-title">INDIVIDUAL CREDIT SCORING FORM</h2>
+      <button class="close-btn" (click)="close()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Plan Info -->
+    <div class="plan-info">
+      <div class="plan-label">
+        Plan: <span class="plan-name">Advanced</span>
+      </div>
+      <div class="for-label">For:</div>
+    </div>
+
+    <!-- Steps Navigation -->
+    <div class="steps-container">
+      <div 
+        *ngFor="let step of steps" 
+        class="step-item"
+        [class.active]="currentStep === step.id"
+        (click)="onStepClick(step.id)"
+      >
+        <div class="step-icon">
+          <!-- Person's Info Icon -->
+          <svg *ngIf="step.icon === 'user'" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          
+          <!-- Location Icon -->
+          <svg *ngIf="step.icon === 'location'" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          
+          <!-- Financial Info Icon -->
+          <svg *ngIf="step.icon === 'finance'" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          
+          <!-- Upload Info Icon -->
+          <svg *ngIf="step.icon === 'upload'" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          
+          <!-- User Consent Icon -->
+          <svg *ngIf="step.icon === 'consent'" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <span class="step-name">{{ step.name }}</span>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="form-content">
+      <h3 class="form-title">Person's Information</h3>
+      <p class="form-subtitle">Provide your Person's Information below</p>
+
+      <!-- SELECT FOR Dropdown -->
+      <div class="select-for-container">
+        <label class="select-label">SELECT FOR:</label>
+        <div class="custom-select">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6l4 4 4-4" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <form [formGroup]="personalInfoForm">
+        <div class="form-row">
+          <div class="form-group half">
+            <input 
+              type="text" 
+              formControlName="firstName" 
+              placeholder="First Name"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group half">
+            <input 
+              type="text" 
+              formControlName="lastName" 
+              placeholder="Last Name"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <input 
+              type="date" 
+              formControlName="dateOfBirth" 
+              placeholder="Date of Birth"
+              class="form-input"
+            />
+            <button type="button" class="info-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#4dd4d6" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke="#4dd4d6" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input 
+              type="text" 
+              formControlName="gender" 
+              placeholder="Gender"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group half">
+            <input 
+              type="tel" 
+              formControlName="phoneNumber" 
+              placeholder="Phone Number"
+              class="form-input"
+            />
+            <button type="button" class="info-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#4dd4d6" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke="#4dd4d6" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input 
+              type="text" 
+              formControlName="idNumber" 
+              placeholder="ID Number"
+              class="form-input"
+            />
+            <button type="button" class="info-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#4dd4d6" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke="#4dd4d6" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="form-group half">
+            <div class="upload-container" (click)="triggerFileInput()">
+              <input 
+                type="file" 
+                id="fileUpload"
+                (change)="onFileSelected($event)"
+                style="display: none;"
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <span class="upload-placeholder">{{ selectedFileName || 'Upload ID' }}</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="upload-icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" 
+                      stroke="#4dd4d6" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSave()">SAVE</button>
+          <button 
+            type="button" 
+            class="btn-next" 
+            [disabled]="personalInfoForm.invalid"
+            (click)="onNext()"
+          >
+            NEXT
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="return-home-btn" (click)="returnHome()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Return Home
+      </button>
+    </div>
+
+  </div>
+</div>

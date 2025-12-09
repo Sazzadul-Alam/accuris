@@ -1,0 +1,806 @@
+<!-- Navigation Bar -->
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="logo">
+    </div>
+    <div class="nav-menu">
+      <a (click)="scrollToSection('home', $event)" class="nav-link" [class.active]="isActive('home')">Home</a>
+      <a (click)="scrollToSection('service', $event)" class="nav-link" [class.active]="isActive('service')">Service</a>
+      <a (click)="scrollToSection('contact', $event)" class="nav-link" [class.active]="isActive('contact')">Contact</a>
+      <a (click)="scrollToSection('help', $event)" class="nav-link" [class.active]="isActive('help')">Help</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-signin" routerLink="/login">Sign in</button>
+      <button class="btn-getstarted" routerLink="/signup">Get Started</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section" id="home">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Unlock Your<br>
+        Business Growth<br>
+        With <span class="highlight">AI-Driven</span><br>
+        Credit Scoring
+      </h1>
+      <p class="hero-description">
+        A simple, smart, and<br>
+        transparent way to<br>
+        understand your company's<br>
+        credit standing — built for<br>
+        small businesses, startups,<br>
+        and emerging enterprises.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn-primary" routerLink="/signup">Get Started</button>
+        <button class="btn-secondary" (click)="scrollToSection('service', $event)">How it works</button>
+      </div>
+    </div>
+    
+    <!-- UPDATED STRUCTURE: Wrap image and tagline together -->   
+    <!-- <div class="hero-image-wrapper">
+      <div class="hero-image">
+        <img src="assets/images/building.jpg" alt="Business Buildings" class="building-image">
+      </div>
+      <div class="hero-tagline">
+        <p>Customized insights. Faster financing. A stronger foundation for your future.</p>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!--experimentally adding video to replacd the building image-->
+<div class="hero-image-wrapper">
+  <div class="hero-image">
+    <video 
+      class="building-video"
+      autoplay 
+      loop 
+      muted 
+      playsinline
+      poster="assets/images/building.jpg"
+    >
+      <source src="assets/videos/building-video.mp4" type="video/mp4">
+      <source src="assets/videos/building-video.webm" type="video/webm">
+      <!-- Fallback image if video doesn't load -->
+      <img src="assets/images/building.jpg" alt="Business Buildings" class="building-image">
+    </video>
+  </div>
+  <div class="hero-tagline">
+    <p>Customized insights. Faster financing. A stronger foundation for your future.</p>
+  </div>
+</div>
+</div>
+</section> 
+<!--break-->
+
+<!-- Partners Section -->
+<section class="partners-section">
+  <div class="section-container">
+    <div class="partners-logos">
+      <img src="assets/images/metlife-logo.png" alt="MetLife" class="partner-logo">
+      <img src="assets/images/jukka-logo.png" alt="JUKKA" class="partner-logo">
+      <img src="assets/images/cfsb-logo.png" alt="CFSB" class="partner-logo">
+      <img src="assets/images/undp-logo.png" alt="UNDP" class="partner-logo">
+      <img src="assets/images/bkash-logo.png" alt="bKash" class="partner-logo">
+      <img src="assets/images/usaid-logo.png" alt="USAID" class="partner-logo">
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section">
+  <div class="section-container">
+    <div class="about-content">
+      <div class="about-text">
+        <div class="section-tag">WHO ARE WE</div>
+        
+        <h2 class="section-title">Transforming Finances<br>With Strategic Wealth<br>Management</h2>
+        
+        <p class="about-main-text">
+          Built By DataSoft Systems Bangladesh — A Trusted<br>
+          Technology Leader With 24+ Years Of Experience, DataSoft<br>
+          Systems Bangladesh Limited Is One Of The Country's Most<br>
+          Respected And Globally Recognized Technology Companies.<br>
+          CMMI Level 5, ISO-Certified, And A Pioneer In Large-Scale<br>
+          Digital Transformation, DataSoft Has Delivered Solutions<br>
+          Across Multiple Frontiers.
+        </p>
+        
+        <p class="about-sub-text">
+          We're committed to providing you with expert guidance, proven strategies &<br>
+          personalized approach to ensure financial prosperity
+        </p>
+        
+        <button class="btn-see-more">See More</button>
+      </div>
+      
+      <div class="about-image">
+        <img src="assets/images/about-graphic.png" alt="Financial Growth" class="about-graphic">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section" id="service">
+  <div class="section-container">
+    <div class="services-layout">
+      <!-- Left Image Column -->
+     <div class="services-image-column">
+       <img src="assets/images/service-image.png" alt="Dashboard" class="service-main-image">
+     </div>
+
+      <!-- Right Content Column -->
+      <div class="services-content-column">
+         <div class="section-tag">WHAT WE OFFER</div>
+            <h2 class="section-title">A Complete AI Credit Scoring Platform Designed for Growing Business</h2>
+               <p class="section-subtitle">
+                We combine user-submitted company data with intelligent public-data analysis to produce a certified, reliable credit score — at an affordable cost.
+               </p>
+        <p class="services-intro">Our solution includes:</p>
+
+        <div class="services-list">
+          <div class="service-item">
+        <div class="service-icon service-icon-green">
+           <img src="assets/images/icons/credit-score-icon.png" alt="Credit Score">
+        </div>
+        <div class="service-text">
+          <span class="service-bullet">•</span>
+          <span>AI-generated credit score & rating</span>
+        </div>
+        </div>
+
+         <div class="service-item">
+          <div class="service-icon service-icon-coral">
+              <img src="assets/images/icons/benchmark-icon.png" alt="Benchmark">
+         </div>
+         <div class="service-text">
+             <span class="service-bullet">•</span>
+             <span>Dynamic benchmarking against similar companies</span>
+          </div>
+          </div>
+
+          <div class="service-item">
+  <div class="service-icon service-icon-teal">
+    <img src="assets/images/icons/improvement-icon.png" alt="Improvement">
+  </div>
+  <div class="service-text">
+    <span class="service-bullet">•</span>
+    <span>Actionable improvement recommendations</span>
+  </div>
+</div>
+
+          <div class="service-item">
+  <div class="service-icon service-icon-yellow">
+    <img src="assets/images/icons/report-icon.png" alt="Report">
+  </div>
+  <div class="service-text">
+    <span class="service-bullet">•</span>
+    <span>Downloadable, time-stamped credit report</span>
+  </div>
+</div>
+
+          <div class="service-item">
+  <div class="service-icon service-icon-cyan">
+    <img src="assets/images/icons/security-icon.png" alt="Security">
+  </div>
+  <div class="service-text">
+    <span class="service-bullet">•</span>
+    <span>Secure portal with 2FA, encrypted storage, and GDPR-level protection</span>
+  </div>
+</div>
+
+         <div class="service-item">
+  <div class="service-icon service-icon-orange">
+    <img src="assets/images/icons/plans-icon.png" alt="Plans">
+  </div>
+  <div class="service-text">
+    <span class="service-bullet">•</span>
+    <span>Tiered plans for every stage of growth (Basic, Advanced, Holistic)</span>
+  </div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Benefits Section -->
+<section class="benefits-section">
+  <div class="section-container">
+    <div class="benefits-layout">
+      <!-- Left Content Column -->
+      <div class="benefits-left-column">
+        <div class="section-tag">BENEFITS</div>
+        <h2 class="benefits-title">BENEFITS that our service Provides</h2>
+        
+        <div class="track-progress-card">
+          <h3>Track Progress</h3>
+          <div class="progress-circle">
+            <svg viewBox="0 0 200 200" class="circular-progress">
+              <circle cx="100" cy="100" r="80" class="progress-bg"></circle>
+              <circle cx="100" cy="100" r="80" class="progress-bar" style="stroke-dasharray: 402.1; stroke-dashoffset: 79.6;"></circle>
+            </svg>
+            <div class="progress-text">
+              <span class="progress-value">80.3%</span>
+            </div>
+          </div>
+          <div class="progress-labels">
+            <span class="progress-label-left">0%</span>
+            <span class="progress-label-center">Based on Progress</span>
+            <span class="progress-label-right">100%</span>
+          </div>
+          <div class="progress-indicators">
+            <span class="indicator indicator-green"></span>
+            <span class="indicator indicator-blue"></span>
+            <span class="indicator indicator-coral"></span>
+          </div>
+        </div>
+        
+        <button class="btn-explore">Explore</button>
+      </div>
+
+      <!-- Right Benefits Grid -->
+      <div class="benefits-right-column">
+        <div class="benefits-grid">
+          <!-- Benefit Card 1 -->
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <img src="assets/images/icons/strengthen-icon.png" alt="Strengthen Credibility">
+            </div>
+            <h3 class="benefit-title">STRENGTHEN CREDIBILITY</h3>
+            <p class="benefit-description">Strengthen your credibility with lenders, investors, and partners.</p>
+          </div>
+
+          <!-- Benefit Card 2 -->
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <img src="assets/images/icons/expert-icon.png" alt="Expert Guidance">
+            </div>
+            <h3 class="benefit-title">EXPERT GUIDANCE</h3>
+            <p class="benefit-description">Understand where your company stands — and where it can go.</p>
+          </div>
+
+          <!-- Benefit Card 3 -->
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <img src="assets/images/icons/access-icon.png" alt="Access Opportunities">
+            </div>
+            <h3 class="benefit-title">ACCESS OPPURTUNITIES</h3>
+            <p class="benefit-description">Access financing opportunities with more confidence</p>
+          </div>
+
+          <!-- Benefit Card 4 -->
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <img src="assets/images/icons/track-icon.png" alt="Track Progress">
+            </div>
+            <h3 class="benefit-title">TRACK PROGRESS</h3>
+            <p class="benefit-description">Build financial literacy around credit scoring Track your progress</p>
+          </div>
+
+          <!-- Benefit Card 5 -->
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <img src="assets/images/icons/custom-icon.png" alt="Custom Solutions">
+            </div>
+            <h3 class="benefit-title">CUSTOM SOLUTIONS</h3>
+            <p class="benefit-description">You don't need to be a financial expert. We make everything simple, clear, and actionable.</p>
+          </div>
+
+          <!-- Benefit Card 6 -->
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <img src="assets/images/icons/identify-icon.png" alt="Identify Weakness">
+            </div>
+            <h3 class="benefit-title">IDENTIFY WEAKNESS</h3>
+            <p class="benefit-description">Identify weaknesses before they limit your growth</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Customize Section -->
+<section class="customize-section">
+  <div class="section-container">
+    <div class="customize-layout">
+      <!-- Left Column - Image -->
+      <div class="customize-image-column">
+        <div class="section-tag">CUSTOMIZE</div>
+        <h2 class="customize-title">How We've Simplified &<br>Customized the<br>Solution</h2>
+        
+        <div class="laptop-circle-wrapper">
+          <div class="circle-background">
+            <div class="laptop-mockup">
+              <img src="assets/images/laptop-dashboard.png" alt="Dashboard Interface" class="laptop-image">
+            </div>
+          </div>
+        </div>
+        
+        <div class="customize-tagline">
+          <p><strong>This isn't a one-size-fits-all credit score.</strong><br>
+          It's your company's story, told through intelligent analytics</p>
+        </div>
+      </div>
+
+      <!-- Right Column - Features List -->
+      <div class="customize-features-column">
+        <h3 class="features-heading">Tailored for startups and small businesses — not<br>large enterprises. We designed the experience<br>intentionally:</h3>
+        
+        <div class="features-list-customize">
+          <div class="feature-item-customize">
+            <div class="feature-icon-customize feature-icon-teal">
+              <img src="assets/images/icons/automated-checks.png" alt="Automated Checks">
+            </div>
+            <p>Automated checks to help you avoid missing or incorrect data</p>
+          </div>
+
+          <div class="feature-item-customize">
+            <div class="feature-icon-customize feature-icon-coral">
+              <img src="assets/images/icons/ai-tooltips.png" alt="AI Tooltips">
+            </div>
+            <p>AI tooltips that explain financial terms in human language</p>
+          </div>
+
+          <div class="feature-item-customize">
+            <div class="feature-icon-customize feature-icon-green">
+              <img src="assets/images/icons/flexible-plans.png" alt="Flexible Plans">
+            </div>
+            <p>Flexible plans depending on whether you're pre-revenue, early-stage, or established</p>
+          </div>
+
+          <div class="feature-item-customize">
+            <div class="feature-icon-customize feature-icon-cyan">
+              <img src="assets/images/icons/personalized.png" alt="Personalized">
+            </div>
+            <p>Personalized recommendations based on your company profile</p>
+          </div>
+
+          <div class="feature-item-customize-row">
+            <div class="feature-item-customize">
+              <div class="feature-icon-customize feature-icon-yellow">
+                <img src="assets/images/icons/guided-entry.png" alt="Guided Entry">
+              </div>
+              <p>Step-by-step guided data entry</p>
+            </div>
+
+            <div class="feature-item-customize">
+              <div class="feature-icon-customize feature-icon-pink">
+                <img src="assets/images/icons/clean-dashboard.png" alt="Dashboard">
+              </div>
+              <p>Clean and intuitive dashboard</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Our Expertise Section -->
+<section class="expertise-section">
+  <div class="expertise-container">
+    <!-- Left Column -->
+    <div class="expertise-left-column">
+      <div class="expertise-tag">OUR EXPERTISE</div>
+      <h2 class="expertise-title">Our Expertise- Why<br>We Build This</h2>
+      
+      <div class="standout-card">
+        <div class="standout-text">
+          Stand Out<br>
+          with<br>
+          a<br>
+          Stronger<br>
+          Credit Profile
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="expertise-right-column">
+      <div class="expertise-grid">
+        <!-- Item 1 -->
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <img src="assets/images/icons/building-icon.png" alt="Support Small Business">
+          </div>
+          <h3 class="expertise-item-title">Support Small Business</h3>
+          <p class="expertise-item-description">Small businesses and startups often struggle to get loans because they lack traditional financial history.</p>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <img src="assets/images/icons/desk-icon.png" alt="Expert Workbase">
+          </div>
+          <h3 class="expertise-item-title">Expert workbase</h3>
+          <p class="expertise-item-description">DataSoft has spent decades helping financial institutions modernize — and we saw this problem firsthand.</p>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <img src="assets/images/icons/shield-icon.png" alt="Protection">
+          </div>
+          <h3 class="expertise-item-title">Protection</h3>
+          <p class="expertise-item-description">Check which apps can access your location, microphone or camera. Get alerted if a known tracking app is installed.</p>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <img src="assets/images/icons/control-icon.png" alt="Control on Business">
+          </div>
+          <h3 class="expertise-item-title">Control on Business</h3>
+          <p class="expertise-item-description">Levels the playing field Gives businesses control over their financial narrative.Supports next generation entrepreneurs</p>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <img src="assets/images/icons/clarity-icon.png" alt="Provides Clarity">
+          </div>
+          <h3 class="expertise-item-title">Provides Clarity</h3>
+          <p class="expertise-item-description">This is not just a product. It's a mission to empower businesses with the clarity they deserve.</p>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <img src="assets/images/icons/user-icon.png" alt="Easy to use">
+          </div>
+          <h3 class="expertise-item-title">Easy to use</h3>
+          <p class="expertise-item-description">Makes credit scoring accessible, affordable, and transparent</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Here For You Section -->
+<section class="here-for-you-section">
+  <div class="here-for-you-container">
+    <div class="here-for-you-header">
+      <div class="section-tag">HERE FOR YOU</div>
+      <h2 class="section-title">For Small Business or Startups</h2>
+      <p class="section-subtitle">Your future deserves a strong foundation — we'll help you build it.</p>
+    </div>
+
+    <div class="cards-grid">
+      <!-- Card 1 - Grow Confidence -->
+      <div class="info-card card-pink">
+        <div class="card-header">
+          <h3 class="card-badge">Grow Confidence</h3>
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">Start your journey with confidence</h4>
+          <ul class="card-list">
+            <li>You may not fully understand how credit scoring works, we will help you to understand and do it as experts.</li>
+            <li>You may not know where your company stands</li>
+            <li>You may not be sure how to reach the thresholds lenders look for</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 2 - Ensures Growth -->
+      <div class="info-card card-green">
+        <div class="card-header">
+          <h3 class="card-badge">Ensures Growth</h3>
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">Our platform gives you amazing things</h4>
+          <ul class="card-list">
+            <li>A clear baseline</li>
+            <li>A roadmap to improvement</li>
+            <li>Professional guidance</li>
+            <li>Tools to grow into the company you envision</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 3 - When Startup -->
+      <div class="info-card card-cyan">
+        <div class="card-header">
+          <h3 class="card-badge">When Startup</h3>
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">If you're a startup or small business:</h4>
+          <ul class="card-list">
+            <li>You may not fully understand how credit scoring works, we will help you to understand and do it as experts.</li>
+            <li>You may not know where your company stands</li>
+            <li>You may not be sure how to reach the thresholds lenders look for</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Partner Section -->
+<section class="partner-section">
+  <div class="partner-container">
+    <!-- Left Content Column -->
+    <div class="partner-left-column">
+      <div class="section-tag">WHO ARE WE</div>
+      <h2 class="partner-title">How we want to partner our Customers</h2>
+      
+      <p class="partner-bold-text">
+        <strong>growing together — for your success and the economy's success.</strong><br>
+        <strong>we believe that our success contributes to the broader economy</strong>
+      </p>
+      
+      <p class="partner-description">
+        We're committed to being your technology partner — guiding you, educating you, and helping you build long-term financial resilience Together, we can strengthen not only your business, but the financial fabric of the country.
+      </p>
+      
+      <button class="btn-explore">Explore</button>
+    </div>
+
+    <!-- Right Image Column -->
+    <div class="partner-right-column">
+      <div class="partner-card-wrapper">
+        <img src="assets/images/credit-score-cards.png" alt="When your Credit Score Improves" class="partner-cards-image">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+  <div class="section-container">
+    <div class="testimonials-header">
+      <div class="section-tag">TESTIMONIALS</div>
+      <h2 class="section-title">What Our Customers Say</h2>
+      <p class="section-subtitle">
+        Discover the Success Stories and Satisfaction of Clients Who Have Benefited from Our Expertise and Personalized Financial Guidance
+      </p>
+    </div>
+
+    <div class="testimonials-grid">
+      <!-- Testimonial Card 1 -->
+      <div class="testimonial-card testimonial-white">
+        <div class="testimonial-header">
+          <img src="assets/images/grace-turner.png" alt="Grace Turner" class="testimonial-avatar">
+          <div class="testimonial-info">
+            <h3 class="testimonial-name">Grace Turner</h3>
+            <p class="testimonial-role">Director</p>
+          </div>
+        </div>
+        <p class="testimonial-text">
+          Financial expertise has made a significant impact on our nonprofit financial stability, allowing us to better serve our community
+        </p>
+        <div class="testimonial-quote">
+          <svg width="60" height="45" viewBox="0 0 60 45" fill="none">
+            <path d="M0 45V18.75C0 13.125 1.5 8.4375 4.5 4.6875C7.5 0.9375 11.25 0 15.75 0V7.5C13.5 7.5 11.625 8.4375 10.125 10.3125C8.625 12.1875 7.875 14.625 7.875 17.625H15.75V45H0ZM26.25 45V18.75C26.25 13.125 27.75 8.4375 30.75 4.6875C33.75 0.9375 37.5 0 42 0V7.5C39.75 7.5 37.875 8.4375 36.375 10.3125C34.875 12.1875 34.125 14.625 34.125 17.625H42V45H26.25Z" fill="#16a085" fill-opacity="0.15"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Testimonial Card 2 (Featured) -->
+      <div class="testimonial-card testimonial-teal">
+        <div class="testimonial-header">
+          <img src="assets/images/linda-carter.png" alt="Linda Carter" class="testimonial-avatar">
+          <div class="testimonial-info">
+            <h3 class="testimonial-name">Linda Carter</h3>
+            <p class="testimonial-role">Analyst</p>
+          </div>
+        </div>
+        <p class="testimonial-text">
+          Financial planning and investment advice I received from this team completely transformed my future. I couldn't be happier with the results.
+        </p>
+        <div class="testimonial-quote">
+          <svg width="60" height="45" viewBox="0 0 60 45" fill="none">
+            <path d="M0 45V18.75C0 13.125 1.5 8.4375 4.5 4.6875C7.5 0.9375 11.25 0 15.75 0V7.5C13.5 7.5 11.625 8.4375 10.125 10.3125C8.625 12.1875 7.875 14.625 7.875 17.625H15.75V45H0ZM26.25 45V18.75C26.25 13.125 27.75 8.4375 30.75 4.6875C33.75 0.9375 37.5 0 42 0V7.5C39.75 7.5 37.875 8.4375 36.375 10.3125C34.875 12.1875 34.125 14.625 34.125 17.625H42V45H26.25Z" fill="white" fill-opacity="0.2"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Testimonial Card 3 -->
+      <div class="testimonial-card testimonial-white">
+        <div class="testimonial-header">
+          <img src="assets/images/alex-walker.png" alt="Alex Walker" class="testimonial-avatar">
+          <div class="testimonial-info">
+            <h3 class="testimonial-name">Alex Walker</h3>
+            <p class="testimonial-role">Attorney</p>
+          </div>
+        </div>
+        <p class="testimonial-text">
+          Estate planning is crucial, and they made the process seamless and stress-free. I can rest assured knowing family's future is secure
+        </p>
+        <div class="testimonial-quote">
+          <svg width="60" height="45" viewBox="0 0 60 45" fill="none">
+            <path d="M0 45V18.75C0 13.125 1.5 8.4375 4.5 4.6875C7.5 0.9375 11.25 0 15.75 0V7.5C13.5 7.5 11.625 8.4375 10.125 10.3125C8.625 12.1875 7.875 14.625 7.875 17.625H15.75V45H0ZM26.25 45V18.75C26.25 13.125 27.75 8.4375 30.75 4.6875C33.75 0.9375 37.5 0 42 0V7.5C39.75 7.5 37.875 8.4375 36.375 10.3125C34.875 12.1875 34.125 14.625 34.125 17.625H42V45H26.25Z" fill="#16a085" fill-opacity="0.15"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Additional Services Section -->
+<section class="additional-services-section">
+  <div class="section-container">
+    <h2 class="services-main-title">Our Team Provides Valuable Services at Any Time in Any Situation</h2>
+    
+    <div class="additional-services-grid">
+      <!-- Service 1 -->
+      <div class="additional-service-card">
+        <div class="service-icon-wrapper icon-cyan">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Expert Guidance</h3>
+        <p class="service-card-description">
+          Rely on seasoned professionals for tailored financial advice and strategic planning aligned with your unique goals
+        </p>
+        <a href="#" class="service-read-more">Read more</a>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="additional-service-card">
+        <div class="service-icon-wrapper icon-pink">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Risk Management</h3>
+        <p class="service-card-description">
+          We expertly handle and proactively mitigate financial risks, ensuring the safeguard of assets and overall stability
+        </p>
+        <a href="#" class="service-read-more">Read more</a>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="additional-service-card">
+        <div class="service-icon-wrapper icon-green">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Customized Solutions</h3>
+        <p class="service-card-description">
+          Receive and Benefit from with financial solutions that tailored to your unique financial challenges and aspirations
+        </p>
+        <a href="#" class="service-read-more">Read more</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="cta-container">
+    <div class="cta-content">
+      <div class="cta-tag">START NOW</div>
+      <h2 class="cta-title">Get Start For Free No<br>Credit Card Required</h2>
+      
+      <form class="cta-form">
+        <input 
+          type="email" 
+          class="cta-input" 
+          placeholder="Email address"
+          required
+        >
+        <button type="submit" class="cta-button">Get Started</button>
+      </form>
+      
+      <p class="cta-footer-text">
+        Want to contact our team and book a call? <a href="#contact" class="cta-link">Try it now</a>
+      </p>
+    </div>
+    
+    <div class="cta-image-wrapper">
+      <img src="assets/images/team-services.png" alt="Team Services" class="cta-team-image">
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <!-- Column 1 - Brand -->
+      <div class="footer-brand">
+        <h3 class="footer-brand-title">Prosperix</h3>
+        <p class="footer-brand-description">
+          Our expert financial consultants provide solutions to help you achieve financial wealth. Trust us to guide you toward a brighter financial future.
+        </p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+            Facebook
+          </a>
+          <a href="#" class="social-link" aria-label="Twitter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+            </svg>
+            Twitter
+          </a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <!-- Column 2 - Our Services -->
+      <div class="footer-column">
+        <h4 class="footer-column-title">Our Services</h4>
+        <ul class="footer-links">
+          <li><a href="#">Insurance Planning</a></li>
+          <li><a href="#">Estate Planning</a></li>
+          <li><a href="#">Tax Optimization</a></li>
+          <li><a href="#">Debt Management</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3 - Explore More -->
+      <div class="footer-column">
+        <h4 class="footer-column-title">Explore More</h4>
+        <ul class="footer-links">
+          <li><a href="#">About us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Site map</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4 - Contact Details -->
+      <div class="footer-column">
+        <h4 class="footer-column-title">Contact Details</h4>
+        <ul class="footer-contact">
+          <li>
+            <a href="mailto:contact@briofin.com">contact@briofin.com</a>
+          </li>
+          <li>
+            <a href="tel:+15551234567">+1 (555) 123-4567</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p class="footer-copyright">DSCODE 2023 © All rights reserved</p>
+      <div class="footer-bottom-links">
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>

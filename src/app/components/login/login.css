@@ -1,0 +1,492 @@
+/* Import Zen Kaku Gothic Antique Font */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap');
+
+/* Root defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: "Zen Kaku Gothic Antique", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: #ffffff;
+}
+
+/* Main Layout */
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* -------------------------- */
+/* LEFT SECTION               */
+/* -------------------------- */
+.left-section {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 40px 50px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.login-content {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+/* LOGO STYLING */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+}
+
+.logo-image {
+  height: 45px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-fallback {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  background: #2d5f4f;
+  color: white;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 4px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 0.5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.log-in-btn {
+  padding: 10px 28px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.log-in-btn:hover {
+  background-color: #f8f8f8;
+  border-color: #ccc;
+}
+
+/* Form Container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  flex: 1;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease;
+  background-color: #fff;
+}
+
+.form-control:focus {
+  border-color: #4dd4d6;
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(77, 212, 214, 0.2);
+}
+
+.form-control::placeholder {
+  color: #b0b0b0;
+  font-weight: 400;
+}
+
+/* Password toggle */
+.password-group {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password:hover svg path,
+.toggle-password:hover svg circle {
+  stroke: #4dd4d6;
+}
+
+/* Remember + Forgot */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  color: #777;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-container input {
+  margin-right: 8px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.forgot-link {
+  font-size: 14px;
+  color: #999;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 400;
+}
+
+.forgot-link:hover {
+  color: #4dd4d6;
+}
+
+/* Login Button */
+.login-button {
+  width: 100%;
+  padding: 14px;
+  background-color: #20C0A09C;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: not-allowed;
+  letter-spacing: 1.5px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.login-button:not(:disabled) {
+  background: #20C0A094;
+  cursor: pointer;
+}
+
+.login-button:not(:disabled):hover {
+  background: #20C0A094;
+  box-shadow: 0 2px 8px rgba(77, 212, 214, 0.3);
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 28px 0;
+  color: #999;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #e5e5e5;
+}
+
+.divider span {
+  padding: 0 16px;
+  color: #999;
+}
+
+/* Social Buttons */
+.social-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+.social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border: 1px solid #e0e0e0;
+  background-color: #e8f4f8;
+  border-radius: 24px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.social-btn:hover {
+  background-color: #ddeef5;
+  border-color: #d0d0d0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Footer */
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  position: relative;
+}
+
+/* Left item - Return Home */
+.return-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #666;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+.return-link:hover {
+  color: #4dd4d6;
+}
+
+.return-link:hover svg path {
+  stroke: #4dd4d6;
+}
+
+/* Center item - Copyright */
+.copyright {
+  font-size: 11px;
+  color: #aaa;
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+/* Right item - Chat Icon */
+.chat-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.chat-icon-btn:hover {
+  transform: scale(1.05);
+  background-color: rgba(77, 212, 214, 0.1);
+}
+
+
+
+/* -------------------------- */
+/* RIGHT SECTION              */
+/* -------------------------- */
+.right-section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: #4a5f6a;
+}
+
+.background-image {
+  height: 100vh;
+  width: auto;
+  object-fit: cover;
+  min-width: 380px;
+}
+
+/* -------------------------- */
+/* RESPONSIVE RULES           */
+/* -------------------------- */
+
+@media (max-width: 1200px) {
+  .left-section {
+    padding: 40px;
+  }
+
+  .background-image {
+    min-width: 350px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .left-section {
+    padding: 40px 35px;
+  }
+
+  .background-image {
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-section {
+    display: none;
+  }
+  
+  .left-section {
+    padding: 30px 25px;
+  }
+
+  .form-container {
+    max-width: 100%;
+  }
+
+  .header-right span {
+    display: none;
+  }
+
+  .social-buttons {
+    flex-direction: column;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 10px;
+    margin-bottom: 32px;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .copyright {
+    position: static;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .left-section {
+    padding: 25px 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .form-control {
+    padding: 12px 14px;
+  }
+
+  .login-button {
+    padding: 12px;
+  }
+
+  .social-btn {
+    padding: 11px 16px;
+    font-size: 12px;
+  }
+}

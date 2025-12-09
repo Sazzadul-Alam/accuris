@@ -1,0 +1,478 @@
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="logo" />
+    </div>
+
+    <nav class="nav-menu">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Home</span>
+      </a>
+
+      <a routerLink="/credit-history" routerLinkActive="active" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v20M2 12h20"></path>
+        </svg>
+        <span>Credit History</span>
+      </a>
+
+      <a routerLink="/business-profile" routerLinkActive="active" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        <span>Business Profile</span>
+      </a>
+
+      <a routerLink="/individual-profile" routerLinkActive="active" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Individual Profile</span>
+      </a>
+
+      <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
+        </svg>
+        <span>Profile & Settings</span>
+      </a>
+
+      <a routerLink="/help-center" routerLinkActive="active" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 16v-4m0-4h.01"></path>
+        </svg>
+        <span>Help Center</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="page-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <h1>Home</h1>
+      </div>
+
+      <div class="top-bar-actions">
+        <button class="notification-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="badge">3</span>
+        </button>
+
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" placeholder="Search Here..." />
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active">Individual Credit Scoring</button>
+        <button class="tab">Business Credit Scoring</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Left Column -->
+        <div class="left-column">
+          <!-- Profile Card -->
+          <div class="profile-card">
+            <div class="profile-header">
+              <h3>Profile</h3>
+              <button class="edit-profile-btn" (click)="openIndividualCreditScoringModal()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="profile-content">
+              <img src="assets/images/profile-avatar.jpg" alt="Profile" class="profile-avatar" />
+              <h4 class="profile-name">Sanjit A. Kabir</h4>
+              <p class="profile-role">Business Analyst</p>
+              <p class="profile-company">DataSoft</p>
+            </div>
+
+            <div class="profile-stats">
+              <h4>Individual Statistics</h4>
+
+              <div class="stat-item">
+                <span class="stat-label">Income</span>
+                <span class="stat-value income">$100000</span>
+              </div>
+
+              <div class="stat-item">
+                <span class="stat-label">Expenses</span>
+                <span class="stat-value expense">$3000</span>
+              </div>
+
+              <div class="chart-container">
+                <div class="donut-chart">
+                  <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#e0e0e0" stroke-width="20"></circle>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#20C0A0" stroke-width="20"
+                            stroke-dasharray="175 251" transform="rotate(-90 50 50)"></circle>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#FF6B6B" stroke-width="20"
+                            stroke-dasharray="75 251" stroke-dashoffset="-175" transform="rotate(-90 50 50)"></circle>
+                  </svg>
+                  <div class="chart-legend">
+                    <div class="legend-item">
+                      <span class="dot growth"></span>
+                      <span>40% Growth</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="dot static"></span>
+                      <span>60% Static</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="expense-chart">
+                <div class="chart-header">
+                  <span>Expenses</span>
+                  <select class="year-select">
+                    <option>2024</option>
+                    <option>2023</option>
+                  </select>
+                </div>
+
+                <div class="line-chart">
+                  <svg viewBox="0 0 300 100" class="chart-svg">
+                    <polyline points="0,80 50,60 100,70 150,40 200,50 250,30 300,45"
+                              fill="none" stroke="#20C0A0" stroke-width="2"></polyline>
+                    <polyline points="0,85 50,75 100,80 150,55 200,65 250,50 300,60"
+                              fill="none" stroke="#999" stroke-width="2" stroke-dasharray="5,5"></polyline>
+                  </svg>
+                  <div class="chart-labels">
+                    <span class="label-item">
+                      <span class="dot-this"></span>This year
+                    </span>
+                    <span class="label-item">
+                      <span class="dot-last"></span>Last year
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Choose a Plan -->
+          <div class="plans-card">
+            <div class="plans-header">
+              <h3>Choose a Plan</h3>
+              <span class="running-process">Running Process: 3</span>
+            </div>
+
+            <div class="plans-grid">
+              <div class="plan-item">
+                <div class="plan-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <line x1="9" y1="9" x2="15" y2="9"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                  </svg>
+                </div>
+                <h4>Basic Scoring</h4>
+                <p class="plan-price">USD: 75</p>
+                <p class="plan-hours">6 Hours</p>
+              </div>
+
+              <div class="plan-item">
+                <div class="plan-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                  </svg>
+                </div>
+                <h4>Advanced Scoring</h4>
+                <p class="plan-price">USD: 145</p>
+                <p class="plan-hours">10 Hours</p>
+              </div>
+
+              <div class="plan-item">
+                <div class="plan-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                  </svg>
+                </div>
+                <h4>Holistic Scoring</h4>
+                <p class="plan-price">USD: 245</p>
+                <p class="plan-hours">25 Hours</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+          <!-- Process Steps -->
+          <div class="process-header">
+            <div class="process-title">
+              <h3>Individual Credit Scoring</h3>
+              <span class="process-duration">6 - 25 Hours</span>
+              <span class="process-price">$ 75 - 245</span>
+            </div>
+          </div>
+
+          <!-- Steps Timeline -->
+          <div class="steps-timeline">
+            <div class="step-item">
+              <div class="step-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h5>Step 1</h5>
+                <p>Fill up Information</p>
+                <span class="step-time">5 Minutes<br />5 Documents</span>
+              </div>
+              <div class="step-bar step-bar-red"></div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h5>Step 2</h5>
+                <p>Wait for Verification</p>
+                <span class="step-time">12 Hours</span>
+              </div>
+              <div class="step-bar step-bar-orange"></div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h5>Step 3</h5>
+                <p>Make Digital Payment</p>
+                <span class="step-time">5 Minutes<br />Payment Credential</span>
+              </div>
+              <div class="step-bar step-bar-yellow"></div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h5>Step 4</h5>
+                <p>Wait for AI Engine Analysis</p>
+                <span class="step-time">2 Hours</span>
+              </div>
+              <div class="step-bar step-bar-green"></div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h5>Step 5</h5>
+                <p>Check the Report on System</p>
+                <span class="step-time">20 Minutes</span>
+              </div>
+              <div class="step-bar step-bar-blue"></div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h5>Step 6</h5>
+                <p>Download Report from System</p>
+                <span class="step-time">20 Minutes</span>
+              </div>
+              <div class="step-bar step-bar-purple"></div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h5>Step 7</h5>
+                <p>Apply a New Request</p>
+                <span class="step-time">15 Minutes<br />5 Documents</span>
+              </div>
+              <div class="step-bar step-bar-pink"></div>
+            </div>
+          </div>
+
+          <!-- Credit Score Board -->
+          <div class="credit-score-board">
+            <h3>Credit Score Board</h3>
+            <p class="credit-subtitle">See your current stage in the Credit Rating Board.</p>
+
+            <div class="score-scale">
+              <div class="score-labels">
+                <span>Very Poor</span>
+                <span>Poor</span>
+                <span>Fair</span>
+                <span>Good</span>
+                <span>Exceptional</span>
+              </div>
+
+              <div class="score-bar">
+                <div class="score-gradient"></div>
+                <div class="score-marker" style="left: 52%;">
+                  <div class="marker-arrow">▼</div>
+                  <div class="marker-label">You are<br />here</div>
+                  <div class="marker-score">719</div>
+                </div>
+              </div>
+
+              <div class="score-ranges">
+                <span>300-579</span>
+                <span>580-669</span>
+                <span>670-739</span>
+                <span>740-799</span>
+                <span>800-850</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Running Process -->
+          <div class="running-process-card">
+            <h3>Running Process</h3>
+            <p class="process-subtitle">
+              The block shows the running process and their state. Please click on block if you have to complete the
+              process.
+            </p>
+
+            <div class="process-flow">
+              <div class="process-block active" (click)="openIndividualCreditScoringModal()">
+                <div class="process-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                </div>
+                <h4>Individual Information</h4>
+                <span class="process-number">1</span>
+                <span class="process-status draft">Draft</span>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="process-block">
+                <div class="process-icon disabled">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                </div>
+                <h4>Request Verification</h4>
+                <span class="process-number">0</span>
+                <span class="process-status step-status">Step Status</span>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="process-block">
+                <div class="process-icon disabled">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                </div>
+                <h4>Payment Information</h4>
+                <span class="process-number">2</span>
+                <span class="process-status pending">Pending</span>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="process-block">
+                <div class="process-icon disabled">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <h4>AI Engine Analysis</h4>
+                <span class="process-number">0</span>
+                <span class="process-status pending">Pending</span>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="process-block">
+                <div class="process-icon disabled">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                </div>
+                <h4>New Request</h4>
+                <span class="process-number">0</span>
+                <span class="process-status step-status">Step Status</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
