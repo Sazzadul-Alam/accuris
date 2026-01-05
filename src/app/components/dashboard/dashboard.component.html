@@ -31,7 +31,8 @@
         <span>Business Profile</span>
       </a>
 
-      <a routerLink="/individual-profile" routerLinkActive="active" class="nav-item">
+      <!-- CHANGED: This opens the modal now -->
+      <a (click)="openIndividualCreditScoringModal()" class="nav-item" style="cursor: pointer;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
           <circle cx="12" cy="7" r="4"></circle>
@@ -114,7 +115,7 @@
             </div>
 
             <div class="profile-content">
-              <img src="assets/images/profile-avatar.jpg" alt="Profile" class="profile-avatar" />
+              <img src="assets/images/profile-avatar.png" alt="Profile" class="profile-avatar" />
               <h4 class="profile-name">Sanjit A. Kabir</h4>
               <p class="profile-role">Business Analyst</p>
               <p class="profile-company">DataSoft</p>
@@ -475,4 +476,11 @@
       </div>
     </div>
   </main>
+
+  <!-- Modal Component - Place at the end -->
+  <app-individual-credit-scoring-modal 
+    *ngIf="showIndividualModal"
+    (closeModal)="closeIndividualModal()"
+    (formSubmit)="handleFormSubmit($event)">
+  </app-individual-credit-scoring-modal>
 </div>
