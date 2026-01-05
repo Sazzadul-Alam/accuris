@@ -1,1 +1,708 @@
-<p>individual-credit-scoring-modal works!</p>
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-left">
+        <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="modal-logo" />
+      </div>
+      <h2 class="modal-title">INDIVIDUAL CREDIT SCORING FORM</h2>
+      <button class="close-btn" (click)="close()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Plan Info -->
+    <div class="plan-info">
+      <div class="plan-label">
+        Plan: <span class="plan-name">Advanced</span>
+      </div>
+      <div class="for-label">For: <span class="plan-name">Sanjit Ara Kabir</span></div>
+    </div>
+
+    <!-- Steps Navigation -->
+    <div class="steps-container">
+      <div
+        *ngFor="let step of steps"
+        class="step-item"
+        [class.active]="currentStep === step.id"
+        (click)="onStepClick(step.id)"
+      >
+        <div class="step-icon">
+          <img *ngIf="step.icon === 'user'" src="assets/images/icons/person-info-icon.svg" alt="Person Info" width="28" height="28" />
+          <img *ngIf="step.icon === 'location'" src="assets/images/icons/location-icon.svg" alt="Location" width="28" height="28" />
+          <img *ngIf="step.icon === 'finance'" src="assets/images/icons/financial-icon.svg" alt="Financial" width="28" height="28" />
+          <img *ngIf="step.icon === 'upload'" src="assets/images/icons/upload-icon.svg" alt="Upload" width="28" height="28" />
+          <img *ngIf="step.icon === 'consent'" src="assets/images/icons/user-consent-icon.svg" alt="Consent" width="28" height="28" />
+        </div>
+        <span class="step-name">{{ step.name }}</span>
+      </div>
+    </div>
+
+    <!-- Form Content - Person's Information -->
+    <div class="form-content" *ngIf="currentStep === 1">
+      <h3 class="form-title">Person's Information</h3>
+      <p class="form-subtitle">Provide your Person's Information below</p>
+
+      <form [formGroup]="personalInfoForm" style="display: flex; flex-direction: column; align-items: center; width: 65%;">
+        <div class="select-for-container">
+          <label class="select-label">SELECT FOR:</label>
+          <div class="custom-select" (click)="toggleSelectDropdown()">
+            <img src="assets/images/icons/triangle.svg" alt="">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input
+              type="text"
+              formControlName="firstName"
+              placeholder="First Name"
+              class="form-input"
+              [class.filled]="personalInfoForm.get('firstName')?.value"
+            />
+          </div>
+          <div class="form-group half">
+            <input
+              type="text"
+              formControlName="lastName"
+              placeholder="Last Name"
+              class="form-input"
+              [class.filled]="personalInfoForm.get('lastName')?.value"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <input
+              type="date"
+              formControlName="dateOfBirth"
+              placeholder="Date of Birth"
+              class="form-input"
+              [class.filled]="personalInfoForm.get('dateOfBirth')?.value"
+            />
+            <div class="info-icon">
+              <img src="assets/images/icons/info-circle-icon.png" alt="Info" width="18" height="18" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input
+              type="text"
+              formControlName="gender"
+              placeholder="Gender"
+              class="form-input"
+              [class.filled]="personalInfoForm.get('gender')?.value"
+            />
+          </div>
+          <div class="form-group half">
+            <input
+              type="tel"
+              formControlName="phoneNumber"
+              placeholder="Phone Number"
+              class="form-input"
+              [class.filled]="personalInfoForm.get('phoneNumber')?.value"
+            />
+            <div class="info-icon">
+              <img src="assets/images/icons/info-circle-icon.png" alt="Info" width="18" height="18" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input
+              type="text"
+              formControlName="idNumber"
+              placeholder="ID Number"
+              class="form-input"
+              [class.filled]="personalInfoForm.get('idNumber')?.value"
+            />
+            <div class="info-icon">
+              <img src="assets/images/icons/info-circle-icon.png" alt="Info" width="18" height="18" />
+            </div>
+          </div>
+          <div class="form-group half">
+            <div class="upload-container"
+                 (click)="triggerFileInput()"
+                 [class.filled]="selectedFileName">
+              <input
+                type="file"
+                #fileInput
+                id="fileUpload"
+                (change)="onFileSelected($event)"
+                style="display: none;"
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <span class="upload-placeholder">{{ selectedFileName || 'Upload ID' }}</span>
+              <div class="info-icon">
+                <img src="assets/images/icons/upload-icon.svg" alt="Info" width="18" height="18" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSave()">SAVE</button>
+          <button
+            type="button"
+            class="btn-next"
+            [disabled]="personalInfoForm.invalid"
+            (click)="onNext()"
+          >
+            NEXT
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Form Content - Location -->
+    <div class="form-content" *ngIf="currentStep === 2">
+      <h3 class="form-title">Location</h3>
+      <p class="form-subtitle">Provide your address below</p>
+
+      <form [formGroup]="locationForm" style="display: flex; flex-direction: column; align-items: center; width: 65%;">
+
+        <div class="form-row">
+          <div class="form-group full">
+            <input
+              type="text"
+              formControlName="addressLine1"
+              placeholder="Address Line 1"
+              class="form-input"
+              [class.filled]="locationForm.get('addressLine1')?.value"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <input
+              type="text"
+              formControlName="addressLine2"
+              placeholder="Address Line 2"
+              class="form-input"
+              [class.filled]="locationForm.get('addressLine2')?.value"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input
+              type="text"
+              formControlName="city"
+              placeholder="City"
+              class="form-input"
+              [class.filled]="locationForm.get('city')?.value"
+            />
+          </div>
+          <div class="form-group half">
+            <select
+              formControlName="stateProvince"
+              class="form-input form-select"
+              [class.filled]="locationForm.get('stateProvince')?.value"
+            >
+              <option value="" disabled selected>State/Province/Region</option>
+              <option value="dhaka">Dhaka</option>
+              <option value="chittagong">Chittagong</option>
+              <option value="rajshahi">Rajshahi</option>
+              <option value="khulna">Khulna</option>
+              <option value="barisal">Barisal</option>
+              <option value="sylhet">Sylhet</option>
+              <option value="rangpur">Rangpur</option>
+              <option value="mymensingh">Mymensingh</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input
+              type="text"
+              formControlName="zipPostalCode"
+              placeholder="Zip/Postal Code"
+              class="form-input"
+              [class.filled]="locationForm.get('zipPostalCode')?.value"
+            />
+          </div>
+          <div class="form-group half">
+            <select
+              formControlName="country"
+              class="form-input form-select"
+              [class.filled]="locationForm.get('country')?.value"
+            >
+              <option value="" disabled selected>Country</option>
+              <option value="bangladesh">Bangladesh</option>
+              <option value="india">India</option>
+              <option value="pakistan">Pakistan</option>
+              <option value="nepal">Nepal</option>
+              <option value="sri-lanka">Sri Lanka</option>
+              <option value="bhutan">Bhutan</option>
+              <option value="maldives">Maldives</option>
+              <option value="usa">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="canada">Canada</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSaveLocation()">SAVE</button>
+          <button
+            type="button"
+            class="btn-next"
+            [disabled]="locationForm.invalid"
+            (click)="onNext()"
+          >
+            NEXT
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Form Content - Financial Information -->
+    <div class="form-content financial-content" *ngIf="currentStep === 3">
+      <h3 class="form-title">Financial Information</h3>
+      <p class="form-subtitle">Provide your Financial Information below</p>
+
+      <div class="accordion-container">
+        <div class="accordion-item" [class.completed]="financialSections.basicInfo">
+          <div class="accordion-header" (click)="toggleAccordion('basicInfo')">
+            <div class="accordion-title">
+              <svg *ngIf="financialSections.basicInfo" class="check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!financialSections.basicInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Basic Information</span>
+            </div>
+            <svg class="chevron-icon" [class.rotate]="expandedSection === 'basicInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="accordion-content" *ngIf="expandedSection === 'basicInfo'">
+            <form [formGroup]="basicInfoForm">
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="text" formControlName="occupation" placeholder="Occupation" class="form-input" [class.filled]="basicInfoForm.get('occupation')?.value" />
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="monthlyIncome" placeholder="Monthly Income" class="form-input" [class.filled]="basicInfoForm.get('monthlyIncome')?.value" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <select formControlName="employmentStatus" class="form-input form-select" [class.filled]="basicInfoForm.get('employmentStatus')?.value">
+                    <option value="" disabled selected>Employment Status</option>
+                    <option value="employed">Employed</option>
+                    <option value="self-employed">Self-Employed</option>
+                    <option value="unemployed">Unemployed</option>
+                    <option value="retired">Retired</option>
+                  </select>
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="sourceOfIncome" placeholder="Source of Income" class="form-input" [class.filled]="basicInfoForm.get('sourceOfIncome')?.value" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="accordion-item" [class.completed]="financialSections.employerInfo">
+          <div class="accordion-header" (click)="toggleAccordion('employerInfo')">
+            <div class="accordion-title">
+              <svg *ngIf="financialSections.employerInfo" class="check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!financialSections.employerInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Employer Information:</span>
+            </div>
+            <svg class="chevron-icon" [class.rotate]="expandedSection === 'employerInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="accordion-content" *ngIf="expandedSection === 'employerInfo'">
+            <form [formGroup]="employerInfoForm">
+              <div class="form-row">
+                <div class="form-group full">
+                  <input type="text" formControlName="employerName" placeholder="Employer Name" class="form-input" [class.filled]="employerInfoForm.get('employerName')?.value" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="text" formControlName="jobTitle" placeholder="Job Title" class="form-input" [class.filled]="employerInfoForm.get('jobTitle')?.value" />
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="yearsEmployed" placeholder="Years Employed" class="form-input" [class.filled]="employerInfoForm.get('yearsEmployed')?.value" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group full">
+                  <input type="text" formControlName="employerAddress" placeholder="Employer Address" class="form-input" [class.filled]="employerInfoForm.get('employerAddress')?.value" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="accordion-item" [class.completed]="financialSections.businessInfo">
+          <div class="accordion-header" (click)="toggleAccordion('businessInfo')">
+            <div class="accordion-title">
+              <svg *ngIf="financialSections.businessInfo" class="check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!financialSections.businessInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Business Information:</span>
+            </div>
+            <svg class="chevron-icon" [class.rotate]="expandedSection === 'businessInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="accordion-content" *ngIf="expandedSection === 'businessInfo'">
+            <form [formGroup]="businessInfoForm">
+              <div class="form-row">
+                <div class="form-group full">
+                  <input type="text" formControlName="businessName" placeholder="Business Name" class="form-input" [class.filled]="businessInfoForm.get('businessName')?.value" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="text" formControlName="businessType" placeholder="Business Type" class="form-input" [class.filled]="businessInfoForm.get('businessType')?.value" />
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="registrationNumber" placeholder="Registration Number" class="form-input" [class.filled]="businessInfoForm.get('registrationNumber')?.value" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="text" formControlName="annualRevenue" placeholder="Annual Revenue" class="form-input" [class.filled]="businessInfoForm.get('annualRevenue')?.value" />
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="yearsInBusiness" placeholder="Years in Business" class="form-input" [class.filled]="businessInfoForm.get('yearsInBusiness')?.value" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="accordion-item" [class.completed]="financialSections.creditInfo">
+          <div class="accordion-header" (click)="toggleAccordion('creditInfo')">
+            <div class="accordion-title">
+              <svg *ngIf="financialSections.creditInfo" class="check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!financialSections.creditInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Financial/Credit Information:</span>
+            </div>
+            <svg class="chevron-icon" [class.rotate]="expandedSection === 'creditInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="accordion-content" *ngIf="expandedSection === 'creditInfo'">
+            <form [formGroup]="creditInfoForm">
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="text" formControlName="bankName" placeholder="Bank Name" class="form-input" [class.filled]="creditInfoForm.get('bankName')?.value" />
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="accountNumber" placeholder="Account Number" class="form-input" [class.filled]="creditInfoForm.get('accountNumber')?.value" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <select formControlName="existingLoans" class="form-input form-select" [class.filled]="creditInfoForm.get('existingLoans')?.value">
+                    <option value="" disabled selected>Existing Loans</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="totalDebt" placeholder="Total Debt Amount" class="form-input" [class.filled]="creditInfoForm.get('totalDebt')?.value" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="text" formControlName="creditScore" placeholder="Credit Score (if known)" class="form-input" [class.filled]="creditInfoForm.get('creditScore')?.value" />
+                </div>
+                <div class="form-group half">
+                  <input type="text" formControlName="assets" placeholder="Total Assets" class="form-input" [class.filled]="creditInfoForm.get('assets')?.value" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row financial-buttons">
+        <button type="button" class="btn-save" (click)="onSaveFinancial()">SAVE</button>
+        <button type="button" class="btn-next" (click)="onSubmitFinancial()">Submit</button>
+      </div>
+    </div>
+
+    <!-- Form Content - Upload Information -->
+    <div class="form-content upload-content" *ngIf="currentStep === 4">
+      <h3 class="form-title">Upload Information</h3>
+      <p class="form-subtitle">Provide your Credit Information below</p>
+
+      <div class="upload-sections-container">
+        <!-- Identity & Verification -->
+        <div class="upload-section" [class.completed]="uploadSections.identity" [class.expanded]="expandedUploadSection === 'identity'">
+          <div class="upload-section-header" (click)="toggleUploadSection('identity')">
+            <div class="upload-section-title">
+              <svg *ngIf="uploadSections.identity" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!uploadSections.identity" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Identity & Verification</span>
+            </div>
+            <div class="upload-icons">
+              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'identity'" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="upload-section-content" *ngIf="expandedUploadSection === 'identity'">
+            <div class="upload-grid">
+              <div class="upload-field-group">
+                <input type="text" placeholder="Passport Size Photo" class="upload-field" readonly />
+                <button class="upload-btn-icon" (click)="triggerUploadInput('passport')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input type="file" #passportInput style="display:none" (change)="onUploadFile($event, 'passport')" accept=".pdf,.jpg,.jpeg,.png" />
+              </div>
+              <div class="upload-field-group">
+                <input type="text" placeholder="Utility Bill" class="upload-field" readonly />
+                <button class="upload-btn-icon" (click)="triggerUploadInput('utility')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input type="file" #utilityInput style="display:none" (change)="onUploadFile($event, 'utility')" accept=".pdf,.jpg,.jpeg,.png" />
+              </div>
+            </div>
+            <div class="upload-field-group full-width">
+              <input type="text" placeholder="Tin Certificate" class="upload-field" readonly />
+              <button class="upload-btn-icon" (click)="triggerUploadInput('tin')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <input type="file" #tinInput style="display:none" (change)="onUploadFile($event, 'tin')" accept=".pdf,.jpg,.jpeg,.png" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Employment Document -->
+        <div class="upload-section" [class.completed]="uploadSections.employment" [class.expanded]="expandedUploadSection === 'employment'">
+          <div class="upload-section-header" (click)="toggleUploadSection('employment')">
+            <div class="upload-section-title">
+              <svg *ngIf="uploadSections.employment" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!uploadSections.employment" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Employment Document:</span>
+            </div>
+            <div class="upload-icons">
+              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'employment'" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Information -->
+        <div class="upload-section" [class.completed]="uploadSections.business" [class.expanded]="expandedUploadSection === 'business'">
+          <div class="upload-section-header" (click)="toggleUploadSection('business')">
+            <div class="upload-section-title">
+              <svg *ngIf="uploadSections.business" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!uploadSections.business" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Business Information:</span>
+            </div>
+            <div class="upload-icons">
+              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'business'" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial/Credit Information -->
+        <div class="upload-section" [class.completed]="uploadSections.credit" [class.expanded]="expandedUploadSection === 'credit'">
+          <div class="upload-section-header" (click)="toggleUploadSection('credit')">
+            <div class="upload-section-title">
+              <svg *ngIf="uploadSections.credit" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!uploadSections.credit" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Financial/Credit Information:</span>
+            </div>
+            <div class="upload-icons">
+              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'credit'" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="upload-section-content" *ngIf="expandedUploadSection === 'credit'">
+            <div class="nested-upload-item">
+              <div class="nested-header" (click)="toggleNestedSection('bankAccount')">
+                <div class="upload-section-title">
+                  <svg class="check-icon-small" width="16" height="16" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="7" stroke="#20C0A0" stroke-width="2" fill="none"/>
+                  </svg>
+                  <span>Bank Account Details:</span>
+                </div>
+                <svg class="info-icon-upload yellow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFC107">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="nested-upload-item">
+              <div class="nested-header" (click)="toggleNestedSection('loanDetails')">
+                <div class="upload-section-title">
+                  <svg class="check-icon-small" width="16" height="16" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="7" stroke="#20C0A0" stroke-width="2" fill="none"/>
+                  </svg>
+                  <span>Existing Loan Details:</span>
+                </div>
+                <svg class="info-icon-upload yellow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFC107">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="nested-upload-item">
+              <div class="nested-header" (click)="toggleNestedSection('creditCard')">
+                <div class="upload-section-title">
+                  <svg class="check-icon-small" width="16" height="16" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="7" stroke="#20C0A0" stroke-width="2" fill="none"/>
+                  </svg>
+                  <span>Credit Card Details:</span>
+                </div>
+                <svg class="info-icon-upload yellow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFC107">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row upload-buttons">
+        <button type="button" class="btn-save" (click)="onSaveUpload()">SAVE</button>
+        <button type="button" class="btn-next" (click)="onNextFromUpload()">Submit</button>
+      </div>
+    </div>
+
+    <!-- Form Content - User Consent -->
+    <div class="form-content consent-content" *ngIf="currentStep === 5">
+      <h3 class="form-title">Consent</h3>
+      <p class="form-subtitle consent-subtitle">YOUR DATA IS SACRED TO US AND WE DO NOT DISCLOSE IT TO ANY THIRD PARTY EXCEPT OUR AI ENGINE</p>
+
+      <div class="consent-container">
+        <div class="consent-box">
+          <h4 class="consent-box-title">User Consent Form</h4>
+          <div class="consent-text">
+            <p><strong>Before using the Accuris platform, please read the following carefully:</strong></p>
+            <p>By continuing, you agree to share certain information with us so that we can assess your credit profile, generate reports, and help you understand your financial standing.</p>
+            <p>Your privacy and data security are our top priorities — every step follows strict data protection and confidentiality measures.</p>
+
+            <p><strong>Terms and Conditions:</strong></p>
+            <ol>
+              <li><strong>Purpose of Service:</strong><br/>
+                The Accuris platform provides credit assessment, analysis, and recommendations based on data entered by users and verified third-party sources.</li>
+
+              <li><strong>User Responsibility:</strong><br/>
+                Users must provide accurate, complete, and up-to-date information. False or misleading data may affect the accuracy of the generated credit ratings.</li>
+
+              <li><strong>Use of Results:</strong><br/>
+                The generated credit score, analysis, or recommendations are for informational and decision support purposes only. The system does not guarantee loan approvals or investment outcomes.</li>
+
+              <li><strong>Data Accuracy:</strong><br/>
+                While we strive for precision, all generated results are subject to data quality and algorithmic limitations.</li>
+
+              <li><strong>Account Management:</strong><br/>
+                Users are responsible for maintaining the confidentiality of their login credentials and any activities under their account.</li>
+
+              <li><strong>Limitation of Liability:</strong><br/>
+                Accuris is not liable for any financial decisions made based on the platform's analysis. Users should consult professional advisors before making significant financial commitments.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="consent-checkbox-container">
+          <label class="consent-checkbox-label">
+            <input type="checkbox" [(ngModel)]="consentAccepted" class="consent-checkbox" />
+            <span class="checkbox-text">I have read the privacy policy and terms of service and agree to open my account regardless</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="button-row consent-buttons">
+        <button type="button" class="btn-save" (click)="onSaveConsent()">SAVE</button>
+        <button type="button" class="btn-next" [disabled]="!consentAccepted" (click)="onSubmitConsent()">Submit</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="return-home-btn" (click)="returnHome()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Return Home
+      </button>
+    </div>
+
+  </div>
+</div>

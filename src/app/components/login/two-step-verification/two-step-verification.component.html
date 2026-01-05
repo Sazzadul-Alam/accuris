@@ -1,1 +1,129 @@
-<p>two-step-verification works!</p>
+<div class="verification-container">
+  <!-- Left Section -->
+  <div class="left-section">
+    <div class="verification-content">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-container">
+          <img src="assets/images/accuris-logo.png" class="logo-image" alt="Accuris Logo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="logo-fallback">
+            <div class="logo-icon">A</div>
+            <span class="logo-text">ACCURIS</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <span>Already a Member?</span>
+          <button class="log-in-btn" type="button" (click)="navigateToLogin()">Log In</button>
+        </div>
+      </div>
+
+      <!-- Verification Form -->
+      <div class="form-container">
+        <h1>2nd Step Verification</h1>
+        <p class="subtitle">Choose how you want to verify your account and enter the code below</p>
+
+        <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()">
+
+          <!-- Radio Options -->
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" formControlName="method" value="email" checked>
+              <span class="radio-custom"></span>
+              <span class="radio-label">Email Address</span>
+            </label>
+
+            <label class="radio-option">
+              <input type="radio" formControlName="method" value="phone">
+              <span class="radio-custom"></span>
+              <span class="radio-label">Phone</span>
+            </label>
+
+            <button
+              type="button"
+              class="send-code-btn"
+              (click)="sendCode()"
+              [disabled]="codeSent"
+            >
+              Send Code
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Code Input -->
+          <div class="code-input-group">
+            <input
+              type="text"
+              formControlName="code"
+              placeholder="Enter Code"
+              class="form-control"
+              maxlength="6"
+            />
+            <button
+              type="button"
+              class="verify-icon-btn"
+              (click)="verifyCode()"
+              [class.verified]="codeVerified"
+            >
+              <svg *ngIf="!codeVerified" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <svg *ngIf="codeVerified" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#20C0A0"/>
+                <polyline points="8 12 11 15 16 10" stroke="white" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="!codeVerified"
+          >
+            SUBMIT
+          </button>
+
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <a
+          href="javascript:void(0)"
+          class="return-link"
+          (click)="returnHome()"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4"
+                  stroke="#666"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+          Return Home
+        </a>
+
+        <p class="copyright">
+          Copyright 2025 - 2026 Accuris Inc. All rights Reserved
+        </p>
+
+        <button class="chat-icon-btn" type="button" aria-label="Chat Support">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section -->
+  <div class="right-section">
+    <img src="assets/images/signup-image.jpg" alt="Background" class="background-image"
+         onerror="this.style.display='none';" />
+  </div>
+</div>

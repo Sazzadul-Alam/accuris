@@ -1,1 +1,155 @@
-<p>user-consent works!</p>
+<div class="auth-container">
+  <!-- Left Section -->
+  <div class="left-section">
+    <div class="auth-content">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-container">
+          <img src="assets/images/accuris-logo.png" class="logo-image" alt="Accuris Logo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="logo-fallback">
+            <div class="logo-icon">A</div>
+            <span class="logo-text">ACCURIS</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <span>Already a Member?</span>
+          <button class="log-in-btn" type="button" (click)="navigateToLogin()">Log In</button>
+        </div>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step-item completed">
+          <div class="step-icon">
+            <img src="assets/images/icons/personal-info-icon.png" alt="Personal Info">
+          </div>
+        </div>
+
+        <div class="step-item completed">
+          <div class="step-icon">
+            <img src="assets/images/icons/2fa-icon.png" alt="2 Tier Authentication">
+          </div>
+        </div>
+
+        <div class="step-item active">
+          <div class="step-icon">
+            <img src="assets/images/icons/user-consent-icon.png" alt="User Consent">
+          </div>
+        </div>
+      </div>
+
+      <!-- User Consent Form -->
+      <div class="form-container">
+        <h1>Please go through the Privacy Policy and Terms of Use</h1>
+        <p class="subtitle">YOUR DATA IS SACRED TO US AND WE DO NOT DISCLOSE IT TO ANY THIRD PARTY EXCEPT OUR AI ENGINE</p>
+
+        <form [formGroup]="consentForm" (ngSubmit)="onSubmit()">
+
+          <!-- Privacy Policy Box -->
+          <div class="privacy-policy-box">
+            <div class="policy-content">
+              <h3>User Consent Form</h3>
+
+              <p><strong>By accessing the Accuris platform, please read the following carefully:</strong></p>
+              <p>As a HIPAA-compliant platform, Accuris handles your data with utmost care. We recognize the sensitivity of health information and are dedicated to maintaining the highest standards of privacy, security, and compliance with applicable laws and regulations — every step you take must activate and protect your patient data.</p>
+
+              <h4>Terms and Conditions:</h4>
+              <ol>
+                <li><strong>Nature of Service</strong>
+                  <p>Accuris is an AI-driven platform that assists users in capturing medical data. It uses advanced natural language processing and machine learning to support clinical workflows.</p>
+                </li>
+
+                <li><strong>User Responsibility</strong>
+                  <p>Users must provide accurate, complete, and up-to-date information. Failure to maintain data may affect the accuracy of the platform's output. You acknowledge that:</p>
+                  <ul>
+                    <li>For qualified health users, accuracy, or representatives are key informational and decision support purposes only. The platform does not substitute professional judgment.</li>
+                    <li>You are solely responsible for how you use the information provided.</li>
+                    <li>While Accuris strives for precision, AI-generated results are subject to data quality and algorithm limitations.</li>
+                  </ul>
+                </li>
+
+                <li><strong>Privacy Measures</strong>
+                  <p>We are committed to maintaining the confidentiality of the data credentials and any activities under your account.</p>
+                  <p>The platform and its operators are not liable for any losses or damages arising from reliance on the provided findings, analysis, or recommendations.</p>
+                </li>
+
+                <li><strong>Limitation of Liability</strong>
+                  <p>Accuris operates with applicable Federal data security, privacy, and information security standards.</p>
+                </li>
+              </ol>
+
+              <h4>Privacy Policy</h4>
+              <p><strong>1. Data Collection</strong></p>
+              <p>We collect personal and health information necessary to provide our services effectively.</p>
+            </div>
+          </div>
+
+          <!-- Checkbox -->
+          <div class="checkbox-container">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                formControlName="agreeToTerms"
+                class="checkbox-input"
+              />
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-text">I have read the privacy policy and terms of service and agree to open my account regardless</span>
+            </label>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button type="button" class="btn-back" (click)="goBack()">
+              GO BACK
+            </button>
+            <button
+              type="submit"
+              class="btn-next"
+              [disabled]="!consentForm.get('agreeToTerms')?.value"
+            >
+              CREATE ACCOUNT
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <a
+          href="javascript:void(0)"
+          class="return-link"
+          (click)="returnHome()"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4"
+                  stroke="#666"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+          Return Home
+        </a>
+
+        <p class="copyright">
+          Copyright 2025 - 2026 Accuris Inc. All rights Reserved
+        </p>
+
+        <button class="chat-icon-btn" type="button" aria-label="Chat Support">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section -->
+  <div class="right-section">
+    <img src="assets/images/signup-image.jpg" alt="Background" class="background-image"
+         onerror="this.style.display='none';" />
+  </div>
+</div>

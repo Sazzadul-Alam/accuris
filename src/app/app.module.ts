@@ -16,7 +16,7 @@ import { SignupComponent } from './components/login/signup/signup.component';
 import { TwoStepVerificationComponent } from './components/login/two-step-verification/two-step-verification.component';
 import { UserConsentComponent } from './components/login/user-consent/user-consent.component';
 import { VerifyCodeComponent } from './components/login/verify-code/verify-code.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -35,11 +35,12 @@ import {ReactiveFormsModule} from "@angular/forms";
     UserConsentComponent,
     VerifyCodeComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        FormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

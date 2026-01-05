@@ -1,1 +1,253 @@
-<p>signup works!</p>
+<div class="signup-container">
+  <!-- Left Section -->
+  <div class="left-section">
+    <div class="signup-content">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-container">
+          <img src="assets/images/accuris-logo.png" class="logo-image" alt="Accuris Logo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="logo-fallback">
+            <div class="logo-icon">A</div>
+            <span class="logo-text">ACCURIS</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <span>Already a Member?</span>
+          <button class="log-in-btn" type="button" (click)="navigateToLogin()">Log In</button>
+        </div>
+      </div>
+
+
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step-item active">
+          <div class="step-icon">
+            <img src="assets/images/icons/personal-info-icon.png" alt="Personal Info">
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-icon">
+            <img src="assets/images/icons/2fa-icon.png" alt="2 Tier Authentication">
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-icon">
+            <img src="assets/images/icons/user-consent-icon.png" alt="User Consent">
+          </div>
+        </div>
+      </div>
+
+      <!-- Signup Form -->
+      <div class="form-container">
+
+        <h1>Create an account to use Accuris for your Business.</h1>
+        <p class="subtitle">NO PAYMENT REQUIRED TO OPEN ACCOUNT AND SEE OUR SERVICES!</p>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+          <!-- Name Fields Row -->
+          <div class="name-row">
+            <!-- First Name Input -->
+            <div class="form-group half-width">
+              <input
+                type="text"
+                formControlName="firstName"
+                placeholder="First Name"
+                autocomplete="given-name"
+                class="form-control"
+                aria-label="First Name"
+                required
+              />
+            </div>
+
+            <!-- Last Name Input -->
+            <div class="form-group half-width">
+              <input
+                type="text"
+                formControlName="lastName"
+                placeholder="Last Name"
+                autocomplete="family-name"
+                class="form-control"
+                aria-label="Last Name"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div class="form-group">
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="Email Address"
+              autocomplete="email"
+              class="form-control"
+              aria-label="Email Address"
+              required
+            />
+          </div>
+
+          <!-- Password Input
+          <div class="form-group password-group">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Password"
+              autocomplete="new-password"
+              class="form-control"
+              aria-label="Password"
+              required
+            />
+
+            <button
+              type="button"
+              class="toggle-password"
+              aria-label="Toggle Password Visibility"
+              (click)="togglePasswordVisibility()"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 4C4.5 4 1 10 1 10s3.5 6 9 6 9-6 9-6-3.5-6-9-6z"
+                      stroke="#999" stroke-width="1.5" />
+                <circle cx="10" cy="10" r="3"
+                        stroke="#999" stroke-width="1.5" />
+              </svg>
+            </button>
+          </div>
+
+          Password Strength Label
+          <div class="password-strength-label">Password Strength</div>
+        -->
+
+          <!-- Password Input -->
+          <div class="form-group password-group">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Password"
+              autocomplete="new-password"
+              class="form-control"
+              aria-label="Password"
+              required
+              (input)="checkPasswordStrength()"
+            />
+
+            <button
+              type="button"
+              class="toggle-password"
+              aria-label="Toggle Password Visibility"
+              (click)="togglePasswordVisibility()"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 4C4.5 4 1 10 1 10s3.5 6 9 6 9-6 9-6-3.5-6-9-6z"
+                      stroke="#999" stroke-width="1.5" />
+                <circle cx="10" cy="10" r="3"
+                        stroke="#999" stroke-width="1.5" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Password Strength Indicator -->
+          <div class="password-strength-container">
+            <div class="password-strength-bars">
+              <div class="strength-bar" [class.active]="passwordStrength >= 1" [class.weak]="passwordStrength === 1"></div>
+              <div class="strength-bar" [class.active]="passwordStrength >= 2" [class.medium]="passwordStrength === 2"></div>
+              <div class="strength-bar" [class.active]="passwordStrength >= 3" [class.strong]="passwordStrength === 3"></div>
+            </div>
+            <div class="password-strength-label">Password Strength</div>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="terms-container">
+            <label class="checkbox-container">
+              <input type="checkbox" formControlName="agreeTerms" />
+              <span class="checkmark"></span>
+              By Creating an Account, it means you agree to our <span class="terms-link-text">Privacy Policy</span> and <span class="terms-link-text">Terms of Service</span>
+            </label>
+          </div>
+
+          <!-- Signup Button -->
+          <button type="submit" class="signup-button" [disabled]="signupForm.invalid">
+            NEXT
+          </button>
+
+          <!-- Divider -->
+          <div class="divider"><span>OR</span></div>
+
+          <!-- Social Signup Buttons -->
+          <div class="social-buttons">
+
+            <!-- Google -->
+            <button
+              type="button"
+              class="social-btn google-btn"
+              (click)="signupWithGoogle()"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                <path fill="#34A853" d="M9.003 18c2.43 0 4.467-.806 5.956-2.18L12.05 13.56c-.806.54-1.836.86-3.047.86-2.344 0-4.328-1.584-5.036-3.711H.96v2.332C2.438 15.983 5.482 18 9.003 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71 0-.593.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9.003 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.464.891 11.426 0 9.003 0 5.482 0 2.438 2.017.96 4.958L3.967 7.29c.708-2.127 2.692-3.71 5.036-3.71z"/>
+              </svg>
+              Log In with Google
+            </button>
+
+            <!-- Microsoft -->
+            <button
+              type="button"
+              class="social-btn microsoft-btn"
+              (click)="signupWithMicrosoft()"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                <path fill="#F25022" d="M0 0h8.5v8.5H0z"/>
+                <path fill="#00A4EF" d="M9.5 0H18v8.5H9.5z"/>
+                <path fill="#7FBA00" d="M0 9.5h8.5V18H0z"/>
+                <path fill="#FFB900" d="M9.5 9.5H18V18H9.5z"/>
+              </svg>
+              Log In with Microsoft
+            </button>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <a
+          href="javascript:void(0)"
+          class="return-link"
+          (click)="returnHome()"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4"
+                  stroke="#666"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+          Return Home
+        </a>
+
+        <p class="copyright">
+          Copyright 2025 - 2026 Accuris Inc. All rights Reserved
+        </p>
+
+        <!-- Chat/Comment Icon -->
+        <button class="chat-icon-btn" type="button" aria-label="Chat Support">
+          <img src="assets/images/icons/chat-icon.svg" alt="Chat Icon" width="28" height="28">
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section -->
+  <div class="right-section">
+    <img src="assets/images/signup-image.jpg" alt="Background" class="background-image"
+         onerror="this.style.display='none';" />
+  </div>
+</div>
