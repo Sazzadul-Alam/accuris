@@ -1,74 +1,16 @@
-<div class="dashboard-container">
+<div class="dashboard_background">
   <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="logo-container">
-      <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="logo" />
-    </div>
+  <div>
+    <app-sidebar></app-sidebar>
+  </div>
 
-    <nav class="nav-menu">
-      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7"></rect>
-          <rect x="14" y="3" width="7" height="7"></rect>
-          <rect x="14" y="14" width="7" height="7"></rect>
-          <rect x="3" y="14" width="7" height="7"></rect>
-        </svg>
-        <span>Home</span>
-      </a>
-
-      <a routerLink="/credit-history" routerLinkActive="active" class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2v20M2 12h20"></path>
-        </svg>
-        <span>Credit History</span>
-      </a>
-
-      <a routerLink="/business-profile" routerLinkActive="active" class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="2" y="7" width="20" height="14" rx="2"></rect>
-          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-        </svg>
-        <span>Business Profile</span>
-      </a>
-
-      <!-- CHANGED: This opens the modal now -->
-      <a (click)="openIndividualCreditScoringModal()" class="nav-item" style="cursor: pointer;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        <span>Individual Profile</span>
-      </a>
-
-      <a routerLink="/settings" routerLinkActive="active" class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
-        </svg>
-        <span>Profile & Settings</span>
-      </a>
-
-      <a routerLink="/help-center" routerLinkActive="active" class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 16v-4m0-4h.01"></path>
-        </svg>
-        <span>Help Center</span>
-      </a>
-    </nav>
-  </aside>
 
   <!-- Main Content -->
   <main class="main-content">
     <!-- Top Bar -->
     <header class="top-bar">
       <div class="page-title">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7"></rect>
-          <rect x="14" y="3" width="7" height="7"></rect>
-          <rect x="14" y="14" width="7" height="7"></rect>
-          <rect x="3" y="14" width="7" height="7"></rect>
-        </svg>
+        <img src="assets/images/ic_outline-dashboard.svg" alt="Home Icon" class="home-icon" />
         <h1>Home</h1>
       </div>
 

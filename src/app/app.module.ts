@@ -17,6 +17,7 @@ import { TwoStepVerificationComponent } from './components/login/two-step-verifi
 import { UserConsentComponent } from './components/login/user-consent/user-consent.component';
 import { VerifyCodeComponent } from './components/login/verify-code/verify-code.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { SidebarComponent } from './components/dashboard/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     SignupComponent,
     TwoStepVerificationComponent,
     UserConsentComponent,
-    VerifyCodeComponent
+    VerifyCodeComponent,
+    SidebarComponent
   ],
     imports: [
         BrowserModule,
