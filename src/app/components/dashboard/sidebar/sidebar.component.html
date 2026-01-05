@@ -1,0 +1,48 @@
+<aside class="sidebar">
+  <div class="logo-container">
+    <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="logo" />
+  </div>
+
+  <div class="sidebar-content">
+
+  <nav class="nav-menu">
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <img src="assets/images/ic_outline-dashboard-small.svg" alt="Home Icon" class="home-icon" />
+      <span>Home</span>
+    </a>
+
+    <a routerLink="/credit-history" routerLinkActive="active" class="nav-item">
+      <img src="assets/images/mdi_clipboard-text-history-outline.svg" alt="Home Icon" class="home-icon" />
+      <span>Credit History</span>
+    </a>
+
+    <a routerLink="/business-profile" routerLinkActive="active" class="nav-item">
+      <img src="assets/images/material-symbols_business-center-outline-rounded.svg" alt="Home Icon" class="home-icon" />
+      <span>Business Profile</span>
+    </a>
+
+    <!-- CHANGED: This opens the modal now -->
+    <a (click)="openIndividualCreditScoringModal()" class="nav-item" style="cursor: pointer;">
+      <img src="assets/images/individual_profile.svg" alt="Home Icon" class="home-icon" />
+      <span>Individual Profile</span>
+    </a>
+
+    <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+      <img src="assets/images/profile-settings.svg" alt="Home Icon" class="home-icon" />
+      <span>Profile & Settings</span>
+    </a>
+
+    <a routerLink="/help-center" routerLinkActive="active" class="nav-item">
+      <img src="assets/images/help-center-icon.svg" alt="Home Icon" class="home-icon" />
+      <span>Help Center</span>
+    </a>
+  </nav>
+
+    <footer class="logout-section">
+      <a (click)="logout()" class="nav-item logout">
+        <img src="assets/images/logout-icon.svg" class="home-icon" />
+        <span>Logout</span>
+      </a>
+    </footer>
+  </div>
+</aside>
