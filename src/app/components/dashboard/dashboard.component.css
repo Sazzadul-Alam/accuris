@@ -458,6 +458,12 @@ app-sidebar {
   min-width: 100px;
 
 }
+.step-item h5 {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
 .step-icon {
   width: 40px;
   height: 40px;
