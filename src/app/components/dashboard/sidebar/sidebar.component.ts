@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,6 +11,7 @@ export class SidebarComponent {
     console.log('Opening individual credit scoring modal');
     this.showIndividualModal = true;
   }
+  @Output() closeSidebar = new EventEmitter<void>();
 
   logout() {
 

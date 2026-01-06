@@ -1,7 +1,13 @@
 <div class="dashboard_background">
   <!-- Sidebar -->
+
+  <button class="hamburger" (click)="toggleSidebar()">
+    ☰
+  </button>
+  <div class="overlay" *ngIf="isSidebarOpen" (click)="closeSidebar()"></div>
   <div>
-    <app-sidebar></app-sidebar>
+    <app-sidebar [class.open]="isSidebarOpen"
+                 (closeSidebar)="closeSidebar()" ></app-sidebar>
   </div>
 
 
@@ -16,11 +22,8 @@
 
       <div class="top-bar-actions">
         <button class="notification-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-          <span class="badge">3</span>
+          <img src="assets/images/notification-icon.svg" alt="Home Icon" class="notification-icon" />
+<!--          <span class="badge">3</span>-->
         </button>
 
         <div class="search-box">
@@ -36,9 +39,19 @@
     <!-- Content Area -->
     <div class="content-area">
       <!-- Tabs -->
+
+
       <div class="tabs">
-        <button class="tab active">Individual Credit Scoring</button>
-        <button class="tab">Business Credit Scoring</button>
+        <div class="k-cursor-default" >
+            <button  (click)="changeTable('individual_credit')" class="back-title col-sm-auto"
+                  [ngClass]="{'text-muted-modified':!tables.individual_credit.selected}">Individual Credit Scoring
+            </button>
+            <button  (click)="changeTable('business_credit')" class="back-title col-sm-auto"
+                  [ngClass]="{'text-muted-modified':!tables.business_credit.selected}" >Business Credit Scoring
+            </button>
+
+        </div>
+
       </div>
 
       <div class="dashboard-grid">
@@ -46,21 +59,19 @@
         <div class="left-column">
           <!-- Profile Card -->
           <div class="profile-card">
-            <div class="profile-header">
+            <div class="profile-header d-flex align-items-center justify-content-between">
               <h3>Profile</h3>
-              <button class="edit-profile-btn" (click)="openIndividualCreditScoringModal()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 20h9"></path>
-                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                </svg>
-              </button>
+              <button class="edit-profile-btn" (click)="openIndividualCreditScoringModal()"></button>
             </div>
 
-            <div class="profile-content">
+            <div class="profile-header">
               <img src="assets/images/profile-avatar.png" alt="Profile" class="profile-avatar" />
-              <h4 class="profile-name">Sanjit A. Kabir</h4>
-              <p class="profile-role">Business Analyst</p>
-              <p class="profile-company">DataSoft</p>
+              <div>
+                <h4 class="profile-name">Sanjit A. Kabir</h4>
+                <p class="profile-role">Business Analyst</p>
+                <p class="profile-company">DataSoft</p>
+              </div>
+
             </div>
 
             <div class="profile-stats">
@@ -182,124 +193,122 @@
         <div class="right-column">
           <!-- Process Steps -->
           <div class="process-header">
-            <div class="process-title">
-              <h3>Individual Credit Scoring</h3>
-              <span class="process-duration">6 - 25 Hours</span>
-              <span class="process-price">$ 75 - 245</span>
-            </div>
-          </div>
-
-          <!-- Steps Timeline -->
-          <div class="steps-timeline">
-            <div class="step-item">
-              <div class="step-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
+            <div >
+              <div class="process-title">
+                <h3 style="padding-right: 4px;">Individual Credit Scoring</h3>
+                <h3 class="process-duration">|</h3>
+                <h3 class="process-duration">6 - 25 Hours</h3>
+                <h3 class="process-duration">|</h3>
+                <h3 class="process-price">$ 75 - 245</h3>
               </div>
-              <div class="step-info">
+            </div>
+
+            <div class="steps-timeline">
+              <div class="step-item">
                 <h5>Step 1</h5>
-                <p>Fill up Information</p>
+                <div class="step-icon">
+                  <img src="assets/images/step_1_icon.svg" alt="Step Icon" class="step_1_icon" />
+
+                </div>
+                <div class="step-info">
+<!--                  <h5>Step 1</h5>-->
+                  <p class="">Fill up Information</p>
+                </div>
+                <div class="step-bar step-bar-red"></div>
                 <span class="step-time">5 Minutes<br />5 Documents</span>
               </div>
-              <div class="step-bar step-bar-red"></div>
-            </div>
 
-            <div class="step-item">
-              <div class="step-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                </svg>
-              </div>
-              <div class="step-info">
+              <div class="step-item">
                 <h5>Step 2</h5>
-                <p>Wait for Verification</p>
+                <div class="step-icon">
+                  <img src="assets/images/step_2_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+                <div class="step-info">
+
+                  <p>Wait for Verification</p>
+
+                </div>
+                <div class="step-bar step-bar-orange"></div>
                 <span class="step-time">12 Hours</span>
               </div>
-              <div class="step-bar step-bar-orange"></div>
-            </div>
 
-            <div class="step-item">
-              <div class="step-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                  <line x1="1" y1="10" x2="23" y2="10"></line>
-                </svg>
-              </div>
-              <div class="step-info">
+              <div class="step-item">
                 <h5>Step 3</h5>
-                <p>Make Digital Payment</p>
+                <div class="step-icon">
+                  <img src="assets/images/step_3_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+                <div class="step-info">
+
+                  <p>Make Digital Payment</p>
+
+                </div>
+                <div class="step-bar step-bar-yellow"></div>
                 <span class="step-time">5 Minutes<br />Payment Credential</span>
               </div>
-              <div class="step-bar step-bar-yellow"></div>
-            </div>
 
-            <div class="step-item">
-              <div class="step-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <div class="step-info">
+              <div class="step-item">
                 <h5>Step 4</h5>
-                <p>Wait for AI Engine Analysis</p>
+                <div class="step-icon">
+                  <img src="assets/images/step_4_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+                <div class="step-info">
+
+                  <p>Wait for AI Engine Analysis</p>
+
+                </div>
+                <div class="step-bar step-bar-green"></div>
                 <span class="step-time">2 Hours</span>
               </div>
-              <div class="step-bar step-bar-green"></div>
-            </div>
 
-            <div class="step-item">
-              <div class="step-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                </svg>
-              </div>
-              <div class="step-info">
+              <div class="step-item">
                 <h5>Step 5</h5>
-                <p>Check the Report on System</p>
+                <div class="step-icon">
+                  <img src="assets/images/step_5_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+                <div class="step-info">
+
+                  <p>Check the Report on System</p>
+
+                </div>
+                <div class="step-bar step-bar-blue"></div>
                 <span class="step-time">20 Minutes</span>
               </div>
-              <div class="step-bar step-bar-blue"></div>
-            </div>
 
-            <div class="step-item">
-              <div class="step-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-              </div>
-              <div class="step-info">
+              <div class="step-item">
                 <h5>Step 6</h5>
-                <p>Download Report from System</p>
+                <div class="step-icon">
+                  <img src="assets/images/step_6_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+                <div class="step-info">
+
+                  <p>Download Report from System</p>
+
+                </div>
+                <div class="step-bar step-bar-purple"></div>
                 <span class="step-time">20 Minutes</span>
               </div>
-              <div class="step-bar step-bar-purple"></div>
-            </div>
 
-            <div class="step-item">
-              <div class="step-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-              </div>
-              <div class="step-info">
+              <div class="step-item">
                 <h5>Step 7</h5>
-                <p>Apply a New Request</p>
+                <div class="step-icon">
+                  <img src="assets/images/step_7_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+                <div class="step-info">
+
+                  <p>Apply a New Request</p>
+
+                </div>
+                <div class="step-bar step-bar-pink"></div>
                 <span class="step-time">15 Minutes<br />5 Documents</span>
               </div>
-              <div class="step-bar step-bar-pink"></div>
             </div>
+
           </div>
+
+
+          <!-- Steps Timeline -->
+
+          <br>
 
           <!-- Credit Score Board -->
           <div class="credit-score-board">

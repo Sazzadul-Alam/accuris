@@ -1,5 +1,6 @@
 /* Import Font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');*/
+
 
 * {
   margin: 0;
@@ -11,7 +12,6 @@
   position: fixed;
   inset: 0;                 /* top:0 right:0 bottom:0 left:0 */
   display: flex;
-  font-family: 'Zen Kaku Gothic Antique;', sans-serif;
   background: #EFEFF1;
 }
 app-sidebar {
@@ -20,7 +20,9 @@ app-sidebar {
   background-color: #ffffff; /* example color */
   flex-shrink: 0;      /* prevent shrinking */
 }
-
+.hamburger {
+  display: none;
+}
 
 /* ========== MAIN CONTENT ========== */
 .main-content {
@@ -31,14 +33,18 @@ app-sidebar {
 
 /* Top Bar */
 .top-bar {
-  padding: 14px 24px;
+  padding: 0px 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
+  margin-top: 3%;
 }
-
+.home-icon{
+  width: 25px;
+  height: 25px;
+}
 .page-title {
   display: flex;
   align-items: center;
@@ -46,7 +52,7 @@ app-sidebar {
 }
 
 .page-title h1 {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
   color: #1e293b;
 }
@@ -59,9 +65,8 @@ app-sidebar {
 
 .notification-btn {
   position: relative;
-  background: #20C0A0;
   border: none;
-  padding: 10px;
+  /*padding: 10px;*/
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -80,15 +85,20 @@ app-sidebar {
   border-radius: 10px;
   font-weight: 600;
 }
+.notification-icon{
+  width: 30px;
+  height: 30px;
+}
 
 .search-box {
   display: flex;
   align-items: center;
   gap: 8px;
   background: #f8fafc;
-  padding: 8px 16px;
+  padding: 7px 16px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #0000001A;
+  margin-right:10px;
 }
 
 .search-box input {
@@ -101,7 +111,7 @@ app-sidebar {
 
 /* ========== CONTENT AREA ========== */
 .content-area {
-  padding: 20px 24px;
+  padding: 10px 2px;
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -111,7 +121,6 @@ app-sidebar {
   display: flex;
   gap: 32px;
   margin-bottom: 24px;
-  border-bottom: 2px solid #e2e8f0;
 }
 
 .tab {
@@ -138,49 +147,75 @@ app-sidebar {
   height: 3px;
   background: #20C0A0;
 }
+
+.back-title{
+  text-decoration: underline #79D9C6 !important;
+  text-underline-offset: .5em !important;
+  text-decoration-thickness: 0.1em !important;
+  cursor: pointer !important;
+  margin-left: 8px !important;
+  border: none;
+}
+
+
+.text-muted-modified{
+  color: #40474F !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+
+}
+
+.back-title {
+  margin-bottom: 5px;
+  margin-top: 15px;
+  padding-right: 10px;
+  height: 20px;
+  color: #181A1F;
+  font-size: 16px;
+  font-weight: bold;
+}
 /* Dashboard Grid */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 20px;
-  max-width: 100%;
+  grid-template-columns: 280px 1fr;
+  grid-template-areas: "left right";
+  gap: 14px;
+  width: 100%;
 }
 /* ========== LEFT COLUMN ========== */
 .left-column {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: 0;
+  grid-area: left;
 }
+
+
 /* Profile Card */
 .profile-card {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 6px;
+  padding: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .profile-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
 }
-.profile-header h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
-}
+
 .edit-profile-btn {
-  background: #20C0A0;
   border: none;
   padding: 8px;
-  border-radius: 6px;
+  /*border-radius: 6px;*/
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  background: url(src/assets/images/change_profile_icon.svg)no-repeat;
+  height: 52px;
+  width: 52px;
+  scale: 0.8;
+  color: inherit;
 }
+
 .profile-content {
   text-align: center;
   margin-bottom: 24px;
@@ -188,20 +223,25 @@ app-sidebar {
 .profile-avatar {
   width: 100px;
   height: 100px;
-  border-radius: 50%;
+  border-radius: 10px;
   object-fit: cover;
   margin-bottom: 12px;
 }
 .profile-name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: #008080;
   margin-bottom: 4px;
 }
-.profile-role,
-.profile-company {
+.profile-role {
+  font-weight: 600;
   font-size: 13px;
+  color: #4D4D4D;
+}
+.profile-company{
+  font-size: 12px;
   color: #64748b;
+  margin-bottom: 16px;
 }
 .profile-stats h4 {
   font-size: 16px;
@@ -369,24 +409,26 @@ app-sidebar {
   opacity: 0.9;
 }
 /* ========== RIGHT COLUMN ========== */
+/*.right-column {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  gap: 24px;*/
+/*  min-width: 0;*/
+/*  overflow-x: auto;*/
+/*}*/
 .right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: 0;
-  overflow-x: auto;
+  grid-area: right;
 }
 /* Process Header */
 .process-header {
   background: white;
-  border-radius: 12px;
   padding: 20px 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .process-title {
   display: flex;
   align-items: center;
-  gap: 16px;
+  /*gap: 16px;*/
+  color: #181A1F;
 }
 .process-title h3 {
   font-size: 18px;
@@ -397,16 +439,15 @@ app-sidebar {
 .process-price {
   font-size: 13px;
   color: #64748b;
-  padding: 4px 12px;
-  background: #f1f5f9;
-  border-radius: 4px;
+  padding: 4px 4px;
+
 }
 /* Steps Timeline */
 .steps-timeline {
   background: white;
-  border-radius: 12px;
+  /*border-radius: 12px;*/
   padding: 20px 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);*/
   display: grid;
   grid-template-columns: repeat(7, minmax(100px, 1fr));
   gap: 8px;
@@ -415,22 +456,20 @@ app-sidebar {
 .step-item {
   text-align: center;
   min-width: 100px;
+
 }
 .step-icon {
   width: 40px;
   height: 40px;
-  background: #f1f5f9;
+  /*background: #f1f5f9;*/
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 8px;
-  color: #64748b;
+  /*color: #64748b;*/
 }
-.step-icon svg {
-  width: 20px;
-  height: 20px;
-}
+
 .step-info h5 {
   font-size: 11px;
   font-weight: 600;
@@ -438,10 +477,20 @@ app-sidebar {
   margin-bottom: 4px;
 }
 .step-info p {
-  font-size: 10px;
-  color: #64748b;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  color: #181A1F;
   margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+
+  min-height: calc(1.4em * 2);
 }
+
 .step-time {
   font-size: 9px;
   color: #94a3b8;
@@ -656,7 +705,7 @@ app-sidebar {
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1600px) {
   .dashboard-grid {
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 270px 1fr;
   }
   .steps-timeline {
     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
@@ -664,7 +713,7 @@ app-sidebar {
 }
 @media (max-width: 1400px) {
   .dashboard-grid {
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 250px 1fr;
   }
   .plans-grid {
     grid-template-columns: 1fr;
@@ -678,23 +727,53 @@ app-sidebar {
 }
 @media (max-width: 1200px) {
   .dashboard-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 220px 1fr;
   }
   .steps-timeline {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 @media (max-width: 768px) {
-  .sidebar {
-    display: none;
+
+  .hamburger {
+    display: block;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    z-index: 1100;
+    cursor: pointer;
+  }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 900;
   }
   .top-bar {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
   }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "left"
+      "right";
+    gap: 16px;
+  }
+  .left-column {
+    order: 1;
+  }
+
+  .right-column {
+    order: 2;
+  }
   .content-area {
-    padding: 16px;
+    padding: 14px;
   }
   .plans-grid,
   .steps-timeline {

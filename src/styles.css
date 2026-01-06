@@ -7,4 +7,13 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: 'Zen Kaku Gothic Antique', sans-serif;
 }
+@font-face {
+  font-family: 'Zen Kaku Gothic Antique';
+  src: url('assets/fonts/ZenKakuGothicAntique-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+

@@ -7,7 +7,16 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
   showIndividualModal = false;
+  tables = {
+    individual_credit: {selected:false},
+    business_credit: {selected:false}
+  };
+  currentTable: string;
 
+  ngOnInit() {
+    this.currentTable ='individual_credit';
+    this.tables[this.currentTable].selected = true;
+  }
   openIndividualModal() {
     console.log('Opening individual modal');
     this.showIndividualModal = true;
@@ -28,5 +37,20 @@ export class DashboardComponent {
     // You can add API call here to save the data
     alert('Form submitted successfully!');
     this.closeIndividualModal();
+  }
+  isSidebarOpen = false;
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  closeSidebar() {
+    this.isSidebarOpen = false;
+  }
+
+  changeTable(table: string) {
+    this.tables[this.currentTable].selected = false;
+    this.currentTable = table;
+    this.tables[this.currentTable].selected = true;
   }
 }
