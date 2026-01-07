@@ -75,27 +75,40 @@
             </div>
 
             <div class="profile-stats">
-              <h4>Individual Statistics</h4>
+              <h3>Individual Statistics</h3>
+              <div class="stat-items">
+                <!-- LEFT -->
+                <div class="stat-left">
+                  <div class="stat-item">
+                    <span class="stat-value">$100000</span>
+                    <span class="stat-label">Income</span>
 
-              <div class="stat-item">
-                <span class="stat-label">Income</span>
-                <span class="stat-value income">$100000</span>
-              </div>
+                  </div>
 
-              <div class="stat-item">
-                <span class="stat-label">Expenses</span>
-                <span class="stat-value expense">$3000</span>
-              </div>
+                  <div class="stat-item">
+                    <span class="stat-value">$3000</span>
+                    <span class="stat-label">Expenses</span>
 
-              <div class="chart-container">
-                <div class="donut-chart">
-                  <svg viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#e0e0e0" stroke-width="20"></circle>
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#20C0A0" stroke-width="20"
-                            stroke-dasharray="175 251" transform="rotate(-90 50 50)"></circle>
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#FF6B6B" stroke-width="20"
-                            stroke-dasharray="75 251" stroke-dashoffset="-175" transform="rotate(-90 50 50)"></circle>
-                  </svg>
+                  </div>
+                </div>
+
+                <!-- DIVIDER -->
+                <div class="stat-divider"></div>
+
+                <!-- RIGHT -->
+                <div class="stat-right">
+                  <div class="donut-chart">
+                    <div class="progress-circle">
+                      <svg>
+                        <circle class="bg" cx="40" cy="40" r="30"></circle>
+                        <circle class="progress" cx="40" cy="40" r="30"
+                                [attr.stroke]="progressColor"
+                                [attr.stroke-dashoffset]="dashOffset"></circle>
+                      </svg>
+                    </div>
+
+
+                  </div>
                   <div class="chart-legend">
                     <div class="legend-item">
                       <span class="dot growth"></span>
@@ -109,13 +122,18 @@
                 </div>
               </div>
 
+
+
+
+
+
               <div class="expense-chart">
                 <div class="chart-header">
-                  <span>Expenses</span>
-                  <select class="year-select">
-                    <option>2024</option>
-                    <option>2023</option>
-                  </select>
+                  <span style="font-size: 11px;">Expenses</span>
+<!--                  <select class="year-select">-->
+<!--                    <option>2024</option>-->
+<!--                    <option>2023</option>-->
+<!--                  </select>-->
                 </div>
 
                 <div class="line-chart">
@@ -212,7 +230,7 @@
                 </div>
                 <div class="step-info">
 <!--                  <h5>Step 1</h5>-->
-                  <p class="">Fill up Information</p>
+                  <p class="">Fill up <br> Information</p>
                 </div>
                 <div class="step-bar step-bar-red"></div>
                 <span class="step-time">5 Minutes<br />5 Documents</span>
@@ -225,7 +243,7 @@
                 </div>
                 <div class="step-info">
 
-                  <p>Wait for Verification</p>
+                  <p>Wait for <br> Verification</p>
 
                 </div>
                 <div class="step-bar step-bar-orange"></div>
@@ -325,11 +343,12 @@
               </div>
 
               <div class="score-bar">
-                <div class="score-gradient"></div>
-                <div class="score-marker" style="left: 52%;">
-                  <div class="marker-arrow">▼</div>
-                  <div class="marker-label">You are<br />here</div>
-                  <div class="marker-score">719</div>
+                <div class="progress score-progress">
+                  <div class="progress-bar bg-danger" style="width: 20%"></div>
+                  <div class="progress-bar bg-warning" style="width: 20%"></div>
+                  <div class="progress-bar bg-yellow" style="width: 20%"></div>
+                  <div class="progress-bar bg-light-green" style="width: 20%"></div>
+                  <div class="progress-bar bg-success" style="width: 20%"></div>
                 </div>
               </div>
 
@@ -343,6 +362,7 @@
             </div>
           </div>
 
+          <br>
           <!-- Running Process -->
           <div class="running-process-card">
             <h3>Running Process</h3>
@@ -350,77 +370,159 @@
               The block shows the running process and their state. Please click on block if you have to complete the
               process.
             </p>
-
-            <div class="process-flow">
-              <div class="process-block active" (click)="openIndividualCreditScoringModal()">
-                <div class="process-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
+            <div class="run-steps">
+              <div class="run-step-item">
+                <div class="run-step-icon">
+                  <img src="assets/images/run_proc_1_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-                <h4>Individual Information</h4>
-                <span class="process-number">1</span>
-                <span class="process-status draft">Draft</span>
+
+                <div class="step-info">
+
+                  <p>Individual <br> Information</p>
+
+                </div>
               </div>
-
-              <div class="arrow">→</div>
-
-              <div class="process-block">
-                <div class="process-icon disabled">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
+              <div  class="run-step-item">
+                <div class="run-step-icon ">
+                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
                 </div>
-                <h4>Request Verification</h4>
-                <span class="process-number">0</span>
-                <span class="process-status step-status">Step Status</span>
+
               </div>
-
-              <div class="arrow">→</div>
-
-              <div class="process-block">
-                <div class="process-icon disabled">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                  </svg>
+              <div class="run-step-item">
+                <div class="run-step-icon">
+                  <img src="assets/images/run_proc_2_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-                <h4>Payment Information</h4>
-                <span class="process-number">2</span>
-                <span class="process-status pending">Pending</span>
+
+                <div class="step-info">
+
+                  <p>Request <br/>Verification</p>
+
+                </div>
               </div>
-
-              <div class="arrow">→</div>
-
-              <div class="process-block">
-                <div class="process-icon disabled">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
+              <div  class="run-step-item">
+                <div class="run-step-icon ">
+                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
                 </div>
-                <h4>AI Engine Analysis</h4>
-                <span class="process-number">0</span>
-                <span class="process-status pending">Pending</span>
+
               </div>
-
-              <div class="arrow">→</div>
-
-              <div class="process-block">
-                <div class="process-icon disabled">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
+              <div class="run-step-item">
+                <div class="run-step-icon">
+                  <img src="assets/images/run_proc_3_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-                <h4>New Request</h4>
-                <span class="process-number">0</span>
-                <span class="process-status step-status">Step Status</span>
+
+                <div class="step-info">
+
+                  <p>Payment <br/> Information</p>
+
+                </div>
+              </div>
+              <div  class="run-step-item">
+                <div class="run-step-icon ">
+                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
+                </div>
+
+              </div>
+              <div class="run-step-item">
+                <div class="run-step-icon">
+                  <img src="assets/images/run_proc_4_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+
+                <div class="step-info">
+
+                  <p>AI Engine <br> Process</p>
+
+                </div>
+              </div>
+              <div  class="run-step-item">
+                <div class="run-step-icon ">
+                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
+                </div>
+
+              </div>
+              <div class="run-step-item">
+                <div class="run-step-icon">
+                  <img src="assets/images/run_proc_5_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
+
+                <div class="step-info">
+
+                  <p>Credit <br> Certificate</p>
+
+                </div>
               </div>
 
             </div>
+
+<!--            <div class="process-flow">-->
+<!--              <div class="process-block active" (click)="openIndividualCreditScoringModal()">-->
+<!--                <div class="process-icon">-->
+<!--                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>-->
+<!--                    <polyline points="14 2 14 8 20 8"></polyline>-->
+<!--                  </svg>-->
+<!--                </div>-->
+<!--                <h4>Individual Information</h4>-->
+<!--                <span class="process-number">1</span>-->
+<!--                <span class="process-status draft">Draft</span>-->
+<!--              </div>-->
+
+<!--              <div class="arrow">→</div>-->
+
+<!--              <div class="process-block">-->
+<!--                <div class="process-icon disabled">-->
+<!--                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>-->
+<!--                    <polyline points="14 2 14 8 20 8"></polyline>-->
+<!--                  </svg>-->
+<!--                </div>-->
+<!--                <h4>Request Verification</h4>-->
+<!--                <span class="process-number">0</span>-->
+<!--                <span class="process-status step-status">Step Status</span>-->
+<!--              </div>-->
+
+<!--              <div class="arrow">→</div>-->
+
+<!--              <div class="process-block">-->
+<!--                <div class="process-icon disabled">-->
+<!--                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>-->
+<!--                    <line x1="1" y1="10" x2="23" y2="10"></line>-->
+<!--                  </svg>-->
+<!--                </div>-->
+<!--                <h4>Payment Information</h4>-->
+<!--                <span class="process-number">2</span>-->
+<!--                <span class="process-status pending">Pending</span>-->
+<!--              </div>-->
+
+<!--              <div class="arrow">→</div>-->
+
+<!--              <div class="process-block">-->
+<!--                <div class="process-icon disabled">-->
+<!--                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--                    <circle cx="12" cy="12" r="10"></circle>-->
+<!--                    <polyline points="12 6 12 12 16 14"></polyline>-->
+<!--                  </svg>-->
+<!--                </div>-->
+<!--                <h4>AI Engine Analysis</h4>-->
+<!--                <span class="process-number">0</span>-->
+<!--                <span class="process-status pending">Pending</span>-->
+<!--              </div>-->
+
+<!--              <div class="arrow">→</div>-->
+
+<!--              <div class="process-block">-->
+<!--                <div class="process-icon disabled">-->
+<!--                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>-->
+<!--                    <polyline points="14 2 14 8 20 8"></polyline>-->
+<!--                  </svg>-->
+<!--                </div>-->
+<!--                <h4>New Request</h4>-->
+<!--                <span class="process-number">0</span>-->
+<!--                <span class="process-status step-status">Step Status</span>-->
+<!--              </div>-->
+
+<!--            </div>-->
           </div>
 
         </div>
