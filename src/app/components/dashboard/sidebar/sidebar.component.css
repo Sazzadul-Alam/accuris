@@ -1,6 +1,6 @@
 /* ========== SIDEBAR ========== */
 .sidebar {
-  width: 182px;
+  width: 100%;
   /*height: 95%;*/
   height: calc(100% - 36px);
   background: #ffffff;
@@ -54,6 +54,7 @@
 
 .logout-section {
   margin-top: auto;
+  margin-bottom: 0px;
 
 }
 
