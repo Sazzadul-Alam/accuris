@@ -394,7 +394,7 @@ app-sidebar {
 .plans-card {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .plans-header {
@@ -415,7 +415,8 @@ app-sidebar {
 }
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
+  /*grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));*/
   gap: 10px;
 }
 .plan-item {
@@ -798,7 +799,8 @@ app-sidebar {
     grid-template-columns: 240px 1fr;
   }
   .plans-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    /*grid-template-columns: 1fr;*/
   }
   .steps-timeline {
     grid-template-columns: repeat(7, 1fr);
