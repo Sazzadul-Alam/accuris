@@ -1,0 +1,624 @@
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap');
+
+/* Root defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: "Zen Kaku Gothic Antique", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: #ffffff;
+}
+
+/* Main Layout */
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* LEFT SECTION */
+.left-section {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 50px 15px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.auth-content {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 12px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+}
+
+.logo-image {
+  height: 45px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-fallback {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  background: #2d5f4f;
+  color: white;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 4px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 0.5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.log-in-btn {
+  padding: 9px 26px;
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.log-in-btn:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+/* Step Indicator */
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 120px;
+  width: 100%;
+  margin: 15px 0 40px;
+  padding: 0;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.step-item.completed,
+.step-item.active {
+  opacity: 1;
+}
+
+.step-item:nth-child(2) .step-icon {
+  width: 100px;
+  height: 100px;
+}
+
+.step-item:nth-child(2) .step-icon img {
+  width: 100px;
+  height: 100px;
+}
+
+.step-icon {
+  width: 85px;
+  height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.step-item.active .step-icon {
+  background: transparent;
+}
+
+.step-icon img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  filter: none;
+}
+
+.step-item.active .step-icon img {
+  filter: none;
+}
+
+.step-text {
+  display: none;
+}
+
+/* Form Container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 640px;
+  margin: -120px auto 0;
+  flex: 1;
+  justify-content: center;
+  padding: 0;
+}
+
+h1 {
+  font-size: 27px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 10px;
+  text-align: center;
+  letter-spacing: -0.3px;
+  line-height: 1.4;
+}
+
+.subtitle {
+  font-size: 10px;
+  color: #616161;
+  letter-spacing: 1.2px;
+  text-align: center;
+  margin-bottom: 35px;
+  font-weight: 400;
+}
+
+/* Verification Rows */
+.verification-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  align-items: flex-start;
+}
+
+.input-group {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-control {
+  width: 100%;
+  padding: 13px 52px 13px 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease;
+  background-color: #fff;
+}
+
+/* Enhanced focus state */
+.form-control:focus {
+  border-color: #20C0A0;
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(32, 192, 160, 0.2);
+}
+
+/* When input has value */
+.form-control.ng-dirty,
+.form-control:not(:placeholder-shown) {
+  border-color: #20C0A0;
+}
+
+.form-control.verified {
+  border-color: #20C0A0;
+  background-color: #f0fdf9;
+}
+
+.form-control::placeholder {
+  color: #b0b0b0;
+  font-weight: 400;
+}
+
+/* Send Button - Enhanced styles */
+.send-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #20C0A0;
+  border: none;
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+}
+
+/* Active state when input has value - darker green */
+.input-group .form-control:not(:placeholder-shown) ~ .send-btn,
+.input-group .form-control.ng-dirty ~ .send-btn,
+.input-group .form-control:focus ~ .send-btn {
+  background: #16A085;
+  opacity: 1;
+}
+
+.send-btn:hover:not(:disabled) {
+  background: #16A085;
+  opacity: 1;
+}
+
+.send-btn:disabled {
+  background: #ccc;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.otp-group {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.otp-input {
+  padding-right: 50px;
+}
+
+/* Verify Button - Enhanced styles */
+.verify-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: 2px solid #20C0A0;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  opacity: 0.5;
+}
+
+/* Active/focused state for verify button - darker green */
+.otp-group .form-control:not(:placeholder-shown) ~ .verify-btn,
+.otp-group .form-control.ng-dirty ~ .verify-btn,
+.otp-group .form-control:focus ~ .verify-btn {
+  border-color: #16A085;
+  border-width: 2.5px;
+  opacity: 1;
+}
+
+.verify-btn:hover:not(.verified) {
+  background: #f0fdf9;
+  border-color: #16A085;
+  opacity: 1;
+}
+
+.verify-btn.verified {
+  background: #20C0A0;
+  border-color: #20C0A0;
+  opacity: 1;
+}
+
+/* Make checkmark stroke darker when active but not verified */
+.verify-btn svg {
+  stroke: #20C0A0;
+  stroke-width: 2.5;
+  transition: all 0.2s ease;
+}
+
+.otp-group .form-control:not(:placeholder-shown) ~ .verify-btn:not(.verified) svg,
+.otp-group .form-control.ng-dirty ~ .verify-btn:not(.verified) svg,
+.otp-group .form-control:focus ~ .verify-btn:not(.verified) svg {
+  stroke: #16A085;
+  stroke-width: 2.5;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.btn-back,
+.btn-next {
+  flex: 1;
+  padding: 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.btn-back {
+  background: white;
+  border: 2px solid #20C0A0;
+  color: #333;
+}
+
+.btn-back:hover {
+  background: #f9f9f9;
+}
+
+.btn-next {
+  background: #20C0A0;
+  border: none;
+  color: white;
+}
+
+.btn-next:hover:not(:disabled) {
+  background: #1aa88d;
+  box-shadow: 0 2px 8px rgba(32, 192, 160, 0.3);
+}
+
+.btn-next:disabled {
+  background: #20C0A0;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  position: relative;
+}
+
+.return-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #666;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+.return-link:hover {
+  color: #20C0A0;
+}
+
+.return-link:hover svg path {
+  stroke: #20C0A0;
+}
+
+.copyright {
+  font-size: 10px;
+  color: #aaa;
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Right item - Chat Icon */
+.chat-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.chat-icon-btn:hover {
+  transform: scale(1.05);
+  background-color: rgba(77, 212, 214, 0.1);
+}
+
+/* RIGHT SECTION */
+.right-section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: #4a5f6a;
+}
+
+.background-image {
+  height: 100vh;
+  width: auto;
+  object-fit: cover;
+  min-width: 380px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .left-section {
+    padding: 20px 40px 15px;
+  }
+
+  .background-image {
+    min-width: 350px;
+  }
+
+  .form-container {
+    max-width: 550px;
+  }
+  
+  .step-indicator {
+    gap: 80px;
+    margin: 15px 0 25px;
+  }
+
+  .step-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .step-icon img {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 992px) {
+  .verification-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .input-group,
+  .otp-group {
+    flex: 1;
+    width: 100%;
+  }
+
+  .otp-group {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-section {
+    display: none;
+  }
+
+  .left-section {
+    padding: 20px;
+  }
+
+  .header-right span {
+    display: none;
+  }
+
+  .step-indicator {
+    gap: 60px;
+    margin: 15px 0 20px;
+  }
+
+  .step-icon {
+    width: 65px;
+    height: 65px;
+  }
+
+  .step-icon img {
+    width: 65px;
+    height: 65px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 9px;
+    margin-bottom: 20px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    margin-top: 25px;
+  }
+
+  .btn-back {
+    flex: 1;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .copyright {
+    position: static;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .left-section {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .form-control {
+    padding: 10px 45px 10px 12px;
+    font-size: 12px;
+  }
+
+  .send-btn,
+  .verify-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .action-buttons {
+    margin-top: 20px;
+  }
+}
