@@ -26,7 +26,7 @@ import { SidebarComponent } from './components/dashboard/sidebar/sidebar.compone
     DashboardComponent,
     LandingComponent,
     LoginComponent,
-    TwoFactorAuthComponent,
+    //TwoFactorAuthComponent,
     IndividualCreditScoringModalComponent,
     PaymentModalComponent,
     ForgotPasswordComponent,
@@ -41,7 +41,8 @@ import { SidebarComponent } from './components/dashboard/sidebar/sidebar.compone
         BrowserModule,
         AppRoutingModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
+        TwoFactorAuthComponent
     ],
   providers: [],
   bootstrap: [AppComponent]
