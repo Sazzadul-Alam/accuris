@@ -195,7 +195,7 @@ app-sidebar {
 .profile-card {
   background: white;
   border-radius: 6px;
-  padding: 5px 12px;
+  padding: 0px 12px 5px 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .profile-header {
@@ -256,22 +256,28 @@ app-sidebar {
   /*padding: 12px 16px;*/
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  align-items: center;
+  /*align-items: center;*/
   gap: 20px;
 
 }
 .stat-left {
   display: flex;
   flex-direction: column;
+  padding-top: 10px;
 }
 .stat-item {
   display: flex;
   flex-direction: column;
-  padding: 10px 0;
+  padding-bottom: 5px;
 }
 .stat-label {
   font-size: 10px;
   color: #454545;
+
+}
+.stat-values{
+  display: flex;
+  justify-content: space-between;
 
 }
 .stat-value {
@@ -281,9 +287,10 @@ app-sidebar {
 }
 /* divider*/
 .stat-divider {
-  width: 1px;
-  height: 60px;
-  background: #e2e8f0;
+  width: 2px;
+  height: 100px;
+  background: #53B1B15C;
+  margin-top: 9px;
 }
 /* Chart */
 .stat-right {
@@ -297,30 +304,36 @@ app-sidebar {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-direction: column;
 }
+
 .progress-circle {
-  position: relative;
   width: 80px;
   height: 80px;
 }
 
 .progress-circle svg {
-  /*transform: rotate(-90deg); !* start from top *!*/
+  transform: rotate(-90deg);
 }
 
-.progress-circle circle {
+circle {
   fill: none;
-  stroke-width: 8;
+  stroke-width: 12;
+  transition: stroke-dasharray 0.6s ease, stroke-dashoffset 0.6s ease;
 }
-
-.progress-circle circle.bg {
+.bg {
   stroke: #e5e7eb;
 }
 
-.progress-circle circle.progress {
-  stroke: #22c55e; /* green */
+.static {
+  stroke: #A9C1BB;
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s ease;
+}
+
+.growth {
+  stroke: #238A9D;
+  stroke-linecap: round;
+  border-radius: 25%;
 }
 .chart-legend {
   display: flex;
@@ -329,6 +342,7 @@ app-sidebar {
   font-size: 12px;
   color: #475569;
 }
+
 .legend-item {
   display: flex;
   align-items: center;
@@ -341,11 +355,15 @@ app-sidebar {
 }
 
 .dot.growth {
-  background: #22c55e;
+  background: #238A9D;
+  border-radius: 38%;
+  width: 12px;
 }
 
 .dot.static {
-  background: #94a3b8;
+  background: #A9C1BB;
+  border-radius: 38%;
+  width: 12px;
 }
 .expense-chart {
   /*margin-top: 24px;*/
@@ -367,6 +385,7 @@ app-sidebar {
   height: 80px;
   margin-bottom: 12px;
 }
+
 .chart-labels {
   display: flex;
   gap: 16px;
@@ -378,12 +397,14 @@ app-sidebar {
   align-items: center;
   gap: 6px;
 }
+
 .dot-this {
   width: 8px;
   height: 8px;
   background: #20C0A0;
   border-radius: 50%;
 }
+
 .dot-last {
   width: 8px;
   height: 8px;
@@ -409,9 +430,9 @@ app-sidebar {
   color: #1e293b;
 }
 .running-process {
-  font-size: 13px;
-  color: #20C0A0;
-  font-weight: 500;
+  color: #60BAA2;
+  font-size: 12px;
+  font-weight: 600;
 }
 .plans-grid {
   display: grid;
@@ -422,24 +443,33 @@ app-sidebar {
 .plan-item {
   background: #20C0A0;
   border-radius: 8px;
-  padding: 14px;
+  padding: 9px;
   text-align: center;
   color: white;
+}
+.plan-items{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.plan-items p {
+  font-size: 12px;
+  margin-top: 4px;
+  color: #008080;
 }
 .plan-icon {
   width: 48px;
   height: 48px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 12px;
+  margin: 0 auto 0px;
 }
 .plan-item h4 {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 0px;
 }
 .plan-price {
   font-size: 16px;
@@ -449,6 +479,17 @@ app-sidebar {
 .plan-hours {
   font-size: 11px;
   opacity: 0.9;
+}
+.select-plan{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.select-plan-btn{
+  color: #60BAA2;
+  font-size: 11px;
+  text-decoration: underline;
+  text-decoration-color: #60BAA2;
 }
 /* ========== RIGHT COLUMN ========== */
 /*.right-column {*/
@@ -465,7 +506,7 @@ app-sidebar {
 /* Process Header */
 .process-header {
   background: white;
-  padding: 11px 20px 28px;
+  padding: 11px 20px 50px;
   margin-right: 10px;
 }
 .process-title {
@@ -554,9 +595,9 @@ app-sidebar {
 
   color: #181A1F;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.4;
-
+  padding-bottom: 10px;
   min-height: calc(1.4em * 2);
 }
 
@@ -565,6 +606,7 @@ app-sidebar {
   color: #94a3b8;
   display: block;
   line-height: 1.4;
+  padding-top: 5px;
 }
 .step-bar {
   height: 4px;
@@ -585,6 +627,7 @@ app-sidebar {
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
+  margin-right: 10px;
 }
 .credit-score-board h3 {
   font-size: 14px;
@@ -690,6 +733,7 @@ app-sidebar {
   border-radius: 6px;
   padding: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
 }
 .running-process-card h3 {
   font-size: 14px;

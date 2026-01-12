@@ -7,6 +7,14 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
   showIndividualModal = false;
+
+  thisYearData: number[] = [15000, 22000, 18000, 26000, 20000, 28000, 23000];
+  lastYearData: number[] = [12000, 16000, 14000, 19000, 17000, 21000, 18000];
+
+  svgWidth = 300;
+  svgHeight = 100;
+  padding = 10;
+
   tables = {
     individual_credit: {selected:false},
     business_credit: {selected:false}
@@ -16,7 +24,19 @@ export class DashboardComponent {
 
   radius = 30;
   circumference = 2 * Math.PI * this.radius;
+  growthPercent = 40;
+  staticPercent = 60;
+  get growthDashArray(): string {
+    return `${(this.growthPercent / 100) * this.circumference} ${this.circumference}`;
+  }
 
+  get staticDashArray(): string {
+    return `${(this.staticPercent / 100) * this.circumference} ${this.circumference}`;
+  }
+
+  get growthOffset(): number {
+    return -((this.staticPercent / 100) * this.circumference);
+  }
   dashOffset = this.circumference;
 
   ngOnInit() {
@@ -29,6 +49,26 @@ export class DashboardComponent {
     if (this.progressValue < 70) return '#f59e0b';
     return '#22c55e';
   }
+
+
+  get maxValue(): number {
+    return Math.max(...this.thisYearData, ...this.lastYearData);
+  }
+
+  generatePoints(data: number[]): string {
+    const stepX = this.svgWidth / (data.length - 1);
+
+    return data
+      .map((value, index) => {
+        const x = index * stepX;
+        const y =
+          this.svgHeight -
+          (value / this.maxValue) * (this.svgHeight - this.padding);
+        return `${x},${y}`;
+      })
+      .join(' ');
+  }
+
   openIndividualModal() {
     console.log('Opening individual modal');
     this.showIndividualModal = true;
