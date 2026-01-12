@@ -369,9 +369,9 @@ circle {
   /*margin-top: 24px;*/
 }
 .chart-header{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  /*display: flex;*/
+  /*justify-content: space-between;*/
+  /*align-items: center;*/
   margin-bottom: 11px;
 }
 .year-select {
@@ -385,7 +385,41 @@ circle {
   height: 80px;
   margin-bottom: 12px;
 }
+path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
+/* Optional draw animation */
+path {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: draw 1.2s ease forwards;
+}
+.line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.this-year {
+  stroke: #20C0A0;
+}
+
+.last-year {
+  stroke: #999;
+  stroke-dasharray: 5,5;
+}
+/* Y Axis */
+.y-label {
+  font-size: 9px;
+  fill: #64748b;
+}
+
+.grid-line {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+}
 .chart-labels {
   display: flex;
   gap: 16px;
@@ -401,16 +435,22 @@ circle {
 .dot-this {
   width: 8px;
   height: 8px;
-  background: #20C0A0;
+  background: #339999;
   border-radius: 50%;
 }
 
 .dot-last {
   width: 8px;
   height: 8px;
-  background: #999;
+  background: #60BAA2;
   border-radius: 50%;
 }
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Plans Card */
 .plans-card {
   background: white;

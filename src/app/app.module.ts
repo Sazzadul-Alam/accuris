@@ -19,6 +19,7 @@ import { VerifyCodeComponent } from './components/login/verify-code/verify-code.
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { SidebarComponent } from './components/dashboard/sidebar/sidebar.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +27,7 @@ import { SidebarComponent } from './components/dashboard/sidebar/sidebar.compone
     DashboardComponent,
     LandingComponent,
     LoginComponent,
-    //TwoFactorAuthComponent,
+    TwoFactorAuthComponent,
     IndividualCreditScoringModalComponent,
     PaymentModalComponent,
     ForgotPasswordComponent,
@@ -41,8 +42,8 @@ import { SidebarComponent } from './components/dashboard/sidebar/sidebar.compone
         BrowserModule,
         AppRoutingModule,
         ReactiveFormsModule,
-        FormsModule,
-        TwoFactorAuthComponent
+        FormsModule
+
     ],
   providers: [],
   bootstrap: [AppComponent]

@@ -26,6 +26,12 @@ export class DashboardComponent {
   circumference = 2 * Math.PI * this.radius;
   growthPercent = 40;
   staticPercent = 60;
+
+  last_year: any = 2024;
+  this_year: any = 2025;
+  yAxisTicks = 4;
+
+
   get growthDashArray(): string {
     return `${(this.growthPercent / 100) * this.circumference} ${this.circumference}`;
   }
@@ -55,20 +61,51 @@ export class DashboardComponent {
     return Math.max(...this.thisYearData, ...this.lastYearData);
   }
 
-  generatePoints(data: number[]): string {
+  getPoints(data: number[]) {
     const stepX = this.svgWidth / (data.length - 1);
 
-    return data
-      .map((value, index) => {
-        const x = index * stepX;
-        const y =
-          this.svgHeight -
-          (value / this.maxValue) * (this.svgHeight - this.padding);
-        return `${x},${y}`;
-      })
-      .join(' ');
+    return data.map((value, index) => {
+      const x = index * stepX;
+      const y =
+        this.svgHeight -
+        (value / this.maxValue) * (this.svgHeight - this.padding);
+      return { x, y };
+    });
   }
 
+  /** Smooth curve using cubic Bezier */
+  generateCurvePath(data: number[]): string {
+    const points = this.getPoints(data);
+    if (points.length < 2) return '';
+
+    let d = `M ${points[0].x} ${points[0].y}`;
+
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+
+      const controlX = (prev.x + curr.x) / 2;
+
+      d += ` C ${controlX} ${prev.y}, ${controlX} ${curr.y}, ${curr.x} ${curr.y}`;
+    }
+
+    return d;
+  }
+  get yAxisLabels() {
+    const labels = [];
+    const step = this.maxValue / this.yAxisTicks;
+
+    for (let i = 0; i <= this.yAxisTicks; i++) {
+      labels.push({
+        value: Math.round(step * i),
+        y:
+          this.svgHeight -
+          (step * i / this.maxValue) * (this.svgHeight - this.padding)
+      });
+    }
+
+    return labels.reverse(); // top to bottom
+  }
   openIndividualModal() {
     console.log('Opening individual modal');
     this.showIndividualModal = true;
@@ -91,6 +128,7 @@ export class DashboardComponent {
     this.closeIndividualModal();
   }
   isSidebarOpen = false;
+
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
