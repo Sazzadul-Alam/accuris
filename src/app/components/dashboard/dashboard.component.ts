@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {DashboardService} from "../../services/dashboard_service/dashboard.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -44,12 +46,31 @@ export class DashboardComponent {
     return -((this.staticPercent / 100) * this.circumference);
   }
   dashOffset = this.circumference;
-
+  constructor(
+    public router: Router,
+    public route: ActivatedRoute,
+    private dashboardService: DashboardService,
+    ) {
+  }
   ngOnInit() {
     this.currentTable ='individual_credit';
     this.tables[this.currentTable].selected = true;
     this.dashOffset = this.circumference - (this.progressValue / 100) * this.circumference;
+    this.getData();
   }
+  getData() {
+    this.dashboardService.getdashboardInfo({
+      page: 1,
+      limit: 10
+    })
+      .subscribe(res => {
+
+        }, error => {
+       }
+      );
+
+  }
+
   get progressColor() {
     if (this.progressValue < 40) return '#ef4444';
     if (this.progressValue < 70) return '#f59e0b';
@@ -143,4 +164,6 @@ export class DashboardComponent {
     this.currentTable = table;
     this.tables[this.currentTable].selected = true;
   }
+
+
 }

@@ -18,6 +18,7 @@ import { UserConsentComponent } from './components/login/user-consent/user-conse
 import { VerifyCodeComponent } from './components/login/verify-code/verify-code.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { SidebarComponent } from './components/dashboard/sidebar/sidebar.component';
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { SidebarComponent } from './components/dashboard/sidebar/sidebar.compone
         BrowserModule,
         AppRoutingModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
+      HttpClientModule
 
     ],
   providers: [],

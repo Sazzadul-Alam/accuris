@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'landing', component: LandingComponent},
   { path: 'login', component: LoginComponent },
   { path: 'signup', component:SignupComponent},
-  { path:'two-factor-auth', component:TwoFactorAuthComponent},
+  { path: 'two-factor-auth', component:TwoFactorAuthComponent},
   { path: 'user-consent', component: UserConsentComponent},
   { path: 'two-step-verification', component: TwoStepVerificationComponent},
   { path: 'forgot-password', component: ForgotPasswordComponent},
