@@ -63,7 +63,8 @@
 }
 
 .logout:hover {
-  background: #fdecea;
+  background: #20C0A099;
+  color: #363636;
 }
 @media (max-width: 768px) {
   .sidebar {
