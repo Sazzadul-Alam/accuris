@@ -1,6 +1,3 @@
-/* Import Zen Kaku Gothic Antique Font */
-@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap');
-
 /* Root defaults */
 * {
   margin: 0;
@@ -386,10 +383,70 @@ h1 {
   text-align: right;
   font-size: 11px;
   color: #999;
+}/* Password toggle */
+.password-group {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password:hover svg path,
+.toggle-password:hover svg circle {
+  stroke: #16a085;
+}
+
+/* Password Strength Indicator */
+.password-strength-container {
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+
+.password-strength-bars {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+
+.strength-bar.weak {
+  background-color: #ff4444;
+}
+
+.strength-bar.medium {
+  background-color: #ff9800;
+}
+
+.strength-bar.strong {
+  background-color: #16a085;
+}
+
+.password-strength-label {
+  text-align: right;
+  font-size: 11px;
+  color: #999;
 }
 
 /* Terms Checkbox */
-.terms-container {
+/* .terms-container {
   margin-bottom: 14px;
   font-size: 11.7px;
 }
@@ -417,7 +474,7 @@ h1 {
   color: #1a1a1a;
   font-weight: 600;
   padding: 0 3px;
-}
+} */
 
 /* Signup Button */
 .signup-button {

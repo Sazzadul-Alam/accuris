@@ -1,183 +1,291 @@
-<div class="modal-overlay" (click)="close()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
+<!-- payment-modal.component.html -->
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <!-- Close Button -->
+    <button class="close-button" (click)="onClose()" aria-label="Close modal">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
 
-    <!-- Modal Header -->
+    <!-- Header with Logo and Title -->
     <div class="modal-header">
-      <div class="header-left">
-        <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="modal-logo" />
-      </div>
-      <h2 class="modal-title">INDIVIDUAL CREDIT SCORING FORM</h2>
-      <button class="close-btn" (click)="close()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
+      <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="company-logo" />
+      <h1 class="modal-title">INDIVIDUAL CREDIT SCORING FORM</h1>
     </div>
 
-    <!-- Plan Info -->
-    <div class="plan-info">
+    <!-- Plan Info Row -->
+    <div class="plan-info-row">
       <div class="plan-label">
-        Plan: <span class="plan-name">Advanced</span>
+        <span class="label-text">Plan:</span>
+        <span class="plan-name">{{ selectedPlan }}</span>
       </div>
-      <div class="for-label">For: <span class="plan-name">Sanjit Ara Kabir</span></div>
+      <div class="for-label">
+        <span class="label-text">For:</span>
+        <span class="user-name">{{ userName }}</span>
+      </div>
     </div>
 
-    <!-- Payment Content -->
-    <div class="payment-content">
-      <div class="payment-left">
-        <h3 class="payment-title">Payment Options</h3>
-        <p class="payment-subtitle">Provide your Payment Information below</p>
+    <!-- Main Content Area -->
+    <div class="modal-content" *ngIf="!isPaymentSuccessful">
+      <!-- Left Side - Payment Form -->
+      <div class="payment-form-section">
+        <h2 class="section-title">Payment Options</h2>
+        <p class="section-subtitle">Provide your Payment Information below</p>
 
         <!-- Payment Method Selection -->
         <div class="payment-methods">
-          <label class="payment-method" [class.active]="paymentMethod === 'card'">
-            <input type="radio" name="paymentMethod" value="card" [(ngModel)]="paymentMethod" />
+          <label class="payment-method-option">
+            <input 
+              type="radio" 
+              name="paymentMethod" 
+              value="creditCard" 
+              [(ngModel)]="paymentMethod"
+              (change)="onPaymentMethodChange()"
+            />
             <span class="radio-custom"></span>
             <span class="method-label">Credit Card</span>
           </label>
-          <label class="payment-method" [class.active]="paymentMethod === 'paypal'">
-            <input type="radio" name="paymentMethod" value="paypal" [(ngModel)]="paymentMethod" />
+
+          <label class="payment-method-option">
+            <input 
+              type="radio" 
+              name="paymentMethod" 
+              value="paypal" 
+              [(ngModel)]="paymentMethod"
+              (change)="onPaymentMethodChange()"
+            />
             <span class="radio-custom"></span>
             <span class="method-label">PayPal</span>
           </label>
-        </div>
 
-        <!-- Card Logos -->
-        <div class="card-logos">
-          <img src="assets/images/visa.png" alt="Visa" class="card-logo" />
-          <img src="assets/images/mastercard.png" alt="Mastercard" class="card-logo" />
-          <img src="assets/images/amex.png" alt="American Express" class="card-logo" />
-          <img src="assets/images/discover.png" alt="Discover" class="card-logo" />
-          <div class="more-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="#20C0A0" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+          <!-- Combined Card Icons Image -->
+          <div class="card-icons">
+            <img src="assets\images\icons\payment-cards.png" alt="Accepted Cards" class="cards-image" />
           </div>
+
+          <!-- More Options Dropdown -->
+          <button type="button" class="more-options-btn" (click)="toggleMoreOptions()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
 
         <!-- Payment Form -->
-        <form [formGroup]="paymentForm" class="payment-form">
+        <form class="payment-form" *ngIf="paymentMethod === 'creditCard'">
           <div class="form-group">
-            <input
-              type="text"
-              formControlName="cardNumber"
+            <input 
+              type="text" 
+              class="form-control" 
               placeholder="Card Number"
-              class="form-input"
+              [(ngModel)]="cardNumber"
+              name="cardNumber"
+              (input)="formatCardNumber()"
+              (blur)="validateForm()"
               maxlength="19"
-              [class.filled]="paymentForm.get('cardNumber')?.value"
             />
           </div>
 
           <div class="form-group">
-            <input
-              type="text"
-              formControlName="cardholderName"
+            <input 
+              type="text" 
+              class="form-control" 
               placeholder="Cardholder's Name"
-              class="form-input"
-              [class.filled]="paymentForm.get('cardholderName')?.value"
+              [(ngModel)]="cardholderName"
+              name="cardholderName"
+              (blur)="validateForm()"
             />
           </div>
 
           <div class="form-row">
-            <div class="form-group half">
-              <input
-                type="text"
-                formControlName="cvv"
+            <div class="form-group">
+              <input 
+                type="text" 
+                class="form-control" 
                 placeholder="CVV"
-                class="form-input"
+                [(ngModel)]="cvv"
+                name="cvv"
+                (blur)="validateForm()"
                 maxlength="4"
-                [class.filled]="paymentForm.get('cvv')?.value"
               />
             </div>
-            <div class="form-group half">
-              <input
-                type="text"
-                formControlName="expiryDate"
+            <div class="form-group">
+              <input 
+                type="text" 
+                class="form-control" 
                 placeholder="Expiry Date"
-                class="form-input"
+                [(ngModel)]="expiryDate"
+                name="expiryDate"
+                (input)="formatExpiryDate()"
+                (blur)="validateForm()"
                 maxlength="5"
-                [class.filled]="paymentForm.get('expiryDate')?.value"
+                placeholder="MM/YY"
               />
             </div>
           </div>
 
-          <div class="button-row">
-            <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
-            <button
-              type="button"
-              class="btn-proceed"
-              [disabled]="paymentForm.invalid"
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button type="button" class="btn-cancel" (click)="onClose()">
+              Cancel
+            </button>
+            <button 
+              type="button" 
+              class="btn-proceed" 
+              [class.active]="isFormValid"
+              [disabled]="!isFormValid"
               (click)="onProceed()"
             >
               Proceed
             </button>
           </div>
         </form>
+
+        <!-- PayPal Message -->
+        <div class="paypal-message" *ngIf="paymentMethod === 'paypal'">
+          <p>You will be redirected to PayPal to complete your payment.</p>
+          <div class="action-buttons">
+            <button type="button" class="btn-cancel" (click)="onClose()">
+              Cancel
+            </button>
+            <button 
+              type="button" 
+              class="btn-proceed active"
+              (click)="onProceed()"
+            >
+              Continue to PayPal
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div class="payment-right">
-        <div class="order-summary">
-          <h3 class="summary-title">Order Summary</h3>
-
+      <!-- Right Side - Order Summary -->
+      <div class="order-summary-section">
+        <div class="order-summary-header">Order Summary</div>
+        <div class="order-summary-content">
           <div class="plan-details">
-            <h4 class="plan-name-summary">Advanced Plan</h4>
-            <p class="plan-description">Provides essential credit scoring based on key financial inputs and business profile data. Ideal for startups and small businesses.</p>
+            <h3 class="plan-title">{{ selectedPlan }} Plan</h3>
+            <p class="plan-description">{{ planDescription }}</p>
           </div>
 
-          <div class="summary-item">
+          <div class="summary-row">
             <span class="summary-label">Transaction ID:</span>
-            <span class="summary-value">21N03L2025</span>
+            <span class="summary-value">{{ transactionId }}</span>
           </div>
 
           <div class="summary-divider"></div>
 
-          <div class="summary-item">
+          <div class="summary-row">
             <span class="summary-label">Balance Amount:</span>
-            <span class="summary-value">$2100</span>
+            <span class="summary-value">${{ balanceAmount }}</span>
           </div>
 
-          <div class="summary-item">
-            <span class="summary-label">Vat (21%):</span>
-            <span class="summary-value">
-              $440
-              <svg class="info-icon-small" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
-              </svg>
+          <div class="summary-row">
+            <span class="summary-label">
+              Vat (21%):
+              <img src="assets\images\icons\info-circle-icon.png" alt="Info" class="info-icon" />
             </span>
+            <span class="summary-value">${{ vatAmount }}</span>
           </div>
 
-          <div class="summary-item">
+          <div class="summary-row">
             <span class="summary-label">Discount:</span>
-            <span class="summary-value discount">-$560</span>
+            <span class="summary-value discount">-${{ discountAmount }}</span>
           </div>
 
           <div class="summary-divider"></div>
 
-          <div class="summary-item total">
+          <div class="summary-row total-row">
             <span class="summary-label">Total:</span>
-            <span class="summary-value">$1980</span>
+            <span class="summary-value total">${{ totalAmount }}</span>
           </div>
 
           <div class="summary-divider"></div>
 
-          <div class="payment-date">
-            <div class="date-day">Wednesday</div>
-            <div class="date-time">January 15, 2025 | 11:05 AM</div>
+          <div class="datetime-section">
+            <div class="day-label">{{ currentDay }}</div>
+            <div class="datetime-value">{{ currentDateTime }}</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <div class="modal-footer">
-      <button class="return-home-btn" (click)="returnHome()">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <!-- Success Screen -->
+    <div class="success-content" *ngIf="isPaymentSuccessful">
+      <div class="success-icon">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="40" fill="#10B981"/>
+          <path d="M25 40L35 50L55 30" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Return Home
-      </button>
+      </div>
+
+      <h2 class="success-title">Payment Successful</h2>
+      <p class="success-subtitle">Your payment is done</p>
+
+      <!-- Payment Summary Box -->
+      <div class="payment-summary-box">
+        <h3 class="summary-box-title">Payment Summary</h3>
+
+        <div class="plan-details">
+          <h4 class="plan-title-small">{{ selectedPlan }} Plan</h4>
+          <p class="plan-description-small">{{ planDescription }}</p>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row">
+          <span class="summary-label">Transaction ID:</span>
+          <span class="summary-value">{{ transactionId }}</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row">
+          <span class="summary-label">Amount:</span>
+          <span class="summary-value">${{ balanceAmount }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span class="summary-label">
+            Vat (21%):
+            <img src="assets\images\icons\info-circle-icon.png" alt="Info" class="info-icon-small" />
+          </span>
+          <span class="summary-value">${{ vatAmount }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span class="summary-label">Discount:</span>
+          <span class="summary-value discount">-${{ discountAmount }}</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row total-row">
+          <span class="summary-label">Total:</span>
+          <span class="summary-value total">${{ totalAmount }}</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="success-actions">
+        <button type="button" class="btn-back-dashboard" (click)="backToDashboard()">
+          Back to Dashboard
+        </button>
+        <button type="button" class="btn-download-receipt" (click)="downloadReceipt()">
+          Download Receipt
+        </button>
+      </div>
     </div>
 
+    <!-- Return Home Link (only on payment form screen) -->
+    <div class="return-home" *ngIf="!isPaymentSuccessful">
+      <button class="return-home-btn" (click)="returnHome()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 5L7.5 10L12.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Return Home</span>
+      </button>
+    </div>
   </div>
 </div>

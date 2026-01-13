@@ -1,0 +1,57 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <button class="close-button" (click)="onClose()" aria-label="Close modal">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="modal-header">
+      <h1 class="modal-title">Choose Your Plan</h1>
+      <p class="modal-subtitle">
+        Explore Our Credit Rating Plans in Detail and Choose the Option That
+        Best Supports Your Business Growth and Credibility
+      </p>
+    </div>
+
+    <div class="plans-grid">
+      <div 
+        *ngFor="let plan of plans" 
+        class="plan-card"
+        [class.highlighted]="plan.isHighlighted"
+      >
+        <div class="plan-header">
+          <div class="plan-price-section">
+            <span class="currency">$</span>
+            <span class="price">{{ plan.price }}</span>
+          </div>
+          
+          <h2 class="plan-name">{{ plan.name }}</h2>
+          <p class="plan-description">{{ plan.description }}</p>
+        </div>
+
+        <div class="plan-features">
+          <div class="feature-item" *ngFor="let feature of plan.features">
+            <svg class="checkmark" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="10" fill="#6FD8C8"/>
+              <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="feature-text">{{ feature }}</span>
+          </div>
+        </div>
+
+        <button 
+          class="choose-plan-button"
+          [class.popular]="plan.isPopular"
+          (click)="onSelectPlan(plan.name)"
+        >
+          Choose plan
+        </button>
+
+        <div class="popular-badge" *ngIf="plan.isPopular">
+          MOST POPULAR
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

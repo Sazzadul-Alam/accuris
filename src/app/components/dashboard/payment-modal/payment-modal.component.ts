@@ -1,262 +1,358 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+// payment-modal.component.ts - COMPLETE FIXED VERSION
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { jsPDF } from 'jspdf'; // Static import at the top
 
 @Component({
   selector: 'app-payment-modal',
   templateUrl: './payment-modal.component.html',
   styleUrls: ['./payment-modal.component.css']
 })
-export class PaymentModalComponent {
+export class PaymentModalComponent implements OnInit {
+  @Input() isOpen: boolean = false;
+  @Input() selectedPlan: string = 'Advanced'; // Default value
+  @Input() userName: string = 'Sanjit Ara Kabir'; // Default value
   @Output() closeModal = new EventEmitter<void>();
-  @Output() paymentSubmit = new EventEmitter<any>();
+  @Output() paymentComplete = new EventEmitter<any>();
 
-  paymentForm!: FormGroup;
-  paymentMethod: string = 'card';
+  // Payment form fields
+  paymentMethod: string = 'creditCard';
+  cardNumber: string = '';
+  cardholderName: string = '';
+  cvv: string = '';
+  expiryDate: string = '';
 
-  constructor(private fb: FormBuilder) {}
+  // Form validation
+  isFormValid: boolean = false;
 
-  ngOnInit(): void {
-    this.initializeForm();
+  // Payment state
+  isPaymentSuccessful: boolean = false;
+
+  // Order details
+  transactionId: string = '';
+  balanceAmount: number = 2100;
+  vatAmount: number = 440;
+  discountAmount: number = 560;
+  totalAmount: number = 1980;
+  planDescription: string = 'Provides essential credit scoring based on key financial inputs and business profile data. Ideal for startups and small businesses';
+
+  // Date and time
+  currentDay: string = '';
+  currentDateTime: string = '';
+
+  ngOnInit() {
+    console.log('Payment modal initialized with plan:', this.selectedPlan);
+    console.log('Payment modal initialized with userName:', this.userName);
+    
+    this.generateTransactionId();
+    this.updateDateTime();
+    this.setPlanDetails();
   }
 
-  initializeForm(): void {
-    this.paymentForm = this.fb.group({
-      cardNumber: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]{13,19}$/),
-        this.cardNumberValidator
-      ]],
-      cardholderName: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.pattern(/^[a-zA-Z\s]*$/)
-      ]],
-      cvv: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]{3,4}$/)
-      ]],
-      expiryDate: ['', [
-        Validators.required,
-        this.expiryDateValidator
-      ]]
-    });
+  generateTransactionId() {
+    const prefix = '21N03L';
+    const year = new Date().getFullYear();
+    this.transactionId = `${prefix}${year}`;
+  }
 
-    // Auto-format card number
-    this.paymentForm.get('cardNumber')?.valueChanges.subscribe(value => {
-      if (value) {
-        const formattedValue = this.formatCardNumber(value);
-        if (formattedValue !== value) {
-          this.paymentForm.get('cardNumber')?.setValue(formattedValue, { emitEvent: false });
-        }
+  updateDateTime() {
+    const now = new Date();
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    this.currentDay = days[now.getDay()];
+    
+    const month = months[now.getMonth()];
+    const day = now.getDate();
+    const year = now.getFullYear();
+    const hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    
+    this.currentDateTime = `${month} ${day}, ${year} | ${displayHours}:${minutes} ${ampm}`;
+  }
+
+  setPlanDetails() {
+    const planData: any = {
+      'Basic': {
+        amount: 75,
+        description: 'Unleash the power of automation.'
+      },
+      'Advanced': {
+        amount: 2100,
+        description: 'Provides essential credit scoring based on key financial inputs and business profile data. Ideal for startups and small businesses'
+      },
+      'Holistic': {
+        amount: 245,
+        description: 'Automation plus enterprise-grade features.'
       }
-    });
+    };
 
-    // Auto-format expiry date
-    this.paymentForm.get('expiryDate')?.valueChanges.subscribe(value => {
-      if (value) {
-        const formattedValue = this.formatExpiryDate(value);
-        if (formattedValue !== value) {
-          this.paymentForm.get('expiryDate')?.setValue(formattedValue, { emitEvent: false });
-        }
-      }
-    });
+    if (planData[this.selectedPlan]) {
+      this.balanceAmount = planData[this.selectedPlan].amount;
+      this.planDescription = planData[this.selectedPlan].description;
+      
+      this.vatAmount = Math.round(this.balanceAmount * 0.21);
+      this.discountAmount = Math.round((this.balanceAmount + this.vatAmount) * 0.20);
+      this.totalAmount = this.balanceAmount + this.vatAmount - this.discountAmount;
+    }
   }
 
-  formatCardNumber(value: string): string {
-    // Remove all non-digit characters
-    const cleaned = value.replace(/\D/g, '');
-
-    // Add space every 4 digits
-    const formatted = cleaned.match(/.{1,4}/g)?.join(' ') || cleaned;
-
-    return formatted.substring(0, 19); // Max 16 digits + 3 spaces
-  }
-
-  formatExpiryDate(value: string): string {
-    // Remove all non-digit characters
-    const cleaned = value.replace(/\D/g, '');
-
-    if (cleaned.length >= 2) {
-      return cleaned.substring(0, 2) + '/' + cleaned.substring(2, 4);
-    }
-
-    return cleaned;
-  }
-
-  cardNumberValidator(control: any) {
-    if (!control.value) return null;
-
-    // Remove spaces
-    const value = control.value.replace(/\s/g, '');
-
-    // Luhn algorithm
-    let sum = 0;
-    let isEven = false;
-
-    for (let i = value.length - 1; i >= 0; i--) {
-      let digit = parseInt(value.charAt(i), 10);
-
-      if (isEven) {
-        digit *= 2;
-        if (digit > 9) {
-          digit -= 9;
-        }
-      }
-
-      sum += digit;
-      isEven = !isEven;
-    }
-
-    return (sum % 10) === 0 ? null : { invalidCard: true };
-  }
-
-  expiryDateValidator(control: any) {
-    if (!control.value) return null;
-
-    const value = control.value.replace(/\D/g, '');
-
-    if (value.length !== 4) {
-      return { invalidExpiry: true };
-    }
-
-    const month = parseInt(value.substring(0, 2), 10);
-    const year = parseInt(value.substring(2, 4), 10);
-
-    if (month < 1 || month > 12) {
-      return { invalidExpiry: true };
-    }
-
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear() % 100;
-    const currentMonth = currentDate.getMonth() + 1;
-
-    if (year < currentYear || (year === currentYear && month < currentMonth)) {
-      return { expiredCard: true };
-    }
-
-    return null;
-  }
-
-  close(): void {
-    if (this.paymentForm.dirty) {
-      const confirmClose = confirm('You have unsaved changes. Are you sure you want to close?');
-      if (confirmClose) {
-        this.closeModal.emit();
-      }
+  onPaymentMethodChange() {
+    if (this.paymentMethod === 'paypal') {
+      this.isFormValid = true;
     } else {
-      this.closeModal.emit();
+      this.validateForm();
     }
   }
 
-  onCancel(): void {
-    this.close();
+  formatCardNumber() {
+    let value = this.cardNumber.replace(/\D/g, '');
+    let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+    this.cardNumber = formatted;
+    this.validateForm();
   }
 
-  onProceed(): void {
-    if (this.paymentForm.valid) {
-      const paymentData = {
-        ...this.paymentForm.value,
-        paymentMethod: this.paymentMethod,
-        transactionId: '21N03L2025',
-        amount: 1980,
-        timestamp: new Date().toISOString()
-      };
+  formatExpiryDate() {
+    let value = this.expiryDate.replace(/\D/g, '');
+    if (value.length >= 2) {
+      value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    }
+    this.expiryDate = value;
+    this.validateForm();
+  }
 
-      console.log('Processing payment:', paymentData);
+  validateForm() {
+    if (this.paymentMethod === 'paypal') {
+      this.isFormValid = true;
+      return;
+    }
 
-      // Emit payment data
-      this.paymentSubmit.emit(paymentData);
+    const cardNumberClean = this.cardNumber.replace(/\s/g, '');
+    const isCardNumberValid = cardNumberClean.length >= 13 && cardNumberClean.length <= 19;
+    const isCardholderValid = this.cardholderName.trim().length > 0;
+    const isCvvValid = this.cvv.length >= 3 && this.cvv.length <= 4;
+    const isExpiryValid = this.expiryDate.length === 5 && this.expiryDate.includes('/');
+    
+    this.isFormValid = isCardNumberValid && isCardholderValid && isCvvValid && isExpiryValid;
+  }
 
-      // Show success message
-      alert('✓ Payment processed successfully!');
+  toggleMoreOptions() {
+    console.log('More payment options clicked');
+  }
 
-      // Close modal after successful payment
-      setTimeout(() => {
-        this.closeModal.emit();
-      }, 1000);
-    } else {
-      this.markFormGroupTouched(this.paymentForm);
-      alert('✗ Please fill in all payment details correctly.');
+  onProceed() {
+    if (!this.isFormValid) {
+      return;
+    }
+
+    setTimeout(() => {
+      this.isPaymentSuccessful = true;
+      this.paymentComplete.emit({
+        transactionId: this.transactionId,
+        amount: this.totalAmount,
+        plan: this.selectedPlan
+      });
+    }, 500);
+  }
+
+  /**
+   * Download receipt as PDF - FIXED VERSION WITH SAFETY CHECKS
+   */
+  downloadReceipt() {
+    console.log('=== PDF Download Started ===');
+    console.log('Selected Plan:', this.selectedPlan);
+    console.log('User Name:', this.userName);
+    console.log('Transaction ID:', this.transactionId);
+    
+    try {
+      // Ensure all values are strings (not undefined)
+      const planName = this.selectedPlan || 'Advanced';
+      const userName = this.userName || 'Customer';
+      const transactionId = this.transactionId || 'N/A';
+      const planDesc = this.planDescription || 'Credit scoring service';
+      
+      console.log('Creating PDF with safe values...');
+      
+      const doc = new jsPDF();
+      
+      // Set font
+      doc.setFont('helvetica');
+      
+      // Add logo/company name
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('ACCURIS', 105, 20, { align: 'center' });
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Trust Quantified', 105, 26, { align: 'center' });
+      
+      console.log('Header added');
+      
+      // Add title
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.text('PAYMENT RECEIPT', 105, 40, { align: 'center' });
+      
+      // Add horizontal line
+      doc.setLineWidth(0.5);
+      doc.line(20, 45, 190, 45);
+      
+      // Add payment successful message
+      doc.setFontSize(14);
+      doc.setTextColor(16, 185, 129);
+      doc.text('Payment Successful', 105, 55, { align: 'center' });
+      doc.setTextColor(0, 0, 0);
+      
+      console.log('Title and success message added');
+      
+      // Add customer info
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('For:', 20, 70);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(32, 192, 160);
+      doc.text(userName, 35, 70); // Using safe value
+      doc.setTextColor(0, 0, 0);
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('Plan:', 20, 78);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(32, 192, 160);
+      doc.text(planName, 35, 78); // Using safe value
+      doc.setTextColor(0, 0, 0);
+      
+      console.log('Customer info added');
+      
+      // Add payment summary box
+      doc.setLineWidth(0.3);
+      doc.rect(20, 90, 170, 100);
+      
+      // Payment Summary title
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Payment Summary', 105, 100, { align: 'center' });
+      
+      // Add horizontal line under title
+      doc.setLineWidth(0.2);
+      doc.line(25, 103, 185, 103);
+      
+      // Plan details
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(planName + ' Plan', 25, 112); // Using safe value
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      
+      // Split long description
+      const descLines = doc.splitTextToSize(planDesc, 160); // Using safe value
+      doc.text(descLines, 25, 118);
+      
+      console.log('Plan details added');
+      
+      // Calculate current Y position
+      let currentY = 118 + (descLines.length * 4) + 5;
+      doc.line(25, currentY, 185, currentY);
+      currentY += 8;
+      
+      // Transaction ID
+      doc.setFontSize(9);
+      doc.text('Transaction ID:', 25, currentY);
+      doc.text(transactionId, 185, currentY, { align: 'right' }); // Using safe value
+      currentY += 8;
+      
+      doc.line(25, currentY, 185, currentY);
+      currentY += 8;
+      
+      // Amount
+      doc.text('Amount:', 25, currentY);
+      doc.text('$' + this.balanceAmount.toString(), 185, currentY, { align: 'right' });
+      currentY += 6;
+      
+      // VAT
+      doc.text('Vat (21%):', 25, currentY);
+      doc.text('$' + this.vatAmount.toString(), 185, currentY, { align: 'right' });
+      currentY += 6;
+      
+      // Discount
+      doc.text('Discount:', 25, currentY);
+      doc.setTextColor(239, 68, 68);
+      doc.text('-$' + this.discountAmount.toString(), 185, currentY, { align: 'right' });
+      doc.setTextColor(0, 0, 0);
+      currentY += 8;
+      
+      doc.line(25, currentY, 185, currentY);
+      currentY += 8;
+      
+      // Total
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text('Total:', 25, currentY);
+      doc.text('$' + this.totalAmount.toString(), 185, currentY, { align: 'right' });
+      
+      console.log('Financial details added');
+      
+      // Date and time
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.text(this.currentDay || 'Today', 105, 270, { align: 'center' });
+      doc.text(this.currentDateTime || new Date().toLocaleString(), 105, 276, { align: 'center' });
+      
+      // Footer
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Thank you for your business!', 105, 285, { align: 'center' });
+      
+      console.log('Date and footer added');
+      
+      // Save the PDF
+      const filename = 'Receipt_' + transactionId + '.pdf';
+      doc.save(filename);
+      
+      console.log('=== PDF Saved Successfully:', filename, '===');
+      
+    } catch (error: any) {
+      console.error('=== PDF Generation Error ===');
+      console.error('Error:', error);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      alert('Error generating receipt: ' + (error.message || 'Unknown error'));
     }
   }
 
-  returnHome(): void {
-    this.close();
+  backToDashboard() {
+    this.closeModal.emit();
+    this.resetModal();
   }
 
-  private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      control?.markAsTouched();
-      control?.markAsDirty();
-
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
-    });
+  returnHome() {
+    this.closeModal.emit();
+    this.resetModal();
   }
 
-  // Getter methods for form validation display
-  get cardNumber() {
-    return this.paymentForm.get('cardNumber');
+  resetModal() {
+    this.isPaymentSuccessful = false;
+    this.cardNumber = '';
+    this.cardholderName = '';
+    this.cvv = '';
+    this.expiryDate = '';
+    this.isFormValid = false;
+    this.paymentMethod = 'creditCard';
   }
 
-  get cardholderName() {
-    return this.paymentForm.get('cardholderName');
+  onClose() {
+    this.closeModal.emit();
+    this.resetModal();
   }
 
-  get cvv() {
-    return this.paymentForm.get('cvv');
-  }
-
-  get expiryDate() {
-    return this.paymentForm.get('expiryDate');
-  }
-
-  hasError(fieldName: string, errorType: string): boolean {
-    const field = this.paymentForm.get(fieldName);
-    return !!(field?.hasError(errorType) && (field?.touched || field?.dirty));
-  }
-
-  getErrorMessage(fieldName: string): string {
-    const field = this.paymentForm.get(fieldName);
-
-    if (!field || !field.errors || !field.touched) {
-      return '';
+  onBackdropClick(event: MouseEvent) {
+    if (event.target === event.currentTarget) {
+      this.onClose();
     }
-
-    if (field.hasError('required')) {
-      return 'This field is required';
-    }
-
-    if (field.hasError('pattern')) {
-      if (fieldName === 'cardNumber') {
-        return 'Invalid card number format';
-      }
-      if (fieldName === 'cvv') {
-        return 'CVV must be 3 or 4 digits';
-      }
-      if (fieldName === 'cardholderName') {
-        return 'Only letters are allowed';
-      }
-    }
-
-    if (field.hasError('invalidCard')) {
-      return 'Invalid card number';
-    }
-
-    if (field.hasError('invalidExpiry')) {
-      return 'Invalid expiry date';
-    }
-
-    if (field.hasError('expiredCard')) {
-      return 'Card has expired';
-    }
-
-    if (field.hasError('minlength')) {
-      return 'Name is too short';
-    }
-
-    return 'Invalid value';
   }
 }

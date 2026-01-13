@@ -1,0 +1,291 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 20px;
+  max-width: 950px;
+  width: 100%;
+  padding: 32px 40px 40px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: color 0.2s;
+  border-radius: 8px;
+}
+
+.close-button:hover {
+  color: #1e293b;
+  background-color: #f1f5f9;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.modal-title {
+  font-size: 36px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+}
+
+.modal-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.plan-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px 24px;
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.plan-card.highlighted {
+  border: 2px solid #6FD8C8;
+  box-shadow: 0 8px 24px rgba(111, 216, 200, 0.15);
+}
+
+.plan-header {
+  margin-bottom: 24px;
+}
+
+.plan-price-section {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.currency {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-right: 4px;
+  margin-top: 4px;
+}
+
+.price {
+  font-size: 42px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.plan-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.plan-description {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.plan-features {
+  flex: 1;
+  margin-bottom: 24px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.feature-item:last-child {
+  margin-bottom: 0;
+}
+
+.checkmark {
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+.feature-text {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.choose-plan-button {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: #6FD8C8;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: capitalize;
+}
+
+.choose-plan-button:hover {
+  background-color: #5BC4B3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(111, 216, 200, 0.3);
+}
+
+.choose-plan-button:active {
+  transform: translateY(0);
+}
+
+.choose-plan-button.popular {
+  background-color: #10b981;
+}
+
+.choose-plan-button.popular:hover {
+  background-color: #059669;
+}
+
+.popular-badge {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: linear-gradient(135deg, #6FD8C8 0%, #5BC4B3 100%);
+  color: white;
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(111, 216, 200, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .modal-container {
+    padding: 30px 30px 36px;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .modal-title {
+    font-size: 32px;
+  }
+
+  .modal-subtitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-container {
+    padding: 24px 20px;
+  }
+
+  .modal-header {
+    margin-bottom: 24px;
+  }
+
+  .modal-title {
+    font-size: 26px;
+  }
+
+  .modal-subtitle {
+    font-size: 13px;
+  }
+
+  .price {
+    font-size: 36px;
+  }
+
+  .plan-name {
+    font-size: 20px;
+  }
+
+  .plan-card {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-backdrop {
+    padding: 10px;
+  }
+
+  .modal-container {
+    border-radius: 16px;
+    padding: 20px 16px;
+  }
+
+  .close-button {
+    top: 12px;
+    right: 12px;
+  }
+
+  .modal-title {
+    font-size: 22px;
+  }
+
+  .price {
+    font-size: 32px;
+  }
+}

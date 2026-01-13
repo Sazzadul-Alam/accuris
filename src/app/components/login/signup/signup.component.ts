@@ -1,16 +1,15 @@
-import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
   showPassword = false;
-  showConfirmPassword = false;
   passwordStrength: number = 0;
 
   constructor(
@@ -23,42 +22,46 @@ export class SignupComponent {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      agreeTerms: [false, Validators.requiredTrue]
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    // Listen to password changes
+    this.signupForm.get('password')?.valueChanges.subscribe(password => {
+      this.checkPasswordStrength(password || '');
     });
   }
 
-  checkPasswordStrength() {
-    const password = this.signupForm.get('password')?.value || '';
-
-    if (password.length === 0) {
+  checkPasswordStrength(password: string) {
+    if (!password || password.length === 0) {
       this.passwordStrength = 0;
       return;
     }
 
     let strength = 0;
 
-    // Weak: length >= 6
-    if (password.length >= 6) {
-      strength = 1;
-    }
+    // Check password criteria
+    if (password.length >= 6) strength++;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
 
-    // Medium: length >= 8 and contains numbers
-    if (password.length >= 8 && /\d/.test(password)) {
-      strength = 2;
+    // Calculate final strength (1 = weak, 2 = medium, 3 = strong)
+    if (strength <= 2) {
+      this.passwordStrength = 1; // Weak
+    } else if (strength === 3 || strength === 4) {
+      this.passwordStrength = 2; // Medium
+    } else {
+      this.passwordStrength = 3; // Strong
     }
+  }
 
-    // Strong: length >= 8, contains numbers, uppercase, and special characters
-    if (
-      password.length >= 8 &&
-      /\d/.test(password) &&
-      /[A-Z]/.test(password) &&
-      /[!@#$%^&*(),.?":{}|<>]/.test(password)
-    ) {
-      strength = 3;
-    }
-
-    this.passwordStrength = strength;
+  getStrengthClass(): string {
+    if (this.passwordStrength === 0) return '';
+    if (this.passwordStrength === 1) return 'weak';
+    if (this.passwordStrength === 2) return 'medium';
+    if (this.passwordStrength === 3) return 'strong';
+    return '';
   }
 
   togglePasswordVisibility() {
@@ -68,23 +71,20 @@ export class SignupComponent {
   onSubmit() {
     if (this.signupForm.valid) {
       console.log('Signup form submitted:', this.signupForm.value);
-      // Navigate to 2FA page
       this.router.navigate(['/two-factor-auth']);
     }
   }
 
   signupWithGoogle() {
     console.log('Google signup clicked');
-    // Add Google signup logic
   }
 
   signupWithMicrosoft() {
     console.log('Microsoft signup clicked');
-    // Add Microsoft signup logic
   }
 
   returnHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/landing']);
   }
 
   navigateToLogin() {
