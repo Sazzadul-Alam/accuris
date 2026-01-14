@@ -24,6 +24,9 @@ export class UserConsentComponent {
 
   ngOnInit(): void {
     // Component initialization
+    if (this.formData) {
+      this.consentForm.patchValue(this.formData);
+    }
   }
 
   onSubmit(): void {
