@@ -1,0 +1,80 @@
+<div class="signup-container">
+  <div class="left-section">
+    <div class="signup-content">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-container">
+          <img src="assets/images/accuris-logo.png" class="logo-image" alt="Accuris Logo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+
+        </div>
+
+        <div class="header-right">
+          <span>Already a Member?</span>
+          <button class="log-in-btn" type="button" (click)="navigateToLogin()">Log In</button>
+        </div>
+      </div>
+      <div class="step-indicator">
+        <div class="step-item active">
+          <div class="step-icon">
+            <img src="assets/images/icons/personal-info-icon.png" alt="Personal Info">
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-icon">
+            <img src="assets/images/icons/2fa-icon.png" alt="2 Tier Authentication">
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-icon">
+            <img src="assets/images/icons/consent-icon.png" alt="User Consent">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="steps == 1">
+        <app-signup [formData]="stepFormData.signup"
+          (formValue)="getFormValue($event)"
+                    (step)="getStepValue($event)"  ></app-signup>
+      </div>
+      <div *ngIf="steps == 2">
+        <app-two-factor-auth  [formData]="stepFormData.twoFactor"
+          (twoFactorAuthValue)="getFormValue($event)" (step)="getStepValue($event)" ></app-two-factor-auth>
+     </div>
+      <div *ngIf="steps==3">
+        <app-user-consent  [formData]="stepFormData.consent"
+          (userConsentValue)="getFormValue($event)"  (step)="getStepValue($event)" ></app-user-consent>
+      </div>
+      <div class="footer">
+        <a
+          href="javascript:void(0)"
+          class="return-link"
+          (click)="returnHome()"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4"
+                  stroke="#666"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+          Return Home
+        </a>
+
+        <p class="copyright">
+          Copyright 2025 - 2026 Accuris Inc. All rights Reserved
+        </p>
+
+        <img style="overflow: hidden; margin-top: -5rem; margin-bottom: -2rem; margin-right: -2.5rem;" src="assets/images/icons/chat-icon.svg" alt="">
+
+      </div>
+    </div>
+  </div>
+  <!-- Right Section -->
+  <div class="right-section">
+    <img src="assets/images/right-section.svg" alt="Background" class="background-image"
+         onerror="this.style.display='none';" />
+  </div>
+</div>
