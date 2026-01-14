@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 
@@ -8,10 +8,13 @@ import {Router} from "@angular/router";
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
+  @Input() formData: any;
   signupForm!: FormGroup;
   showPassword = false;
   showConfirmPassword = false;
   passwordStrength: number = 0;
+  steps: number;
+  @Output() step = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -23,8 +26,15 @@ export class SignupComponent {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      agreeTerms: [false, Validators.requiredTrue]
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    if (this.formData) {
+      this.signupForm.patchValue(this.formData);
+    }
+
+    this.signupForm.valueChanges.subscribe(value => {
+      this.formValue.emit(value);
     });
   }
 
@@ -64,12 +74,14 @@ export class SignupComponent {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
+  @Output() formValue = new EventEmitter();
 
   onSubmit() {
     if (this.signupForm.valid) {
+      this.steps = 2;
+      this.step.emit(this.steps);
+      this.formValue.emit(this.signupForm.value);
       console.log('Signup form submitted:', this.signupForm.value);
-      // Navigate to 2FA page
-      this.router.navigate(['/two-factor-auth']);
     }
   }
 

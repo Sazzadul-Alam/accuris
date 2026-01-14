@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./two-factor-auth.component.css']
 })
 export class TwoFactorAuthComponent implements OnInit {
+  @Input() formData: any;
   twoFactorForm!: FormGroup;
   emailOTPSent = false;
   phoneOTPSent = false;
@@ -18,13 +19,18 @@ export class TwoFactorAuthComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router
   ) {}
-
   ngOnInit() {
     this.twoFactorForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       emailOTP: [''],  // Removed validation for testing
       phone: ['', [Validators.required]],  // Simplified validation
       phoneOTP: ['']   // Removed validation for testing
+    });
+    if (this.formData) {
+      this.twoFactorForm.patchValue(this.formData);
+    }
+    this.twoFactorForm.valueChanges.subscribe(value => {
+      this.twoFactorAuthValue.emit(value);
     });
   }
 
@@ -71,29 +77,24 @@ export class TwoFactorAuthComponent implements OnInit {
       alert('Please enter an OTP code');
     }
   }
-
+  @Output() twoFactorAuthValue = new EventEmitter();
   onSubmit() {
-  console.log('=== onSubmit DEBUG ===');
   console.log('Email verified:', this.emailVerified);
   console.log('Phone verified:', this.phoneVerified);
+  if(this.emailVerified || this.phoneVerified){
+    this.steps = 3;
+    this.step.emit(this.steps);
+    this.twoFactorAuthValue.emit(this.twoFactorForm.value);
 
-  // TEMPORARY: Force navigation for testing
-  console.log('Forcing navigation to user-consent...');
-  this.router.navigate(['/user-consent']).then(
-    success => {
-      console.log('Navigation successful:', success);
-      if (!success) {
-        console.error('Navigation returned false - route may not exist');
-      }
-    },
-    error => {
-      console.error('Navigation failed with error:', error);
-    }
-  );
+  }
+
 }
-
+  steps: number;
+  @Output() step = new EventEmitter();
   goBack() {
-    this.router.navigate(['/signup']);
+    this.steps = 1;
+    this.step.emit(this.steps);
+    // this.router.navigate(['/signup']);
   }
 
   returnHome() {

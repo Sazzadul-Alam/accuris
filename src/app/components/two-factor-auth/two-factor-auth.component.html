@@ -1,48 +1,5 @@
-<div class="auth-container">
-  <!-- Left Section -->
-  <div class="left-section">
-    <div class="auth-content">
-      
-      <!-- Header -->
-      <div class="header">
-        <div class="logo-container">
-          <img src="assets/images/accuris-logo.png" class="logo-image" alt="Accuris Logo" 
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-          <div class="logo-fallback">
-            <div class="logo-icon">A</div>
-            <span class="logo-text">ACCURIS</span>
-          </div>
-        </div>
-
-        <div class="header-right">
-          <span>Already a Member?</span>
-          <button class="log-in-btn" type="button" (click)="navigateToLogin()">Log In</button>
-        </div>
-      </div>
-
-      <!-- Step Indicator -->
-      <div class="step-indicator">
-        <div class="step-item completed">
-          <div class="step-icon">
-            <img src="assets/images/icons/personal-info-icon.png" alt="Personal Info">
-          </div>
-        </div>
-        
-        <div class="step-item active">
-          <div class="step-icon">
-            <img src="assets/images/icons/2fa-icon.png" alt="2 Tier Authentication">
-          </div>
-        </div>
-        
-        <div class="step-item">
-          <div class="step-icon">
-            <img src="assets/images/icons/consent-icon.png" alt="User Consent">
-          </div>
-        </div>
-      </div>
-
-      <!-- 2FA Form -->
-      <div class="form-container">
+<div >
+  <div class="form-container">
         <h1>Your account is secured by our 2 Tier Authentication</h1>
         <p class="subtitle">VERIFICATION CODE WILL BE SENT TO EMAIL AND AN OTP TO YOUR PHONE</p>
 
@@ -51,15 +8,15 @@
           <!-- Email Verification Row -->
           <div class="verification-row">
             <div class="input-group">
-              <input 
+              <input
                 type="email"
                 formControlName="email"
                 placeholder="Type your Email address"
                 class="form-control"
                 [class.verified]="emailVerified"
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 class="send-btn"
                 (click)="sendEmailOTP()"
                 [disabled]="emailOTPSent"
@@ -71,15 +28,15 @@
             </div>
 
             <div class="otp-group">
-              <input 
+              <input
                 type="text"
                 formControlName="emailOTP"
                 placeholder="Type OTP here"
                 class="form-control otp-input"
                 maxlength="6"
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 class="verify-btn"
                 (click)="verifyEmailOTP()"
                 [class.verified]="emailVerified"
@@ -98,15 +55,15 @@
           <!-- Phone Verification Row -->
           <div class="verification-row">
             <div class="input-group">
-              <input 
+              <input
                 type="tel"
                 formControlName="phone"
                 placeholder="Type your phone number"
                 class="form-control"
                 [class.verified]="phoneVerified"
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 class="send-btn"
                 (click)="sendPhoneOTP()"
                 [disabled]="phoneOTPSent"
@@ -118,15 +75,15 @@
             </div>
 
             <div class="otp-group">
-              <input 
+              <input
                 type="text"
                 formControlName="phoneOTP"
                 placeholder="Type OTP Here"
                 class="form-control otp-input"
                 maxlength="6"
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 class="verify-btn"
                 (click)="verifyPhoneOTP()"
                 [class.verified]="phoneVerified"
@@ -147,8 +104,8 @@
             <button type="button" class="btn-back" (click)="goBack()">
               GO BACK
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               class="btn-next"
              (click)="onSubmit()"
             >
@@ -158,37 +115,4 @@
 
         </form>
       </div>
-
-      <!-- Footer -->
-      <div class="footer">
-        <a 
-          href="javascript:void(0)" 
-          class="return-link"
-          (click)="returnHome()"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 12L6 8l4-4" 
-                  stroke="#666" 
-                  stroke-width="2" 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round"/>
-          </svg>
-          Return Home
-        </a>
-
-        <p class="copyright">
-          Copyright 2025 - 2026 Accuris Inc. All rights Reserved
-        </p>
-
-         <img style="overflow: hidden; margin-top: -5rem; margin-bottom: -2rem; margin-right: -2.5rem;" src="assets/images/icons/chat-icon.svg" alt="">
-         
-      </div>
-    </div>
-  </div>
-
-  <!-- Right Section -->
-  <div class="right-section">
-    <img src="assets/images/signup-image.jpg" alt="Background" class="background-image"
-         onerror="this.style.display='none';" />
-  </div>
 </div>

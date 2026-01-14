@@ -10,13 +10,14 @@ import {ForgotPasswordComponent} from "./components/login/forgot-password/forgot
 import {VerifyCodeComponent} from "./components/login/verify-code/verify-code.component";
 import {SetPasswordComponent} from "./components/login/set-password/set-password.component";
 import {DashboardComponent} from "./components/dashboard/dashboard.component";
+import {SignUpParentComponent} from "./components/login/sign-up-parent/sign-up-parent.component";
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
 
   { path: 'landing', component: LandingComponent},
   { path: 'login', component: LoginComponent },
-  { path: 'signup', component:SignupComponent},
+  { path: 'signup', component:SignUpParentComponent},
   { path: 'two-factor-auth', component:TwoFactorAuthComponent},
   { path: 'user-consent', component: UserConsentComponent},
   { path: 'two-step-verification', component: TwoStepVerificationComponent},

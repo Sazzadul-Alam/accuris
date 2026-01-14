@@ -11,11 +11,21 @@ export class TwoStepVerificationComponent {
   verificationForm!: FormGroup;
   codeSent = false;
   codeVerified = false;
+   email: string;
+   password: string;
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router
-  ) {}
+
+  constructor(private router: Router,
+              private fb: FormBuilder)
+  {
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state as { email: string; password: string };
+
+    if (state) {
+      this.email = state.email;
+      this.password = state.password;
+    }
+  }
 
   ngOnInit() {
     this.verificationForm = this.fb.group({

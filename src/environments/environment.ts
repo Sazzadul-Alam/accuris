@@ -7,6 +7,6 @@ export const environment = {
   app1: 'http://192.168.26.139:8181/web-backend',
   app2: 'http://192.168.26.139:8181/web-backend',
   baseURL: 'http://192.168.26.139:8181/web-backend',
-  oauthBaseURL:'http://192.168.26.139:8003/',
+  oauthBaseURL:'http://192.168.26.139:8003',
 
 };

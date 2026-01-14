@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 
@@ -8,8 +8,11 @@ import {Router} from "@angular/router";
   styleUrls: ['./user-consent.component.css']
 })
 export class UserConsentComponent {
+  @Input() formData: any;
   consentForm: FormGroup;
-
+  steps: number;
+  @Output() step = new EventEmitter();
+  @Output() userConsentValue = new EventEmitter();
   constructor(
     private fb: FormBuilder,
     private router: Router
@@ -25,8 +28,10 @@ export class UserConsentComponent {
 
   onSubmit(): void {
     if (this.consentForm.valid) {
-      console.log('User agreed to terms');
-      alert('Account created successfully!');
+      // this.steps = 3;
+      // this.step.emit(this.steps);
+      this.userConsentValue.emit(this.consentForm.value);
+
     }
   }
 

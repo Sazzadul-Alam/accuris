@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {HttpErrorResponse} from "@angular/common/http";
+import { UserService } from 'src/app/services/user_service/user.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,9 @@ export class LoginComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -32,15 +36,43 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    const { email, password } = this.loginForm.value;
     Object.keys(this.loginForm.value).length > 0 && (this.isEmpty = false);
     if (this.loginForm.valid) {
-      const { email, password, rememberMe } = this.loginForm.value;
-      console.log('Login attempt:', { email, password, rememberMe });
+      // this.userService.login(this.loginForm.value).subscribe(
+      //   (data: any) => {
+      //
+      //     localStorage.setItem("token", data.access_token);
+      //     localStorage.setItem("refresh_token", data.refresh_token);
+      //     localStorage.setItem("expire_in", data.expires_in);
+      //
+      //     this.userService
+      //       .userDetail({
+      //         loginId: email
+      //       })
+      //       .subscribe((d: any) => {
+      //         //store user details and session info in local storage
+      //         localStorage.setItem("loginId", d.loginId);
+      //         localStorage.setItem("userId", d.id);
+      //         localStorage.setItem("user", JSON.stringify(d));
+      //         localStorage.setItem("currentRole", JSON.stringify(d.roles));
+      //         // localStorage.setItem("customSessionId", `${d.loginId}-${uuid.v4()}` + '-' + Date.now());
+      //
+      //         this.router.navigate(['/dashboard']);
+      //
+      //       });
+      //   },
+      //   (error: HttpErrorResponse) => {
+      //
+      //
+      //     // this.alerts.toast('error','An error occurred!');
+      //   }
+      // );
 
-      // TODO: Implement your actual login logic here
-      // After successful login, navigate to two-step verification
-      this.router.navigate(['/two-step-verification']);
-      //alert('Login form submitted successfully!\nEmail: ' + email);
+      this.router.navigate(['/two-step-verification'], {
+        state: { email, password }
+      });
+
     } else {
       alert('Please fill in all required fields correctly');
     }
