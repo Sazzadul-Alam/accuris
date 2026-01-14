@@ -27,7 +27,7 @@ import { TwoStepVerificationComponent } from './components/login/two-step-verifi
 import { UserConsentComponent } from './components/login/user-consent/user-consent.component';
 import { VerifyCodeComponent } from './components/login/verify-code/verify-code.component';
 
-// Two Factor Auth Component (Standalone)
+// Standalone
 import { TwoFactorAuthComponent } from './components/two-factor-auth/two-factor-auth.component';
 
 @NgModule({
@@ -36,28 +36,27 @@ import { TwoFactorAuthComponent } from './components/two-factor-auth/two-factor-
     ComponentsComponent,
     DashboardComponent,
     LandingComponent,
-    LoginComponent,
     SidebarComponent,
-    IndividualCreditScoringModalComponent,
-    PricingPlansModalComponent,
-    PaymentModalComponent,
+    LoginComponent,
+    SignupComponent,
     ForgotPasswordComponent,
     SetPasswordComponent,
-    SignupComponent,
     TwoStepVerificationComponent,
     UserConsentComponent,
-    VerifyCodeComponent
+    VerifyCodeComponent,
+    IndividualCreditScoringModalComponent,
+    PricingPlansModalComponent,
+    PaymentModalComponent
   ],
   imports: [
     BrowserModule,
-    CommonModule,           // Provides *ngIf, *ngFor, *ngClass, pipes
-    RouterModule,           // Provides router-outlet and routing directives
-    AppRoutingModule,       // Your routing configuration
-    ReactiveFormsModule,    // Provides [formGroup], formControlName
-    FormsModule,            // Provides [(ngModel)]
-    TwoFactorAuthComponent  // Standalone component import
+    CommonModule,
+    RouterModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TwoFactorAuthComponent
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

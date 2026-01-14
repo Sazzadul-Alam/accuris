@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-two-factor-auth',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './two-factor-auth.component.html',
   styleUrls: ['./two-factor-auth.component.css']
 })
@@ -79,7 +76,7 @@ export class TwoFactorAuthComponent implements OnInit {
   console.log('=== onSubmit DEBUG ===');
   console.log('Email verified:', this.emailVerified);
   console.log('Phone verified:', this.phoneVerified);
-  
+
   // TEMPORARY: Force navigation for testing
   console.log('Forcing navigation to user-consent...');
   this.router.navigate(['/user-consent']).then(

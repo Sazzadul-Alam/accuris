@@ -1,66 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+
+  /* -------------------- UI State -------------------- */
+  isSidebarOpen = false;
   showIndividualModal = false;
   isPricingModalOpen = false;
-  isPaymentModalOpen = false; // ADD THIS - for payment modal
-  selectedPlanForPayment: string = 'Advanced'; // ADD THIS - store selected plan
-  
-  tables = {
-    individual_credit: {selected:false},
-    business_credit: {selected:false}
-  };
-  currentTable: string;
-  progressValue = 40;
+  isPaymentModalOpen = false;
 
+  selectedPlanForPayment: string | null = null;
+
+  /* -------------------- Tabs -------------------- */
+  tables = {
+    individual_credit: { selected: false },
+    business_credit: { selected: false }
+  };
+  currentTable!: keyof typeof this.tables;
+
+  /* -------------------- Chart Data -------------------- */
+  thisYearData: number[] = [15000, 22000, 18000, 26000, 20000, 28000, 23000];
+  lastYearData: number[] = [12000, 16000, 14000, 19000, 17000, 21000, 18000];
+
+  svgWidth = 300;
+  svgHeight = 100;
+  padding = 10;
+
+  last_year = 2024;
+  this_year = 2025;
+  yAxisTicks = 4;
+
+  /* -------------------- Donut Chart -------------------- */
   radius = 30;
   circumference = 2 * Math.PI * this.radius;
+  growthPercent = 40;
+  staticPercent = 60;
+  progressValue = 40;
 
-  dashOffset = this.circumference;
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.currentTable = 'individual_credit';
     this.tables[this.currentTable].selected = true;
-    this.dashOffset = this.circumference - (this.progressValue / 100) * this.circumference;
-  }
-  
-  get progressColor() {
-    if (this.progressValue < 40) return '#ef4444';
-    if (this.progressValue < 70) return '#f59e0b';
-    return '#22c55e';
-  }
-  
-  openIndividualModal() {
-    console.log('Opening individual modal');
-    this.showIndividualModal = true;
-    document.body.style.overflow = 'hidden';
   }
 
-  openIndividualCreditScoringModal() {
-    console.log('Opening individual credit scoring modal');
-    this.showIndividualModal = true;
-    document.body.style.overflow = 'hidden';
-  }
-
-  closeIndividualModal() {
-    console.log('Closing individual modal');
-    this.showIndividualModal = false;
-    document.body.style.overflow = 'auto';
-  }
-
-  handleFormSubmit(formData: any) {
-    console.log('Form submitted:', formData);
-    alert('Form submitted successfully!');
-    this.closeIndividualModal();
-  }
-  
-  isSidebarOpen = false;
-
+  /* -------------------- Sidebar -------------------- */
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
@@ -69,57 +55,102 @@ export class DashboardComponent {
     this.isSidebarOpen = false;
   }
 
-  changeTable(table: string) {
+  /* -------------------- Tabs -------------------- */
+  changeTable(table: keyof typeof this.tables) {
     this.tables[this.currentTable].selected = false;
     this.currentTable = table;
     this.tables[this.currentTable].selected = true;
   }
 
-  // Pricing Modal Methods
-  openPricingModal(): void {
-    console.log('Opening pricing modal');
+  /* -------------------- Donut Helpers -------------------- */
+  get growthDashArray(): string {
+    return `${(this.growthPercent / 100) * this.circumference} ${this.circumference}`;
+  }
+
+  get staticDashArray(): string {
+    return `${(this.staticPercent / 100) * this.circumference} ${this.circumference}`;
+  }
+
+  get growthOffset(): number {
+    return -((this.staticPercent / 100) * this.circumference);
+  }
+
+  /* -------------------- Line Chart -------------------- */
+  get maxValue(): number {
+    return Math.max(...this.thisYearData, ...this.lastYearData);
+  }
+
+  getPoints(data: number[]) {
+    const stepX = this.svgWidth / (data.length - 1);
+    return data.map((value, index) => ({
+      x: index * stepX,
+      y: this.svgHeight - (value / this.maxValue) * (this.svgHeight - this.padding)
+    }));
+  }
+
+  generateCurvePath(data: number[]): string {
+    const points = this.getPoints(data);
+    if (points.length < 2) return '';
+
+    let d = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const cx = (prev.x + curr.x) / 2;
+      d += ` C ${cx} ${prev.y}, ${cx} ${curr.y}, ${curr.x} ${curr.y}`;
+    }
+    return d;
+  }
+
+  get yAxisLabels() {
+    const labels = [];
+    const step = this.maxValue / this.yAxisTicks;
+    for (let i = 0; i <= this.yAxisTicks; i++) {
+      labels.push({
+        value: Math.round(step * i),
+        y: this.svgHeight - (step * i / this.maxValue) * (this.svgHeight - this.padding)
+      });
+    }
+    return labels.reverse();
+  }
+
+  /* -------------------- Modals -------------------- */
+  openIndividualCreditScoringModal() {
+    this.showIndividualModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeIndividualModal() {
+    this.showIndividualModal = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  openPricingModal() {
     this.isPricingModalOpen = true;
     document.body.style.overflow = 'hidden';
   }
 
-  closePricingModal(): void {
-    console.log('Closing pricing modal');
+  closePricingModal() {
     this.isPricingModalOpen = false;
     document.body.style.overflow = 'auto';
   }
 
-  // UPDATED - This now opens payment modal instead of alert
-  onPlanSelected(planName: string): void {
-    console.log('User selected plan:', planName);
-    
-    // Store the selected plan
+  onPlanSelected(planName: string) {
     this.selectedPlanForPayment = planName;
-    
-    // Close pricing modal
     this.isPricingModalOpen = false;
-    
-    // Open payment modal after short delay
+
     setTimeout(() => {
-      console.log('Opening payment modal for plan:', this.selectedPlanForPayment);
       this.isPaymentModalOpen = true;
       document.body.style.overflow = 'hidden';
     }, 200);
   }
 
-  // ADD THIS - Close payment modal
-  closePaymentModal(): void {
-    console.log('Closing payment modal');
+  closePaymentModal() {
     this.isPaymentModalOpen = false;
     document.body.style.overflow = 'auto';
   }
 
-  // ADD THIS - Handle payment completion
-  onPaymentComplete(paymentData: any): void {
+  onPaymentComplete(paymentData: any) {
     console.log('Payment completed:', paymentData);
-    // You can add logic here to:
-    // - Save payment to database
-    // - Update user subscription
-    // - Navigate to confirmation page
-    // - etc.
   }
 }
