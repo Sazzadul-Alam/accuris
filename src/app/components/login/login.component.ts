@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 export class LoginComponent {
   loginForm!: FormGroup;
   showPassword = false;
+  isEmpty: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -17,6 +18,7 @@ export class LoginComponent {
   ) {}
 
   ngOnInit(): void {
+    this.isEmpty = false;
     this.initializeForm();
   }
 
@@ -24,11 +26,13 @@ export class LoginComponent {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      grant_type: ["password", Validators.required],
       rememberMe: [false]
     });
   }
 
   onSubmit(): void {
+    Object.keys(this.loginForm.value).length > 0 && (this.isEmpty = false);
     if (this.loginForm.valid) {
       const { email, password, rememberMe } = this.loginForm.value;
       console.log('Login attempt:', { email, password, rememberMe });
