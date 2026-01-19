@@ -9,6 +9,10 @@ import {DashboardService} from "../../services/dashboard_service/dashboard.servi
 })
 export class DashboardComponent {
   showIndividualModal = false;
+  isPricingModalOpen = false;
+  isPaymentModalOpen = false;
+
+  selectedPlanForPayment: string | null = null;
 
   thisYearData: number[] = [15000, 22000, 18000, 26000, 20000, 28000, 23000];
   lastYearData: number[] = [12000, 16000, 14000, 19000, 17000, 21000, 18000];
@@ -141,7 +145,15 @@ export class DashboardComponent {
     console.log('Closing individual modal');
     this.showIndividualModal = false;
   }
+  openPricingModal() {
+    this.isPricingModalOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
 
+  closePricingModal() {
+    this.isPricingModalOpen = false;
+    document.body.style.overflow = 'auto';
+  }
   handleFormSubmit(formData: any) {
     console.log('Form submitted:', formData);
     // You can add API call here to save the data
@@ -164,6 +176,23 @@ export class DashboardComponent {
     this.currentTable = table;
     this.tables[this.currentTable].selected = true;
   }
+  onPlanSelected(planName: string) {
+    this.selectedPlanForPayment = planName;
+    this.isPricingModalOpen = false;
 
+    setTimeout(() => {
+      this.isPaymentModalOpen = true;
+      document.body.style.overflow = 'hidden';
+    }, 200);
+  }
+
+  closePaymentModal() {
+    this.isPaymentModalOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  onPaymentComplete(paymentData: any) {
+    console.log('Payment completed:', paymentData);
+  }
 
 }
