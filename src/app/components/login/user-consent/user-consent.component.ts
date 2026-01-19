@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {UserService} from "../../../services/user_service/user.service";
 
 @Component({
   selector: 'app-user-consent',
@@ -15,25 +16,38 @@ export class UserConsentComponent {
   @Output() userConsentValue = new EventEmitter();
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private userService: UserService,
   ) {
-    this.consentForm = this.fb.group({
-      agreeToTerms: [false, Validators.requiredTrue]
-    });
+
   }
 
   ngOnInit(): void {
-    // Component initialization
+    this.consentForm = this.fb.group({
+      agreeToTerms: [false, Validators.requiredTrue]
+    });
     if (this.formData) {
-      this.consentForm.patchValue(this.formData);
+      this.consentForm.patchValue(this.formData.consent);
     }
+    this.consentForm.valueChanges.subscribe(value => {
+      this.userConsentValue.emit(value);
+    });
   }
 
   onSubmit(): void {
     if (this.consentForm.valid) {
-      // this.steps = 3;
-      // this.step.emit(this.steps);
-      this.userConsentValue.emit(this.consentForm.value);
+      const fullStepData = {
+        ...this.formData,
+        consent: this.consentForm.value
+      };
+      console.log("full signup value: ", fullStepData);
+
+      // this.userConsentValue.emit(fullStepData);
+      this.userService.signup(fullStepData).subscribe(
+         (data: any) => {
+           this.router.navigate(['/login']);
+         });
 
     }
   }

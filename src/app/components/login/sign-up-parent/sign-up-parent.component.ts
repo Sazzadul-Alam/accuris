@@ -53,4 +53,12 @@ export class SignUpParentComponent {
     console.log("step value from parent : ", this.steps)
 
   }
+
+  signupWithMicrosoft() {
+
+  }
+
+  signupWithGoogle() {
+
+  }
 }

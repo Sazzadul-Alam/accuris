@@ -15,4 +15,7 @@ export class UserService {
   userDetail(user) {
     return this.httpClient.get(`${ApiEndpoint.baseURL}/user/info`);
   }
+  signup(user){
+    return this.httpClient.post(`${ApiEndpoint.OAUTH_TOKEN}/user/signup`, user);
+  }
 }
