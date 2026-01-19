@@ -407,9 +407,6 @@ circle {
   height: 80px;
   margin-bottom: 12px;
 }
-<<<<<<< HEAD
-
-=======
 path {
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -445,7 +442,6 @@ path {
   stroke: #e5e7eb;
   stroke-width: 1;
 }
->>>>>>> origin/development_staging@kaungkon_update
 .chart-labels {
   display: flex;
   gap: 16px;
@@ -472,14 +468,11 @@ path {
   background: #60BAA2;
   border-radius: 50%;
 }
-<<<<<<< HEAD
-=======
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
   }
 }
->>>>>>> origin/development_staging@kaungkon_update
 
 /* Plans Card */
 .plans-card {
@@ -526,14 +519,11 @@ path {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-<<<<<<< HEAD
 
 .plan-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(32, 192, 160, 0.3);
 }
-
-=======
 .plan-items{
   display: flex;
   align-items: center;
@@ -545,7 +535,6 @@ path {
   margin-top: 4px;
   color: #008080;
 }
->>>>>>> origin/development_staging@kaungkon_update
 .plan-icon {
   width: 48px;
   height: 48px;
@@ -571,30 +560,27 @@ path {
   font-size: 11px;
   opacity: 0.9;
 }
-<<<<<<< HEAD
 
 /* See Plans Button - Enhanced Version */
 .see-plans-button {
-  width: 100%;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #6FD8C8 0%, #5BC4B3 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(111, 216, 200, 0.25);
-  margin-top: 16px;
-=======
+          width: 100%;
+          padding: 16px 24px;
+          background: linear-gradient(135deg, #6FD8C8 0%, #5BC4B3 100%);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 12px rgba(111, 216, 200, 0.25);
+          margin-top: 16px;
+        }
 .select-plan{
->>>>>>> origin/development_staging@kaungkon_update
   display: flex;
   align-items: center;
   justify-content: center;
 }
-<<<<<<< HEAD
 
 .see-plans-button:hover {
   background: linear-gradient(135deg, #5BC4B3 0%, #4AB4A2 100%);
@@ -606,15 +592,12 @@ path {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(111, 216, 200, 0.3);
 }
-
-=======
 .select-plan-btn{
   color: #60BAA2;
   font-size: 11px;
   text-decoration: underline;
   text-decoration-color: #60BAA2;
 }
->>>>>>> origin/development_staging@kaungkon_update
 /* ========== RIGHT COLUMN ========== */
 .right-column {
   grid-area: right;
@@ -726,10 +709,7 @@ path {
   font-weight: 600;
   font-size: 11px;
   line-height: 1.4;
-<<<<<<< HEAD
-=======
   padding-bottom: 10px;
->>>>>>> origin/development_staging@kaungkon_update
   min-height: calc(1.4em * 2);
 }
 
@@ -1049,14 +1029,14 @@ path {
     z-index: 1100;
     cursor: pointer;
   }
-  
+
   .overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
     z-index: 900;
   }
-  
+
   .top-bar {
     flex-direction: column;
     gap: 16px;
@@ -1070,7 +1050,7 @@ path {
       "right";
     gap: 16px;
   }
-  
+
   .left-column {
     order: 1;
   }
@@ -1078,24 +1058,24 @@ path {
   .right-column {
     order: 2;
   }
-  
+
   .content-area {
     padding: 14px;
   }
-  
+
   .plans-grid,
   .steps-timeline {
     grid-template-columns: 1fr;
   }
-  
+
   .run-steps{
     grid-template-columns: 1fr;
   }
-  
+
   .process-flow {
     flex-direction: column;
   }
-  
+
   .arrow {
     transform: rotate(90deg);
   }
