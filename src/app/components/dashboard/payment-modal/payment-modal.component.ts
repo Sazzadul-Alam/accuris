@@ -42,7 +42,7 @@ export class PaymentModalComponent implements OnInit {
   ngOnInit() {
     console.log('Payment modal initialized with plan:', this.selectedPlan);
     console.log('Payment modal initialized with userName:', this.userName);
-    
+
     this.generateTransactionId();
     this.updateDateTime();
     this.setPlanDetails();
@@ -57,11 +57,11 @@ export class PaymentModalComponent implements OnInit {
   updateDateTime() {
     const now = new Date();
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'];
-    
+
     this.currentDay = days[now.getDay()];
-    
+
     const month = months[now.getMonth()];
     const day = now.getDate();
     const year = now.getFullYear();
@@ -69,7 +69,7 @@ export class PaymentModalComponent implements OnInit {
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const displayHours = hours % 12 || 12;
-    
+
     this.currentDateTime = `${month} ${day}, ${year} | ${displayHours}:${minutes} ${ampm}`;
   }
 
@@ -92,7 +92,7 @@ export class PaymentModalComponent implements OnInit {
     if (planData[this.selectedPlan]) {
       this.balanceAmount = planData[this.selectedPlan].amount;
       this.planDescription = planData[this.selectedPlan].description;
-      
+
       this.vatAmount = Math.round(this.balanceAmount * 0.21);
       this.discountAmount = Math.round((this.balanceAmount + this.vatAmount) * 0.20);
       this.totalAmount = this.balanceAmount + this.vatAmount - this.discountAmount;
@@ -134,7 +134,7 @@ export class PaymentModalComponent implements OnInit {
     const isCardholderValid = this.cardholderName.trim().length > 0;
     const isCvvValid = this.cvv.length >= 3 && this.cvv.length <= 4;
     const isExpiryValid = this.expiryDate.length === 5 && this.expiryDate.includes('/');
-    
+
     this.isFormValid = isCardNumberValid && isCardholderValid && isCvvValid && isExpiryValid;
   }
 
@@ -165,157 +165,157 @@ export class PaymentModalComponent implements OnInit {
     console.log('Selected Plan:', this.selectedPlan);
     console.log('User Name:', this.userName);
     console.log('Transaction ID:', this.transactionId);
-    
+
     try {
       // Ensure all values are strings (not undefined)
       const planName = this.selectedPlan || 'Advanced';
       const userName = this.userName || 'Customer';
       const transactionId = this.transactionId || 'N/A';
       const planDesc = this.planDescription || 'Credit scoring service';
-      
+
       console.log('Creating PDF with safe values...');
-      
+
       const doc = new jsPDF();
-      
+
       // Set font
       doc.setFont('helvetica');
-      
+
       // Add logo/company name
       doc.setFontSize(16);
       doc.setFont('helvetica', 'bold');
       doc.text('ACCURIS', 105, 20, { align: 'center' });
-      
+
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.text('Trust Quantified', 105, 26, { align: 'center' });
-      
+
       console.log('Header added');
-      
+
       // Add title
       doc.setFontSize(18);
       doc.setFont('helvetica', 'bold');
       doc.text('PAYMENT RECEIPT', 105, 40, { align: 'center' });
-      
+
       // Add horizontal line
       doc.setLineWidth(0.5);
       doc.line(20, 45, 190, 45);
-      
+
       // Add payment successful message
       doc.setFontSize(14);
       doc.setTextColor(16, 185, 129);
       doc.text('Payment Successful', 105, 55, { align: 'center' });
       doc.setTextColor(0, 0, 0);
-      
+
       console.log('Title and success message added');
-      
+
       // Add customer info
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.text('For:', 20, 70);
-      
+
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(32, 192, 160);
       doc.text(userName, 35, 70); // Using safe value
       doc.setTextColor(0, 0, 0);
-      
+
       doc.setFont('helvetica', 'bold');
       doc.text('Plan:', 20, 78);
-      
+
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(32, 192, 160);
       doc.text(planName, 35, 78); // Using safe value
       doc.setTextColor(0, 0, 0);
-      
+
       console.log('Customer info added');
-      
+
       // Add payment summary box
       doc.setLineWidth(0.3);
       doc.rect(20, 90, 170, 100);
-      
+
       // Payment Summary title
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('Payment Summary', 105, 100, { align: 'center' });
-      
+
       // Add horizontal line under title
       doc.setLineWidth(0.2);
       doc.line(25, 103, 185, 103);
-      
+
       // Plan details
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       doc.text(planName + ' Plan', 25, 112); // Using safe value
-      
+
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
-      
+
       // Split long description
       const descLines = doc.splitTextToSize(planDesc, 160); // Using safe value
       doc.text(descLines, 25, 118);
-      
+
       console.log('Plan details added');
-      
+
       // Calculate current Y position
       let currentY = 118 + (descLines.length * 4) + 5;
       doc.line(25, currentY, 185, currentY);
       currentY += 8;
-      
+
       // Transaction ID
       doc.setFontSize(9);
       doc.text('Transaction ID:', 25, currentY);
       doc.text(transactionId, 185, currentY, { align: 'right' }); // Using safe value
       currentY += 8;
-      
+
       doc.line(25, currentY, 185, currentY);
       currentY += 8;
-      
+
       // Amount
       doc.text('Amount:', 25, currentY);
       doc.text('$' + this.balanceAmount.toString(), 185, currentY, { align: 'right' });
       currentY += 6;
-      
+
       // VAT
       doc.text('Vat (21%):', 25, currentY);
       doc.text('$' + this.vatAmount.toString(), 185, currentY, { align: 'right' });
       currentY += 6;
-      
+
       // Discount
       doc.text('Discount:', 25, currentY);
       doc.setTextColor(239, 68, 68);
       doc.text('-$' + this.discountAmount.toString(), 185, currentY, { align: 'right' });
       doc.setTextColor(0, 0, 0);
       currentY += 8;
-      
+
       doc.line(25, currentY, 185, currentY);
       currentY += 8;
-      
+
       // Total
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.text('Total:', 25, currentY);
       doc.text('$' + this.totalAmount.toString(), 185, currentY, { align: 'right' });
-      
+
       console.log('Financial details added');
-      
+
       // Date and time
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.text(this.currentDay || 'Today', 105, 270, { align: 'center' });
       doc.text(this.currentDateTime || new Date().toLocaleString(), 105, 276, { align: 'center' });
-      
+
       // Footer
       doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
       doc.text('Thank you for your business!', 105, 285, { align: 'center' });
-      
+
       console.log('Date and footer added');
-      
+
       // Save the PDF
       const filename = 'Receipt_' + transactionId + '.pdf';
       doc.save(filename);
-      
+
       console.log('=== PDF Saved Successfully:', filename, '===');
-      
+
     } catch (error: any) {
       console.error('=== PDF Generation Error ===');
       console.error('Error:', error);

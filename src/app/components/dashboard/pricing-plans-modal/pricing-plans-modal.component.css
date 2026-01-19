@@ -100,7 +100,7 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
-.plan-card.highlighted {
+.plan-card:hover {
   border: 2px solid #6FD8C8;
   box-shadow: 0 8px 24px rgba(111, 216, 200, 0.15);
 }

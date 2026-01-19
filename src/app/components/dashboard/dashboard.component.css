@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .dashboard_background {
   /*inset: 0;*/
   display: flex;

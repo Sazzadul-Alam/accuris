@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Output, ViewChild, Input} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
@@ -7,6 +7,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./individual-credit-scoring-modal.component.css']
 })
 export class IndividualCreditScoringModalComponent {
+  @Input() selectedPlanInput = '';
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;

@@ -8,6 +8,16 @@ import {DashboardService} from "../../services/dashboard_service/dashboard.servi
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
+
+  selectedPlan = "";
+
+  runningProcesses: Record<string, boolean> = {
+    'Individual Information': false,
+    'Request Verification': false,
+    'Payment Information': false,
+    'AI Engine Process': false,
+    'Credit Certificate': false,
+  };
   showIndividualModal = false;
   isPricingModalOpen = false;
   isPaymentModalOpen = false;
@@ -136,9 +146,11 @@ export class DashboardComponent {
     this.showIndividualModal = true;
   }
 
-  openIndividualCreditScoringModal() {
+  openIndividualCreditScoringModal(selectedPlan: string) {
+    if (this.runningProcesses['Individual Information']) {
     console.log('Opening individual credit scoring modal');
     this.showIndividualModal = true;
+    }
   }
 
   closeIndividualModal() {
@@ -193,6 +205,8 @@ export class DashboardComponent {
 
   onPaymentComplete(paymentData: any) {
     console.log('Payment completed:', paymentData);
+    this.selectedPlan = paymentData.plan;
+    this.runningProcesses['Individual Information'] = true;
   }
 
 }

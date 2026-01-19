@@ -58,7 +58,7 @@
           <div class="profile-card">
             <div class="profile-header d-flex align-items-center justify-content-between">
               <h3>Profile</h3>
-              <button class="edit-profile-btn" (click)="openIndividualCreditScoringModal()"></button>
+              <button class="edit-profile-btn"></button>
             </div>
 
             <div class="profile-header">
@@ -83,7 +83,7 @@
                       </div>
                       <div>
 
-                        <img src="assets/images/up_icon.svg" alt="Step Icon" style="scale: 0.8" class="step_1_icon" />
+                        <img   src="assets/images/up_icon.svg" alt="Step Icon" style="scale: 0.8" class="step_1_icon" />
                       </div>
 
                     </div>
@@ -453,48 +453,41 @@
             </p>
             <div class="run-steps">
               <div class="run-step-item">
-                <div class="run-step-icon">
-                  <img src="assets/images/run_proc_1_icon.svg" alt="Step Icon" class="step_1_icon" />
+                <div [ngClass]="{ clickable: runningProcesses['Individual Information'] }" class="run-step-icon" (click)="openIndividualCreditScoringModal(selectedPlan)">
+                  <img *ngIf="runningProcesses['Individual Information']" src="assets/images/run_proc_1_icon.svg" alt="Step Icon" class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Individual Information']" src="assets/images/run_proc_1_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-
                 <div class="step-info">
-
                   <p>Individual <br> Information</p>
-
                 </div>
               </div>
-              <div  class="run-step-item">
+              <div class="run-step-item">
                 <div class="run-step-icon ">
                   <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
                 </div>
-
-              </div>
-              <div class="run-step-item">
-                <div class="run-step-icon">
-                  <img src="assets/images/run_proc_2_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-
+              <div class="run-step-item">
+                <div [ngClass]="{ clickable: runningProcesses['Request Verification'] }" class="run-step-icon">
+                  <img *ngIf="runningProcesses['Request Verification']" src="assets/images/run_proc_2_icon.svg" alt="Step Icon" class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Request Verification']" src="assets/images/run_proc_2_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
+                </div>
                 <div class="step-info">
-
                   <p>Request <br/>Verification</p>
-
                 </div>
               </div>
-              <div  class="run-step-item">
-                <div class="run-step-icon ">
-                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
-                </div>
+              <div class="run-step-item">
+              <div class="run-step-icon ">
+                <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
+              </div>
 
               </div>
               <div class="run-step-item">
-                <div class="run-step-icon">
-                  <img src="assets/images/run_proc_3_icon.svg" alt="Step Icon" class="step_1_icon" />
+                <div [ngClass]="{ clickable: runningProcesses['Payment Information'] }" class="run-step-icon">
+                  <img *ngIf="runningProcesses['Payment Information']" src="assets/images/run_proc_3_icon.svg" alt="Step Icon" class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Payment Information']" src="assets/images/run_proc_3_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-
                 <div class="step-info">
-
                   <p>Payment <br/> Information</p>
-
                 </div>
               </div>
               <div  class="run-step-item">
@@ -504,14 +497,12 @@
 
               </div>
               <div class="run-step-item">
-                <div class="run-step-icon">
-                  <img src="assets/images/run_proc_4_icon.svg" alt="Step Icon" class="step_1_icon" />
+                <div [ngClass]="{ clickable: runningProcesses['AI Engine Process'] }" class="run-step-icon">
+                  <img *ngIf="runningProcesses['AI Engine Process']" src="assets/images/run_proc_4_icon.svg" alt="Step Icon" class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['AI Engine Process']" src="assets/images/run_proc_4_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-
                 <div class="step-info">
-
                   <p>AI Engine <br> Process</p>
-
                 </div>
               </div>
               <div  class="run-step-item">
@@ -521,14 +512,12 @@
 
               </div>
               <div class="run-step-item">
-                <div class="run-step-icon">
-                  <img src="assets/images/run_proc_5_icon.svg" alt="Step Icon" class="step_1_icon" />
+                <div [ngClass]="{ clickable: runningProcesses['Credit Certificate'] }" class="run-step-icon">
+                  <img *ngIf="runningProcesses['Credit Certificate']" src="assets/images/run_proc_5_icon.svg" alt="Step Icon" class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Credit Certificate']" src="assets/images/run_proc_5_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
                 </div>
-
                 <div class="step-info">
-
                   <p>Credit <br> Certificate</p>
-
                 </div>
               </div>
 
@@ -543,12 +532,13 @@
   <!-- Individual Credit Scoring Modal -->
   <app-individual-credit-scoring-modal
     *ngIf="showIndividualModal"
+    [selectedPlanInput]="selectedPlan"
     (closeModal)="closeIndividualModal()"
     (formSubmit)="handleFormSubmit($event)">
   </app-individual-credit-scoring-modal>
 
   <!-- Pricing Plans Modal -->
-  <app-pricing-plans-modal 
+  <app-pricing-plans-modal
     *ngIf="isPricingModalOpen"
     (closeModal)="closePricingModal()"
     (planSelected)="onPlanSelected($event)">

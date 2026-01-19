@@ -42,7 +42,7 @@ export class PricingPlansModalComponent {
         'Shared Workspace'
       ],
       isPopular: false,
-      isHighlighted: true
+      isHighlighted: false
     },
     {
       price: 459,
@@ -55,7 +55,7 @@ export class PricingPlansModalComponent {
         'Advanced Admin',
         'Custom Data Retention'
       ],
-      isPopular: true,
+      isPopular: false,
       isHighlighted: false
     }
   ];
