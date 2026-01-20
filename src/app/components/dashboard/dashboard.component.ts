@@ -69,6 +69,7 @@ export class DashboardComponent {
 
   skipVerification() {
     this.runningProcesses['Payment Information'] = true;
+    this.stepStatus['Request Verification'] = Status.completed;
   }
 
   get growthDashArray(): string {
@@ -240,6 +241,8 @@ export class DashboardComponent {
     console.log('Payment completed:', paymentData);
     this.selectedPlan = paymentData.plan;
     this.runningProcesses['AI Engine Process'] = true;
+    this.stepStatus['Payment Information'] = Status.completed;
+    this.stepStatus['AI Engine Process'] = Status.in_progress;
   }
 
   clicked_ai_engine() {

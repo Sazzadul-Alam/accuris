@@ -1131,7 +1131,7 @@ path {
 }
 
 .in-progress-status {
-
+  background-color: yellow;
 }
 
 .completed-status {

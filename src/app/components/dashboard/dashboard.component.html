@@ -451,93 +451,176 @@
               The block shows the running process and their state. Please click on block if you have to complete the
               process.
             </p>
+
             <div class="run-steps">
+
+              <!-- Individual Information -->
               <div class="run-step-item">
-                <div [ngClass]="{ clickable: runningProcesses['Individual Information'] }" class="run-step-icon" (click)="openIndividualCreditScoringModal(selectedPlan)">
-                  <img *ngIf="runningProcesses['Individual Information']" src="assets/images/run_proc_1_icon.svg" alt="Step Icon" class="step_1_icon" />
-                  <img *ngIf="!runningProcesses['Individual Information']" src="assets/images/run_proc_1_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
-                </div>
-                <div class="step-info">
-                  <p>Individual <br> Information</p>
+                <div
+                  class="run-step-icon"
+                  [ngClass]="{ clickable: runningProcesses['Individual Information'] }"
+                  (click)="openIndividualCreditScoringModal(selectedPlan)">
+                  <img *ngIf="runningProcesses['Individual Information']"
+                       src="assets/images/run_proc_1_icon.svg"
+                       class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Individual Information']"
+                       src="assets/images/run_proc_1_disabled_icon.svg"
+                       class="step_1_icon" />
                 </div>
 
-                <div *ngIf="stepStatus['Individual Information'] !== Status.nothing" class="status"
-                     [ngClass]="{
-                     'draft-status': stepStatus['Individual Information'] === Status.draft,
-                     'completed-status': stepStatus['Individual Information'] === Status.completed
-                     }">
-                  {{stepStatus['Individual Information']}}</div>
-              </div>
-              <div class="run-step-item">
-                <div class="run-step-icon ">
-                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
-                </div>
-                </div>
-              <div class="run-step-item">
-                <div [ngClass]="{ clickable: runningProcesses['Request Verification'] }" class="run-step-icon">
-                  <img *ngIf="runningProcesses['Request Verification']" src="assets/images/run_proc_2_icon.svg" alt="Step Icon" class="step_1_icon" />
-                  <img *ngIf="!runningProcesses['Request Verification']" src="assets/images/run_proc_2_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
-                </div>
                 <div class="step-info">
-                  <p>Request <br/>Verification</p>
-                </div>
-                <div *ngIf="stepStatus['Request Verification'] !== Status.nothing" class="status"
-                     [ngClass]="{
-                     'in-progress-status': stepStatus['Request Verification'] === Status.in_progress,
-                     'completed-status': stepStatus['Request Verification'] === Status.completed
-                     }">
-                  {{stepStatus['Request Verification']}}</div>
-              </div>
-<!--                <button *ngIf="runningProcesses['Request Verification']" (click)="skipVerification()" class="btn-next">Skip Verification</button>-->
-              </div>
-              <div class="run-step-item">
-              <div class="run-step-icon " style="cursor: pointer" (click)="skipVerification()">
-                <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
-              </div>
-
-              </div>
-              <div class="run-step-item">
-                <div [ngClass]="{ clickable: runningProcesses['Payment Information'] }" (click)="openPaymentModal()" class="run-step-icon">
-                  <img *ngIf="runningProcesses['Payment Information']" src="assets/images/run_proc_3_icon.svg" alt="Step Icon" class="step_1_icon" />
-                  <img *ngIf="!runningProcesses['Payment Information']" src="assets/images/run_proc_3_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
-                </div>
-                <div class="step-info">
-                  <p>Payment <br/> Information</p>
-                </div>
-              </div>
-              <div  class="run-step-item">
-                <div class="run-step-icon ">
-                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
+                  <p>Individual <br /> Information</p>
                 </div>
 
+                <div
+                  *ngIf="stepStatus['Individual Information'] !== Status.nothing"
+                  class="status"
+                  [ngClass]="{
+          'draft-status': stepStatus['Individual Information'] === Status.draft,
+          'completed-status': stepStatus['Individual Information'] === Status.completed
+        }">
+                  {{ stepStatus['Individual Information'] }}
+                </div>
               </div>
+
+              <!-- Arrow -->
               <div class="run-step-item">
-                <div [ngClass]="{ clickable: runningProcesses['AI Engine Process'] }" (click)="clicked_ai_engine()" class="run-step-icon">
-                  <img *ngIf="runningProcesses['AI Engine Process']" src="assets/images/run_proc_4_icon.svg" alt="Step Icon" class="step_1_icon" />
-                  <img *ngIf="!runningProcesses['AI Engine Process']" src="assets/images/run_proc_4_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
-                </div>
-                <div class="step-info">
-                  <p>AI Engine <br> Process</p>
+                <div class="run-step-icon">
+                  <img src="assets/images/arrow_right.svg" class="arrow_icon" />
                 </div>
               </div>
-              <div  class="run-step-item">
-                <div class="run-step-icon ">
-                  <img src="assets/images/arrow_right.svg" alt="Step Icon" class="arrow_icon" />
+
+              <!-- Request Verification -->
+              <div class="run-step-item">
+                <div
+                  class="run-step-icon"
+                  [ngClass]="{ clickable: runningProcesses['Request Verification'] }">
+                  <img *ngIf="runningProcesses['Request Verification']"
+                       src="assets/images/run_proc_2_icon.svg"
+                       class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Request Verification']"
+                       src="assets/images/run_proc_2_disabled_icon.svg"
+                       class="step_1_icon" />
+                </div>
+
+                <div class="step-info">
+                  <p>Request <br /> Verification</p>
+                </div>
+
+                <div
+                  *ngIf="stepStatus['Request Verification'] !== Status.nothing"
+                  class="status"
+                  [ngClass]="{
+          'in-progress-status': stepStatus['Request Verification'] === Status.in_progress,
+          'completed-status': stepStatus['Request Verification'] === Status.completed
+        }">
+                  {{ stepStatus['Request Verification'] }}
+                </div>
+              </div>
+
+              <!-- Arrow (Skip Verification) -->
+              <div class="run-step-item">
+                <div
+                  class="run-step-icon"
+                  style="cursor: pointer"
+                  (click)="skipVerification()">
+                  <img src="assets/images/arrow_right.svg" class="arrow_icon" />
+                </div>
+              </div>
+
+              <!-- Payment Information -->
+              <div class="run-step-item">
+                <div
+                  class="run-step-icon"
+                  [ngClass]="{ clickable: runningProcesses['Payment Information'] }"
+                  (click)="openPaymentModal()">
+                  <img *ngIf="runningProcesses['Payment Information']"
+                       src="assets/images/run_proc_3_icon.svg"
+                       class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Payment Information']"
+                       src="assets/images/run_proc_3_disabled_icon.svg"
+                       class="step_1_icon" />
+                </div>
+
+                <div class="step-info">
+                  <p>Payment <br /> Information</p>
+                </div>
+                <div
+                  *ngIf="stepStatus['Payment Information'] !== Status.nothing"
+                  class="status"
+                  [ngClass]="{
+          'in-progress-status': stepStatus['Payment Information'] === Status.in_progress,
+          'completed-status': stepStatus['Payment Information'] === Status.completed
+        }">
+                  {{ stepStatus['Payment Information'] }}
                 </div>
 
               </div>
+
+              <!-- Arrow -->
               <div class="run-step-item">
-                <div [ngClass]="{ clickable: runningProcesses['Credit Certificate'] }" class="run-step-icon">
-                  <img *ngIf="runningProcesses['Credit Certificate']" src="assets/images/run_proc_5_icon.svg" alt="Step Icon" class="step_1_icon" />
-                  <img *ngIf="!runningProcesses['Credit Certificate']" src="assets/images/run_proc_5_disabled_icon.svg" alt="Step Icon" class="step_1_icon" />
+                <div class="run-step-icon">
+                  <img src="assets/images/arrow_right.svg" class="arrow_icon" />
                 </div>
+              </div>
+
+              <!-- AI Engine Process -->
+              <div class="run-step-item">
+                <div
+                  class="run-step-icon"
+                  [ngClass]="{ clickable: runningProcesses['AI Engine Process'] }"
+                  (click)="clicked_ai_engine()">
+                  <img *ngIf="runningProcesses['AI Engine Process']"
+                       src="assets/images/run_proc_4_icon.svg"
+                       class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['AI Engine Process']"
+                       src="assets/images/run_proc_4_disabled_icon.svg"
+                       class="step_1_icon" />
+                </div>
+
                 <div class="step-info">
-                  <p>Credit <br> Certificate</p>
+                  <p>AI Engine <br /> Process</p>
+                </div>
+                <div
+                  *ngIf="stepStatus['AI Engine Process'] !== Status.nothing"
+                  class="status"
+                  [ngClass]="{
+          'in-progress-status': stepStatus['AI Engine Process'] === Status.in_progress,
+          'completed-status': stepStatus['AI Engine Process'] === Status.completed
+        }">
+                  {{ stepStatus['AI Engine Process'] }}
+                </div>
+
+              </div>
+
+              <!-- Arrow -->
+              <div style="cursor: pointer" class="run-step-item" (click)="stepStatus['AI Engine Process'] = Status.completed; runningProcesses['Credit Certificate'] = true; ">
+                <div class="run-step-icon">
+                  <img src="assets/images/arrow_right.svg" class="arrow_icon" />
+                </div>
+              </div>
+
+              <!-- Credit Certificate -->
+              <div class="run-step-item">
+                <div
+                  class="run-step-icon"
+                  [ngClass]="{ clickable: runningProcesses['Credit Certificate'] }">
+                  <img *ngIf="runningProcesses['Credit Certificate']"
+                       src="assets/images/run_proc_5_icon.svg"
+                       class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Credit Certificate']"
+                       src="assets/images/run_proc_5_disabled_icon.svg"
+                       class="step_1_icon" />
+                </div>
+
+                <div class="step-info">
+                  <p>Credit <br /> Certificate</p>
                 </div>
               </div>
 
             </div>
           </div>
+
 
         </div>
       </div>
