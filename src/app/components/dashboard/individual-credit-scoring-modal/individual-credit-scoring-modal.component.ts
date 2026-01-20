@@ -11,9 +11,27 @@ export class IndividualCreditScoringModalComponent {
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  // Identity & Verification
   @ViewChild('passportInput') passportInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('passportPhotoInput') passportPhotoInput!: ElementRef<HTMLInputElement>;
   @ViewChild('utilityInput') utilityInput!: ElementRef<HTMLInputElement>;
   @ViewChild('tinInput') tinInput!: ElementRef<HTMLInputElement>;
+
+  // Employment Document
+  @ViewChild('salaryInput') salaryInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('employerIdInput') employerIdInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('paySlipInput') paySlipInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('appointmentInput') appointmentInput!: ElementRef<HTMLInputElement>;
+
+  // Credit Verification
+  @ViewChild('cibConsentInput') cibConsentInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('loanStatementsInput') loanStatementsInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('creditCardInput') creditCardInput!: ElementRef<HTMLInputElement>;
+
+  // Collateral / Asset Verification
+  @ViewChild('fdrInput') fdrInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('goldInput') goldInput!: ElementRef<HTMLInputElement>;
 
   personalInfoForm!: FormGroup;
   locationForm!: FormGroup;
@@ -41,13 +59,44 @@ export class IndividualCreditScoringModalComponent {
     identity: false,
     employment: false,
     business: false,
-    credit: false
+    credit: false,
+    collateral: false
   };
 
+  expandedNestedSection: string = '';
+
   uploadedFiles: any = {
+    // Identity & Verification
     passport: null,
+    passportPhoto: null,
     utility: null,
-    tin: null
+    tin: null,
+
+    // Employment Document
+    salary: null,
+    employerId: null,
+    paySlip: null,
+    appointment: null,
+
+    // Credit Verification
+    cibConsent: null,
+    loanStatements: null,
+    creditCard: null,
+
+    // Collateral / Asset Verification
+    fdr: null,
+    gold: null
+  };
+
+  isUploadSectionValid: boolean = false;
+
+  // Business Information Form Data
+  businessUploadInfo = {
+    businessType: '',
+    yearsInBusiness: '',
+    businessRevenue: '',
+    industryType: '',
+    businessName: ''
   };
 
   consentAccepted: boolean = false;
@@ -181,7 +230,7 @@ export class IndividualCreditScoringModalComponent {
   }
 
   toggleNestedSection(section: string): void {
-    console.log('Toggle nested section:', section);
+    this.expandedNestedSection = this.expandedNestedSection === section ? '' : section;
   }
 
   close(): void {
@@ -245,10 +294,69 @@ export class IndividualCreditScoringModalComponent {
 
   loadUploadData(): void {
     // Upload data already in component state
+    this.updateUploadSectionStatus();
+    this.validateUploadSection();
   }
 
   loadConsentData(): void {
     // Consent data already in component state
+  }
+
+  updateUploadSectionStatus(): void {
+    this.uploadSections.identity = !!(this.uploadedFiles.passport || this.uploadedFiles.passportPhoto ||
+      this.uploadedFiles.utility || this.uploadedFiles.tin);
+    this.uploadSections.employment = !!(this.uploadedFiles.salary || this.uploadedFiles.employerId ||
+      this.uploadedFiles.paySlip || this.uploadedFiles.appointment);
+    this.uploadSections.business = !!(this.businessUploadInfo.businessType || this.businessUploadInfo.yearsInBusiness ||
+      this.businessUploadInfo.businessRevenue || this.businessUploadInfo.industryType ||
+      this.businessUploadInfo.businessName);
+    this.uploadSections.credit = !!(this.uploadedFiles.cibConsent || this.uploadedFiles.loanStatements ||
+      this.uploadedFiles.creditCard);
+    this.uploadSections.collateral = !!(this.uploadedFiles.fdr || this.uploadedFiles.gold);
+  }
+
+  validateUploadSection(): boolean {
+    // Identity & Verification (passport is optional)
+    const identityValid = !!(
+      this.uploadedFiles.passportPhoto &&
+      this.uploadedFiles.utility &&
+      this.uploadedFiles.tin
+    );
+
+    // Employment Document
+    const employmentValid = !!(
+      this.uploadedFiles.salary &&
+      this.uploadedFiles.employerId &&
+      this.uploadedFiles.paySlip &&
+      this.uploadedFiles.appointment
+    );
+
+    // Business Information
+    const businessValid = !!(
+      this.businessUploadInfo.businessType &&
+      this.businessUploadInfo.yearsInBusiness &&
+      this.businessUploadInfo.businessRevenue &&
+      this.businessUploadInfo.industryType &&
+      this.businessUploadInfo.businessName
+    );
+
+    // Credit Verification
+    const creditValid = !!(
+      this.uploadedFiles.cibConsent &&
+      this.uploadedFiles.loanStatements &&
+      this.uploadedFiles.creditCard
+    );
+
+    // Collateral / Asset Verification
+    const collateralValid = !!(
+      this.uploadedFiles.fdr &&
+      this.uploadedFiles.gold
+    );
+
+    // All sections must be valid
+    this.isUploadSectionValid = identityValid && employmentValid && businessValid && creditValid && collateralValid;
+
+    return this.isUploadSectionValid;
   }
 
   validateCurrentStep(): boolean {
@@ -260,7 +368,7 @@ export class IndividualCreditScoringModalComponent {
       case 3:
         return this.basicInfoForm.valid && this.employerInfoForm.valid && this.businessInfoForm.valid && this.creditInfoForm.valid;
       case 4:
-        return true;
+        return this.validateUploadSection();
       case 5:
         return true;
       default:
@@ -319,14 +427,51 @@ export class IndividualCreditScoringModalComponent {
 
   triggerUploadInput(type: string): void {
     switch(type) {
+      // Identity & Verification
       case 'passport':
         this.passportInput?.nativeElement.click();
+        break;
+      case 'passportPhoto':
+        this.passportPhotoInput?.nativeElement.click();
         break;
       case 'utility':
         this.utilityInput?.nativeElement.click();
         break;
       case 'tin':
         this.tinInput?.nativeElement.click();
+        break;
+
+      // Employment Document
+      case 'salary':
+        this.salaryInput?.nativeElement.click();
+        break;
+      case 'employerId':
+        this.employerIdInput?.nativeElement.click();
+        break;
+      case 'paySlip':
+        this.paySlipInput?.nativeElement.click();
+        break;
+      case 'appointment':
+        this.appointmentInput?.nativeElement.click();
+        break;
+
+      // Credit Verification
+      case 'cibConsent':
+        this.cibConsentInput?.nativeElement.click();
+        break;
+      case 'loanStatements':
+        this.loanStatementsInput?.nativeElement.click();
+        break;
+      case 'creditCard':
+        this.creditCardInput?.nativeElement.click();
+        break;
+
+      // Collateral / Asset Verification
+      case 'fdr':
+        this.fdrInput?.nativeElement.click();
+        break;
+      case 'gold':
+        this.goldInput?.nativeElement.click();
         break;
     }
   }
@@ -350,9 +495,16 @@ export class IndividualCreditScoringModalComponent {
 
       this.fileErrorMessage = '';
       this.uploadedFiles[type] = file.name;
-      this.uploadSections.identity = true;
+      this.updateUploadSectionStatus();
+      this.validateUploadSection();
       console.log(`File uploaded for ${type}:`, file.name);
     }
+  }
+
+  onBusinessInfoChange(field: string, value: string): void {
+    this.businessUploadInfo[field as keyof typeof this.businessUploadInfo] = value;
+    this.updateUploadSectionStatus();
+    this.validateUploadSection();
   }
 
   onSaveUpload(): void {
@@ -418,7 +570,10 @@ export class IndividualCreditScoringModalComponent {
         businessInfo: this.businessInfoForm.value,
         creditInfo: this.creditInfoForm.value
       },
-      step4: this.uploadedFiles,
+      step4: {
+        uploadedFiles: this.uploadedFiles,
+        businessUploadInfo: this.businessUploadInfo
+      },
       step5: { consentAccepted: this.consentAccepted },
       submittedAt: new Date().toISOString()
     };
