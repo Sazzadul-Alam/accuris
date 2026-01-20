@@ -11,6 +11,7 @@ import {VerifyCodeComponent} from "./components/login/verify-code/verify-code.co
 import {SetPasswordComponent} from "./components/login/set-password/set-password.component";
 import {DashboardComponent} from "./components/dashboard/dashboard.component";
 import {SignUpParentComponent} from "./components/login/sign-up-parent/sign-up-parent.component";
+import {UnderConstructionComponent} from "./components/under-construction/under-construction.component";
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -25,7 +26,9 @@ const routes: Routes = [
   { path: 'forgot-password/verify-code', component: VerifyCodeComponent},
   { path: 'set-password', component: SetPasswordComponent},
   { path: 'dashboard', component: DashboardComponent},
+  { path: 'under-construction', component: UnderConstructionComponent},
   { path: '**', component: LandingComponent},
+
 ];
 
 @NgModule({
