@@ -255,17 +255,21 @@ export class IndividualCreditScoringModalComponent {
   }
 
   onStepClick(stepId: number): void {
-    if (stepId <= this.currentStep) {
-      this.currentStep = stepId;
-      this.loadStepData(stepId);
-    } else {
-      if (this.validateCurrentStep()) {
-        this.currentStep = stepId;
-        this.loadStepData(stepId);
-      } else {
-        this.showNotification('Please complete the current step before proceeding.', 'error');
-      }
-    }
+
+    this.currentStep = stepId;
+    this.loadStepData(stepId);
+
+    // if (stepId <= this.currentStep) {
+    //   this.currentStep = stepId;
+    //   this.loadStepData(stepId);
+    // } else {
+    //   if (this.validateCurrentStep()) {
+    //     this.currentStep = stepId;
+    //     this.loadStepData(stepId);
+    //   } else {
+    //     this.showNotification('Please complete the current step before proceeding.', 'error');
+    //   }
+    // }
   }
 
   loadStepData(stepId: number): void {
@@ -303,16 +307,42 @@ export class IndividualCreditScoringModalComponent {
   }
 
   updateUploadSectionStatus(): void {
-    this.uploadSections.identity = !!(this.uploadedFiles.passport || this.uploadedFiles.passportPhoto ||
-      this.uploadedFiles.utility || this.uploadedFiles.tin);
-    this.uploadSections.employment = !!(this.uploadedFiles.salary || this.uploadedFiles.employerId ||
-      this.uploadedFiles.paySlip || this.uploadedFiles.appointment);
-    this.uploadSections.business = !!(this.businessUploadInfo.businessType || this.businessUploadInfo.yearsInBusiness ||
-      this.businessUploadInfo.businessRevenue || this.businessUploadInfo.industryType ||
-      this.businessUploadInfo.businessName);
-    this.uploadSections.credit = !!(this.uploadedFiles.cibConsent || this.uploadedFiles.loanStatements ||
-      this.uploadedFiles.creditCard);
-    this.uploadSections.collateral = !!(this.uploadedFiles.fdr || this.uploadedFiles.gold);
+    // Identity & Verification (passport is optional, others required)
+    this.uploadSections.identity = !!(
+      this.uploadedFiles.passportPhoto &&
+      this.uploadedFiles.utility &&
+      this.uploadedFiles.tin
+    );
+
+    // Employment Document (all required)
+    this.uploadSections.employment = !!(
+      this.uploadedFiles.salary &&
+      this.uploadedFiles.employerId &&
+      this.uploadedFiles.paySlip &&
+      this.uploadedFiles.appointment
+    );
+
+    // Business Information (all required)
+    this.uploadSections.business = !!(
+      this.businessUploadInfo.businessType &&
+      this.businessUploadInfo.yearsInBusiness &&
+      this.businessUploadInfo.businessRevenue &&
+      this.businessUploadInfo.industryType &&
+      this.businessUploadInfo.businessName
+    );
+
+    // Credit Verification (all required)
+    this.uploadSections.credit = !!(
+      this.uploadedFiles.cibConsent &&
+      this.uploadedFiles.loanStatements &&
+      this.uploadedFiles.creditCard
+    );
+
+    // Collateral / Asset Verification (all required)
+    this.uploadSections.collateral = !!(
+      this.uploadedFiles.fdr &&
+      this.uploadedFiles.gold
+    );
   }
 
   validateUploadSection(): boolean {
