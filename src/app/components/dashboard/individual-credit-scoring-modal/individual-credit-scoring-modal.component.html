@@ -452,7 +452,7 @@
 
       <div class="button-row financial-buttons">
         <button type="button" class="btn-save" (click)="onSaveFinancial()">SAVE</button>
-        <button type="button" class="btn-next" (click)="onSubmitFinancial()">NEXT</button>
+        <button type="button" class="btn-next" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid" (click)="onSubmitFinancial()">NEXT</button>
       </div>
     </div>
 

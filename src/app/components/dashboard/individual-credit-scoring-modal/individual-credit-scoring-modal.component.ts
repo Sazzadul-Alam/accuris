@@ -51,6 +51,11 @@ export class IndividualCreditScoringModalComponent {
   };
 
   consentAccepted: boolean = false;
+  notificationMessage: string = '';
+  notificationType: 'success' | 'error' | '' = '';
+  showNotificationFlag: boolean = false;
+  showUnsavedChangesWarning: boolean = false;
+  fileErrorMessage: string = '';
 
   steps = [
     { id: 1, name: "Person's Info", icon: 'user' },
@@ -66,7 +71,6 @@ export class IndividualCreditScoringModalComponent {
     this.initializeForm();
     this.initializeLocationForm();
     this.initializeFinancialForms();
-    // this.loadSavedData(); // Disabled local storage loading
   }
 
   initializeForm(): void {
@@ -116,20 +120,20 @@ export class IndividualCreditScoringModalComponent {
     });
 
     this.businessInfoForm = this.fb.group({
-      businessName: [''],
-      businessType: [''],
-      registrationNumber: [''],
-      annualRevenue: ['', Validators.pattern(/^[0-9]+$/)],
-      yearsInBusiness: ['', Validators.pattern(/^[0-9]+$/)]
+      businessName: ['', Validators.required],
+      businessType: ['', Validators.required],
+      registrationNumber: ['', Validators.required],
+      annualRevenue: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      yearsInBusiness: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
     });
 
     this.creditInfoForm = this.fb.group({
       bankName: ['', Validators.required],
       accountNumber: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       existingLoans: ['', Validators.required],
-      totalDebt: ['', Validators.pattern(/^[0-9]+$/)],
+      totalDebt: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       creditScore: ['', Validators.pattern(/^[0-9]{3}$/)],
-      assets: ['', Validators.pattern(/^[0-9]+$/)]
+      assets: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
     });
 
     this.basicInfoForm.valueChanges.subscribe(() => {
@@ -186,13 +190,19 @@ export class IndividualCreditScoringModalComponent {
       this.businessInfoForm.dirty || this.creditInfoForm.dirty;
 
     if (hasUnsavedChanges) {
-      const confirmClose = confirm('You have unsaved changes. Are you sure you want to close?');
-      if (confirmClose) {
-        this.closeModal.emit();
-      }
+      this.showUnsavedChangesWarning = true;
     } else {
       this.closeModal.emit();
     }
+  }
+
+  confirmClose(): void {
+    this.showUnsavedChangesWarning = false;
+    this.closeModal.emit();
+  }
+
+  cancelClose(): void {
+    this.showUnsavedChangesWarning = false;
   }
 
   onStepClick(stepId: number): void {
@@ -204,7 +214,7 @@ export class IndividualCreditScoringModalComponent {
         this.currentStep = stepId;
         this.loadStepData(stepId);
       } else {
-        alert('Please complete the current step before proceeding.');
+        this.showNotification('Please complete the current step before proceeding.', 'error');
       }
     }
   }
@@ -214,21 +224,8 @@ export class IndividualCreditScoringModalComponent {
 
     switch(stepId) {
       case 1:
-        // const savedPersonalData = localStorage.getItem('creditScoringStep1');
-        // if (savedPersonalData) {
-        //   const parsedData = JSON.parse(savedPersonalData);
-        //   this.personalInfoForm.patchValue(parsedData);
-        //   if (parsedData.uploadId) {
-        //     this.selectedFileName = 'Previously uploaded file';
-        //   }
-        // }
         break;
       case 2:
-        // const savedLocationData = localStorage.getItem('creditScoringStep2');
-        // if (savedLocationData) {
-        //   const parsedData = JSON.parse(savedLocationData);
-        //   this.locationForm.patchValue(parsedData);
-        // }
         break;
       case 3:
         this.loadFinancialData();
@@ -243,28 +240,15 @@ export class IndividualCreditScoringModalComponent {
   }
 
   loadFinancialData(): void {
-    /* const savedBasicInfo = localStorage.getItem('creditScoringBasicInfo');
-    if (savedBasicInfo) {
-      const parsedData = JSON.parse(savedBasicInfo);
-      this.basicInfoForm.patchValue(parsedData);
-    }
-    ... and so on
-    */
+    // Financial data already in forms
   }
 
   loadUploadData(): void {
-    // const savedUploadData = localStorage.getItem('creditScoringUploadData');
-    // if (savedUploadData) {
-    //   this.uploadedFiles = JSON.parse(savedUploadData);
-    //   this.uploadSections.identity = !!(this.uploadedFiles.passport || this.uploadedFiles.utility || this.uploadedFiles.tin);
-    // }
+    // Upload data already in component state
   }
 
   loadConsentData(): void {
-    // const savedConsent = localStorage.getItem('creditScoringConsent');
-    // if (savedConsent) {
-    //   this.consentAccepted = JSON.parse(savedConsent);
-    // }
+    // Consent data already in component state
   }
 
   validateCurrentStep(): boolean {
@@ -274,7 +258,7 @@ export class IndividualCreditScoringModalComponent {
       case 2:
         return this.locationForm.valid;
       case 3:
-        return this.basicInfoForm.valid && this.employerInfoForm.valid && this.creditInfoForm.valid;
+        return this.basicInfoForm.valid && this.employerInfoForm.valid && this.businessInfoForm.valid && this.creditInfoForm.valid;
       case 4:
         return true;
       case 5:
@@ -297,7 +281,6 @@ export class IndividualCreditScoringModalComponent {
   onSave(): void {
     if (this.personalInfoForm.valid) {
       const formData = this.personalInfoForm.value;
-      // localStorage.setItem('creditScoringStep1', JSON.stringify(formData));
       console.log('Personal info (in-memory):', formData);
       this.showNotification('Form updated!', 'success');
     } else {
@@ -309,7 +292,6 @@ export class IndividualCreditScoringModalComponent {
   onSaveLocation(): void {
     if (this.locationForm.valid) {
       const formData = this.locationForm.value;
-      // localStorage.setItem('creditScoringStep2', JSON.stringify(formData));
       this.showNotification('Location updated!', 'success');
     } else {
       this.markFormGroupTouched(this.locationForm);
@@ -318,15 +300,11 @@ export class IndividualCreditScoringModalComponent {
   }
 
   onSaveFinancial(): void {
-    // localStorage.setItem('creditScoringBasicInfo', JSON.stringify(this.basicInfoForm.value));
-    // localStorage.setItem('creditScoringEmployerInfo', JSON.stringify(this.employerInfoForm.value));
-    // localStorage.setItem('creditScoringBusinessInfo', JSON.stringify(this.businessInfoForm.value));
-    // localStorage.setItem('creditScoringCreditInfo', JSON.stringify(this.creditInfoForm.value));
     this.showNotification('Financial info updated!', 'success');
   }
 
   onSubmitFinancial(): void {
-    if (!this.basicInfoForm.valid || !this.employerInfoForm.valid || !this.creditInfoForm.valid) {
+    if (!this.basicInfoForm.valid || !this.employerInfoForm.valid || !this.businessInfoForm.valid || !this.creditInfoForm.valid) {
       this.showNotification('Please complete all required sections.', 'error');
       return;
     }
@@ -360,16 +338,17 @@ export class IndividualCreditScoringModalComponent {
     if (file) {
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert('File size must be less than 5MB');
+        this.fileErrorMessage = 'File size must be less than 5MB';
         return;
       }
 
       const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
       if (!allowedTypes.includes(file.type)) {
-        alert('Only PDF, JPG, JPEG, and PNG files are allowed');
+        this.fileErrorMessage = 'Only PDF, JPG, JPEG, and PNG files are allowed';
         return;
       }
 
+      this.fileErrorMessage = '';
       this.uploadedFiles[type] = file.name;
       this.uploadSections.identity = true;
       console.log(`File uploaded for ${type}:`, file.name);
@@ -377,7 +356,6 @@ export class IndividualCreditScoringModalComponent {
   }
 
   onSaveUpload(): void {
-    // localStorage.setItem('creditScoringUploadData', JSON.stringify(this.uploadedFiles));
     this.showNotification('Upload information updated!', 'success');
   }
 
@@ -391,7 +369,6 @@ export class IndividualCreditScoringModalComponent {
   }
 
   onSaveConsent(): void {
-    // localStorage.setItem('creditScoringConsent', JSON.stringify(this.consentAccepted));
     this.showNotification('Consent updated!', 'success');
   }
 
@@ -428,12 +405,10 @@ export class IndividualCreditScoringModalComponent {
   }
 
   saveCurrentStepData(): void {
-    // Logic previously used for localStorage, now just logs or prepares in-memory state
     console.log(`Current data for step ${this.currentStep} is held in forms.`);
   }
 
   submitForm(): void {
-    // Reconstruct full object from FormGroups instead of localStorage
     const completeFormData = {
       step1: this.personalInfoForm.value,
       step2: this.locationForm.value,
@@ -453,11 +428,6 @@ export class IndividualCreditScoringModalComponent {
 
     this.showNotification('Form submitted successfully!', 'success');
 
-    /* Clear local storage commented out as we aren't using it
-    localStorage.removeItem('creditScoringStep1');
-    ...
-    */
-
     setTimeout(() => {
       this.closeModal.emit();
     }, 1500);
@@ -476,16 +446,17 @@ export class IndividualCreditScoringModalComponent {
     if (file) {
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert('File size must be less than 5MB');
+        this.fileErrorMessage = 'File size must be less than 5MB';
         return;
       }
 
       const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
       if (!allowedTypes.includes(file.type)) {
-        alert('Only PDF, JPG, JPEG, and PNG files are allowed');
+        this.fileErrorMessage = 'Only PDF, JPG, JPEG, and PNG files are allowed';
         return;
       }
 
+      this.fileErrorMessage = '';
       this.selectedFileName = file.name;
       this.personalInfoForm.patchValue({ uploadId: file });
       this.convertFileToBase64(file);
@@ -497,7 +468,6 @@ export class IndividualCreditScoringModalComponent {
     reader.onload = () => {
       const base64String = reader.result as string;
       console.log('File converted to base64');
-      // localStorage.setItem('uploadedIdFile', base64String);
     };
     reader.readAsDataURL(file);
   }
@@ -519,11 +489,17 @@ export class IndividualCreditScoringModalComponent {
   }
 
   private showNotification(message: string, type: 'success' | 'error'): void {
-    if (type === 'success') {
-      alert('✓ ' + message);
-    } else {
-      alert('✗ ' + message);
-    }
+    this.notificationMessage = message;
+    this.notificationType = type;
+    this.showNotificationFlag = true;
+
+    setTimeout(() => {
+      this.showNotificationFlag = false;
+    }, 3000);
+  }
+
+  dismissNotification(): void {
+    this.showNotificationFlag = false;
   }
 
   loadSavedData(): void {

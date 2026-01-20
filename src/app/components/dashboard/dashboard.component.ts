@@ -189,13 +189,14 @@ export class DashboardComponent {
     this.tables[this.currentTable].selected = true;
   }
   onPlanSelected(planName: string) {
-    this.selectedPlanForPayment = planName;
+    // this.selectedPlanForPayment = planName;
     this.isPricingModalOpen = false;
-
-    setTimeout(() => {
-      this.isPaymentModalOpen = true;
-      document.body.style.overflow = 'hidden';
-    }, 200);
+    this.runningProcesses['Individual Information'] = true;
+    this.selectedPlan = planName;
+    // setTimeout(() => {
+    //   this.isPaymentModalOpen = true;
+    //   document.body.style.overflow = 'hidden';
+    // }, 200);
   }
 
   closePaymentModal() {
