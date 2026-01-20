@@ -1,3 +1,14 @@
+<!-- Close Confirmation Modal -->
+<div class="confirmation-overlay" *ngIf="showCloseConfirmation" (click)="cancelClose()">
+  <div class="confirmation-modal" (click)="$event.stopPropagation()">
+    <h3 class="confirmation-title">Are you sure you want to quit?</h3>
+    <p class="confirmation-message">Any unsaved data will be lost</p>
+    <div class="confirmation-buttons">
+      <button class="btn-save" (click)="cancelClose()">No</button>
+      <button class="btn-next" (click)="confirmClose()">Yes</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" (click)="close()">
   <div class="modal-container" (click)="$event.stopPropagation()">
 
@@ -148,7 +159,7 @@
         </div>
 
         <div class="button-row">
-          <button type="button" class="btn-save" (click)="onSave()">SAVE</button>
+          <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
           <button
             type="button"
             class="btn-next"
@@ -253,7 +264,7 @@
         </div>
 
         <div class="button-row">
-          <button type="button" class="btn-save" (click)="onSaveLocation()">SAVE</button>
+          <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
           <button
             type="button"
             class="btn-next"
@@ -451,7 +462,7 @@
       </div>
 
       <div class="button-row financial-buttons">
-        <button type="button" class="btn-save" (click)="onSaveFinancial()">SAVE</button>
+        <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
         <button type="button" class="btn-next" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid" (click)="onSubmitFinancial()">NEXT</button>
       </div>
     </div>
@@ -749,7 +760,7 @@
       </div>
 
       <div class="button-row upload-buttons">
-        <button type="button" class="btn-save" (click)="onSaveUpload()">SAVE</button>
+        <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
         <button type="button" class="btn-next" [disabled]="!isUploadSectionValid" (click)="onNextFromUpload()">NEXT</button>
       </div>
     </div>
@@ -799,7 +810,7 @@
       </div>
 
       <div class="button-row consent-buttons">
-        <button type="button" class="btn-save" (click)="onSaveConsent()">SAVE</button>
+        <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
         <button type="button" class="btn-next" [disabled]="!consentAccepted" (click)="onSubmitConsent()">Submit</button>
       </div>
     </div>

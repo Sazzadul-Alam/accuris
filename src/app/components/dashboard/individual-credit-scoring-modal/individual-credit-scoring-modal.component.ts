@@ -8,8 +8,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class IndividualCreditScoringModalComponent {
   @Input() selectedPlanInput = '';
-  @Output() closeModal = new EventEmitter<void>();
-  @Output() formSubmit = new EventEmitter<any>();
+  @Output() closeModal= new EventEmitter<void>();
+  @Output() formSubmit= new EventEmitter<any>();
+  @Output() saved= new EventEmitter<any>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   // Identity & Verification
@@ -104,6 +105,7 @@ export class IndividualCreditScoringModalComponent {
   notificationType: 'success' | 'error' | '' = '';
   showNotificationFlag: boolean = false;
   showUnsavedChangesWarning: boolean = false;
+  showCloseConfirmation: boolean = false;
   fileErrorMessage: string = '';
 
   steps = [
@@ -120,6 +122,92 @@ export class IndividualCreditScoringModalComponent {
     this.initializeForm();
     this.initializeLocationForm();
     this.initializeFinancialForms();
+    this.loadSavedDataFromLocalStorage();
+  }
+
+  saveAllDataToLocalStorage(): void {
+    const allFormData = {
+      step1: this.personalInfoForm.value,
+      step2: this.locationForm.value,
+      step3: {
+        basicInfo: this.basicInfoForm.value,
+        employerInfo: this.employerInfoForm.value,
+        businessInfo: this.businessInfoForm.value,
+        creditInfo: this.creditInfoForm.value
+      },
+      step4: {
+        uploadedFiles: this.uploadedFiles,
+        businessUploadInfo: this.businessUploadInfo,
+        selectedFileName: this.selectedFileName
+      },
+      step5: {
+        consentAccepted: this.consentAccepted
+      },
+      savedAt: new Date().toISOString()
+    };
+
+    localStorage.setItem('creditScoringFormData', JSON.stringify(allFormData));
+    console.log('All form data saved to localStorage');
+    this.saved.emit();
+  }
+  loadSavedDataFromLocalStorage(): void {
+    const savedData = localStorage.getItem('creditScoringFormData');
+
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+
+        // Load Step 1 - Personal Info
+        if (parsedData.step1) {
+          this.personalInfoForm.patchValue(parsedData.step1);
+          if (parsedData.step4?.selectedFileName) {
+            this.selectedFileName = parsedData.step4.selectedFileName;
+          }
+        }
+
+        // Load Step 2 - Location
+        if (parsedData.step2) {
+          this.locationForm.patchValue(parsedData.step2);
+        }
+
+        // Load Step 3 - Financial Info
+        if (parsedData.step3) {
+          if (parsedData.step3.basicInfo) {
+            this.basicInfoForm.patchValue(parsedData.step3.basicInfo);
+          }
+          if (parsedData.step3.employerInfo) {
+            this.employerInfoForm.patchValue(parsedData.step3.employerInfo);
+          }
+          if (parsedData.step3.businessInfo) {
+            this.businessInfoForm.patchValue(parsedData.step3.businessInfo);
+          }
+          if (parsedData.step3.creditInfo) {
+            this.creditInfoForm.patchValue(parsedData.step3.creditInfo);
+          }
+        }
+
+        // Load Step 4 - Upload Info
+        if (parsedData.step4) {
+          if (parsedData.step4.uploadedFiles) {
+            this.uploadedFiles = { ...parsedData.step4.uploadedFiles };
+          }
+          if (parsedData.step4.businessUploadInfo) {
+            this.businessUploadInfo = { ...parsedData.step4.businessUploadInfo };
+          }
+          this.updateUploadSectionStatus();
+          this.validateUploadSection();
+        }
+
+        // Load Step 5 - Consent
+        if (parsedData.step5) {
+          this.consentAccepted = parsedData.step5.consentAccepted || false;
+        }
+
+        console.log('Form data loaded from localStorage');
+      } catch (error) {
+        console.error('Error loading saved data:', error);
+      }
+    }
   }
 
   initializeForm(): void {
@@ -234,24 +322,37 @@ export class IndividualCreditScoringModalComponent {
   }
 
   close(): void {
-    const hasUnsavedChanges = this.personalInfoForm.dirty || this.locationForm.dirty ||
-      this.basicInfoForm.dirty || this.employerInfoForm.dirty ||
-      this.businessInfoForm.dirty || this.creditInfoForm.dirty;
 
-    if (hasUnsavedChanges) {
-      this.showUnsavedChangesWarning = true;
-    } else {
-      this.closeModal.emit();
-    }
+    this.showCloseConfirmation = true;
+
+
+    // const hasUnsavedChanges = this.personalInfoForm.dirty || this.locationForm.dirty ||
+    //   this.basicInfoForm.dirty || this.employerInfoForm.dirty ||
+    //   this.businessInfoForm.dirty || this.creditInfoForm.dirty;
+    //
+    // if (hasUnsavedChanges) {
+    //   this.showUnsavedChangesWarning = true;
+    // } else {
+    //   this.closeModal.emit();
+    // }
   }
 
+  // confirmClose(): void {
+  //   this.showUnsavedChangesWarning = false;
+  //   this.closeModal.emit();
+  // }
+
   confirmClose(): void {
-    this.showUnsavedChangesWarning = false;
+    this.showCloseConfirmation = false;
     this.closeModal.emit();
   }
 
+  // cancelClose(): void {
+  //   this.showUnsavedChangesWarning = false;
+  // }
+
   cancelClose(): void {
-    this.showUnsavedChangesWarning = false;
+    this.showCloseConfirmation = false;
   }
 
   onStepClick(stepId: number): void {
@@ -418,19 +519,39 @@ export class IndividualCreditScoringModalComponent {
 
   onSave(): void {
     if (this.personalInfoForm.valid) {
-      const formData = this.personalInfoForm.value;
-      console.log('Personal info (in-memory):', formData);
-      this.showNotification('Form updated!', 'success');
+      this.saveAllDataToLocalStorage();
+      this.showNotification('Form saved successfully!', 'success');
     } else {
       this.markFormGroupTouched(this.personalInfoForm);
       this.showNotification('Please fill in all required fields correctly.', 'error');
     }
   }
 
+  // onSave(): void {
+  //   if (this.personalInfoForm.valid) {
+  //     const formData = this.personalInfoForm.value;
+  //     console.log('Personal info (in-memory):', formData);
+  //     this.showNotification('Form updated!', 'success');
+  //   } else {
+  //     this.markFormGroupTouched(this.personalInfoForm);
+  //     this.showNotification('Please fill in all required fields correctly.', 'error');
+  //   }
+  // }
+
+  // onSaveLocation(): void {
+  //   if (this.locationForm.valid) {
+  //     const formData = this.locationForm.value;
+  //     this.showNotification('Location updated!', 'success');
+  //   } else {
+  //     this.markFormGroupTouched(this.locationForm);
+  //     this.showNotification('Please fill in all required fields correctly.', 'error');
+  //   }
+  // }
+
   onSaveLocation(): void {
     if (this.locationForm.valid) {
-      const formData = this.locationForm.value;
-      this.showNotification('Location updated!', 'success');
+      this.saveAllDataToLocalStorage();
+      this.showNotification('Form saved successfully!', 'success');
     } else {
       this.markFormGroupTouched(this.locationForm);
       this.showNotification('Please fill in all required fields correctly.', 'error');
@@ -438,7 +559,8 @@ export class IndividualCreditScoringModalComponent {
   }
 
   onSaveFinancial(): void {
-    this.showNotification('Financial info updated!', 'success');
+    this.saveAllDataToLocalStorage();
+    this.showNotification('Form saved successfully!', 'success');
   }
 
   onSubmitFinancial(): void {
@@ -538,7 +660,12 @@ export class IndividualCreditScoringModalComponent {
   }
 
   onSaveUpload(): void {
-    this.showNotification('Upload information updated!', 'success');
+    this.saveAllDataToLocalStorage();
+    this.showNotification('Form saved successfully!', 'success');
+  }
+
+  saveAll() {
+    this.saveAllDataToLocalStorage();
   }
 
   onNextFromUpload(): void {
@@ -551,7 +678,8 @@ export class IndividualCreditScoringModalComponent {
   }
 
   onSaveConsent(): void {
-    this.showNotification('Consent updated!', 'success');
+    this.saveAllDataToLocalStorage();
+    this.showNotification('Form saved successfully!', 'success');
   }
 
   onSubmitConsent(): void {
@@ -559,7 +687,6 @@ export class IndividualCreditScoringModalComponent {
       this.showNotification('Please accept the terms and conditions to proceed.', 'error');
       return;
     }
-
     this.onSaveConsent();
     this.submitForm();
   }
@@ -611,7 +738,10 @@ export class IndividualCreditScoringModalComponent {
     console.log('Submitting complete form:', completeFormData);
     this.formSubmit.emit(completeFormData);
 
-    this.showNotification('Form submitted successfully!', 'success');
+    // Clear saved data from localStorage
+    localStorage.removeItem('creditScoringFormData');
+
+    // this.showNotification('Form submitted successfully!', 'success');
 
     setTimeout(() => {
       this.closeModal.emit();
@@ -687,7 +817,5 @@ export class IndividualCreditScoringModalComponent {
     this.showNotificationFlag = false;
   }
 
-  loadSavedData(): void {
-    // Logic disabled to prevent loading from local storage
-  }
+
 }

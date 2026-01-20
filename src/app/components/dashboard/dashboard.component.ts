@@ -2,6 +2,13 @@ import { Component } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DashboardService} from "../../services/dashboard_service/dashboard.service";
 
+enum Status {
+  draft = "Draft",
+  in_progress = "In Progress",
+  completed = "Completed",
+  nothing = "Nothing"
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -9,7 +16,19 @@ import {DashboardService} from "../../services/dashboard_service/dashboard.servi
 })
 export class DashboardComponent {
 
+
+
   selectedPlan = "";
+
+  Status = Status;
+
+  stepStatus: Record<string, Status> = {
+    'Individual Information': Status.nothing,
+    'Request Verification': Status.nothing,
+    'Payment Information': Status.nothing,
+    'AI Engine Process': Status.nothing,
+    'Credit Certificate': Status.nothing
+  }
 
   runningProcesses: Record<string, boolean> = {
     'Individual Information': false,
@@ -47,6 +66,10 @@ export class DashboardComponent {
   this_year: any = 2025;
   yAxisTicks = 4;
 
+
+  skipVerification() {
+    this.runningProcesses['Payment Information'] = true;
+  }
 
   get growthDashArray(): string {
     return `${(this.growthPercent / 100) * this.circumference} ${this.circumference}`;
@@ -168,8 +191,12 @@ export class DashboardComponent {
   }
   handleFormSubmit(formData: any) {
     console.log('Form submitted:', formData);
+    this.runningProcesses["Request Verification"] = true;
+
+    this.stepStatus['Individual Information'] = Status.completed;
+    this.stepStatus['Request Verification'] = Status.in_progress;
     // You can add API call here to save the data
-    alert('Form submitted successfully!');
+    // alert('Form submitted successfully!');
     this.closeIndividualModal();
   }
   isSidebarOpen = false;
@@ -204,10 +231,19 @@ export class DashboardComponent {
     document.body.style.overflow = 'auto';
   }
 
+  openPaymentModal() {
+    this.isPaymentModalOpen = true;
+    // document.body.style.overflow = 'auto';
+  }
+
   onPaymentComplete(paymentData: any) {
     console.log('Payment completed:', paymentData);
     this.selectedPlan = paymentData.plan;
-    this.runningProcesses['Individual Information'] = true;
+    this.runningProcesses['AI Engine Process'] = true;
+  }
+
+  clicked_ai_engine() {
+    // this.
   }
 
 }
