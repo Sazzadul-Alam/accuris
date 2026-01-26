@@ -29,6 +29,7 @@ import { SignUpParentComponent } from './components/login/sign-up-parent/sign-up
 // Standalone
 import { TwoFactorAuthComponent } from './components/two-factor-auth/two-factor-auth.component';
 import { SignupComponent } from './components/login/signup/signup.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +50,8 @@ import { SignupComponent } from './components/login/signup/signup.component';
     PricingPlansModalComponent,
     PaymentModalComponent,
     SidebarComponent,
-    SignUpParentComponent
+    SignUpParentComponent,
+
   ],
     imports: [
         BrowserModule,

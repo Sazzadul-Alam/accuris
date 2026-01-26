@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-signup',
@@ -9,12 +9,12 @@ import {Router} from "@angular/router";
 })
 export class SignupComponent {
   @Input() formData: any;
+  @Output() step = new EventEmitter();
+  @Output() formValue = new EventEmitter();
+
   signupForm!: FormGroup;
   showPassword = false;
-  showConfirmPassword = false;
   passwordStrength: number = 0;
-  steps: number;
-  @Output() step = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -26,7 +26,7 @@ export class SignupComponent {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
 
     if (this.formData) {
@@ -48,17 +48,14 @@ export class SignupComponent {
 
     let strength = 0;
 
-    // Weak: length >= 6
     if (password.length >= 6) {
       strength = 1;
     }
 
-    // Medium: length >= 8 and contains numbers
     if (password.length >= 8 && /\d/.test(password)) {
       strength = 2;
     }
 
-    // Strong: length >= 8, contains numbers, uppercase, and special characters
     if (
       password.length >= 8 &&
       /\d/.test(password) &&
@@ -74,25 +71,23 @@ export class SignupComponent {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
-  @Output() formValue = new EventEmitter();
 
   onSubmit() {
     if (this.signupForm.valid) {
-      this.steps = 2;
-      this.step.emit(this.steps);
+      // Emit form data
       this.formValue.emit(this.signupForm.value);
+      // Emit step change to parent (parent will handle API call)
+      this.step.emit(2);
       console.log('Signup form submitted:', this.signupForm.value);
     }
   }
 
   signupWithGoogle() {
     console.log('Google signup clicked');
-    // Add Google signup logic
   }
 
   signupWithMicrosoft() {
     console.log('Microsoft signup clicked');
-    // Add Microsoft signup logic
   }
 
   returnHome() {

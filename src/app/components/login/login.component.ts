@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {HttpErrorResponse} from "@angular/common/http";
-import { UserService } from 'src/app/services/user_service/user.service';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { HttpErrorResponse } from "@angular/common/http";
+import { AuthService } from "../../services/auth-service";
 
 @Component({
   selector: 'app-login',
@@ -17,8 +17,7 @@ export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
-    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -30,79 +29,61 @@ export class LoginComponent {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      grant_type: ["password", Validators.required],
       rememberMe: [false]
     });
   }
 
   onSubmit(): void {
-    const { email, password } = this.loginForm.value;
-    Object.keys(this.loginForm.value).length > 0 && (this.isEmpty = false);
-    if (this.loginForm.valid) {
-      // this.userService.login(this.loginForm.value).subscribe(
-      //   (data: any) => {
-      //
-      //     localStorage.setItem("token", data.access_token);
-      //     localStorage.setItem("refresh_token", data.refresh_token);
-      //     localStorage.setItem("expire_in", data.expires_in);
-      //
-      //     this.userService
-      //       .userDetail({
-      //         loginId: email
-      //       })
-      //       .subscribe((d: any) => {
-      //         //store user details and session info in local storage
-      //         localStorage.setItem("loginId", d.loginId);
-      //         localStorage.setItem("userId", d.id);
-      //         localStorage.setItem("user", JSON.stringify(d));
-      //         localStorage.setItem("currentRole", JSON.stringify(d.roles));
-      //         // localStorage.setItem("customSessionId", `${d.loginId}-${uuid.v4()}` + '-' + Date.now());
-      //
-      //         this.router.navigate(['/dashboard']);
-      //
-      //       });
-      //   },
-      //   (error: HttpErrorResponse) => {
-      //
-      //
-      //     // this.alerts.toast('error','An error occurred!');
-      //   }
-      // );
-
-      this.router.navigate(['/two-step-verification'], {
-        state: { email, password }
-      });
-
-    } else {
+    if (!this.loginForm.valid) {
       alert('Please fill in all required fields correctly');
+      return;
     }
+
+    const { email, password, rememberMe } = this.loginForm.value;
+
+    // PHASE 1: Login with email/password
+    this.authService.login(email, password).subscribe({
+      next: (res: any) => {
+        // Navigate to two-factor-auth page
+        console.log('Password verification successful:', res);
+        this.router.navigate(['/two-step-verification'], {
+          state: { email, rememberMe, password }
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Login failed:', err);
+        if (err.status === 401) {
+          alert('Invalid credentials. Please try again.');
+        } else if (err.status === 403) {
+          alert('Account is locked or disabled.');
+        } else {
+          alert('An error occurred while logging in. Please try again later.');
+        }
+      }
+    });
   }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  navigateToLogin(): void {
-    console.log('Navigate to login clicked');
-  }
-
   forgotPassword(): void {
     this.router.navigate(['/forgot-password']);
   }
 
-  loginWithGoogle(): void {
-    console.log('Google login clicked');
-    alert('Google OAuth login will be implemented');
-  }
-
-  loginWithMicrosoft(): void {
-    console.log('Microsoft login clicked');
-    alert('Microsoft OAuth login will be implemented');
-  }
-
   returnHome(): void {
-    console.log('Return home clicked');
     this.router.navigate(['/']);
   }
 
+  navigateToLogin(): void {
+    console.log('Navigate to login clicked');
+  }
+
+  loginWithGoogle(): void {
+    alert('Google login not implemented yet.');
+  }
+
+  loginWithMicrosoft(): void {
+    alert('Microsoft login not implemented yet.');
+  }
 }

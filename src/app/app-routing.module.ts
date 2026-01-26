@@ -12,6 +12,7 @@ import {SetPasswordComponent} from "./components/login/set-password/set-password
 import {DashboardComponent} from "./components/dashboard/dashboard.component";
 import {SignUpParentComponent} from "./components/login/sign-up-parent/sign-up-parent.component";
 import {UnderConstructionComponent} from "./components/under-construction/under-construction.component";
+import {authGuard} from "./auth-guard";
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -25,7 +26,7 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent},
   { path: 'forgot-password/verify-code', component: VerifyCodeComponent},
   { path: 'set-password', component: SetPasswordComponent},
-  { path: 'dashboard', component: DashboardComponent},
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
   { path: 'under-construction', component: UnderConstructionComponent},
   { path: '**', component: LandingComponent},
 

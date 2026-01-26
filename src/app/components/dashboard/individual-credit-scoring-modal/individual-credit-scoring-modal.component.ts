@@ -1,5 +1,6 @@
 import {Component, ElementRef, EventEmitter, Output, ViewChild, Input} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { IndividualCreditService } from "./individual-credit-scoring-api-service";
 
 @Component({
   selector: 'app-individual-credit-scoring-modal',
@@ -33,6 +34,9 @@ export class IndividualCreditScoringModalComponent {
   // Collateral / Asset Verification
   @ViewChild('fdrInput') fdrInput!: ElementRef<HTMLInputElement>;
   @ViewChild('goldInput') goldInput!: ElementRef<HTMLInputElement>;
+
+
+  currentUserId: number = null;
 
   personalInfoForm!: FormGroup;
   locationForm!: FormGroup;
@@ -116,13 +120,56 @@ export class IndividualCreditScoringModalComponent {
     { id: 5, name: 'User Consent', icon: 'consent' }
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private creditService: IndividualCreditService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.initializeLocationForm();
     this.initializeFinancialForms();
     this.loadSavedDataFromLocalStorage();
+  }
+
+  onSaveStepOne(step1Data) {
+
+    this.creditService.submitStepOne(step1Data).subscribe({
+      next: (response) => {
+        console.log('Success!', response);
+        this.currentUserId = response.individualId;
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+        alert('Failed to save personal info. Please check the console.');
+      }
+    });
+  }
+
+  onSaveLocation(): void {
+    if (this.locationForm.valid) {
+      // Check if we have an individual ID from step 1
+      if (!this.currentUserId) {
+        this.showNotification('Please complete Step 1 first to get an individual ID.', 'error');
+        return;
+      }
+
+      // Call the API to update location
+      this.creditService.submitStepTwo(this.locationForm.value, this.currentUserId).subscribe({
+        next: (response) => {
+          console.log('Location updated successfully!', response);
+          this.saveAllDataToLocalStorage();
+          this.showNotification('Location saved successfully!', 'success');
+        },
+        error: (err) => {
+          console.error('API Error:', err);
+          this.showNotification('Failed to save location. Please try again.', 'error');
+        }
+      });
+    } else {
+      this.markFormGroupTouched(this.locationForm);
+      this.showNotification('Please fill in all required fields correctly.', 'error');
+    }
   }
 
   saveAllDataToLocalStorage(): void {
@@ -145,6 +192,14 @@ export class IndividualCreditScoringModalComponent {
       },
       savedAt: new Date().toISOString()
     };
+    console.log(allFormData);
+    if (this.currentStep === 1) {
+      this.onSaveStepOne(allFormData.step1);
+    }
+
+    if (this.currentStep === 2) {
+      this.onSaveLocation();
+    }
 
     localStorage.setItem('creditScoringFormData', JSON.stringify(allFormData));
     console.log('All form data saved to localStorage');
@@ -548,15 +603,15 @@ export class IndividualCreditScoringModalComponent {
   //   }
   // }
 
-  onSaveLocation(): void {
-    if (this.locationForm.valid) {
-      this.saveAllDataToLocalStorage();
-      this.showNotification('Form saved successfully!', 'success');
-    } else {
-      this.markFormGroupTouched(this.locationForm);
-      this.showNotification('Please fill in all required fields correctly.', 'error');
-    }
-  }
+  // onSaveLocation(): void {
+  //   if (this.locationForm.valid) {
+  //     this.saveAllDataToLocalStorage();
+  //     this.showNotification('Form saved successfully!', 'success');
+  //   } else {
+  //     this.markFormGroupTouched(this.locationForm);
+  //     this.showNotification('Please fill in all required fields correctly.', 'error');
+  //   }
+  // }
 
   onSaveFinancial(): void {
     this.saveAllDataToLocalStorage();

@@ -40,9 +40,10 @@
                     (step)="getStepValue($event)"  ></app-signup>
       </div>
       <div *ngIf="steps == 2">
-        <app-two-factor-auth  [formData]="stepFormData.twoFactor"
-          (twoFactorAuthValue)="getFormValue($event)" (step)="getStepValue($event)" ></app-two-factor-auth>
-     </div>
+        <app-two-factor-auth [formData]="stepFormData"
+                             (twoFactorAuthValue)="getFormValue($event)" (step)="getStepValue($event)">
+        </app-two-factor-auth>
+      </div>
       <div *ngIf="steps==3">
         <app-user-consent  [formData]="stepFormData"
           (userConsentValue)="getFormValue($event)"  (step)="getStepValue($event)" ></app-user-consent>
