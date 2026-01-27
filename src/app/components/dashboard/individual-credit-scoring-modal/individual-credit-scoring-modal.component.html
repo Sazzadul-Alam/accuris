@@ -579,19 +579,19 @@
                   type="text"
                   placeholder="ID Copy"
                   class="upload-field"
-                  [value]="uploadForm.get('nationalIdCopy')?.value || ''"
+                  [value]="uploadForm.get('idCopy')?.value || ''"
                   readonly
                 />
-                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('nationalIdCopy')">
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('idCopy')">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
                 <input
                   type="file"
-                  #nationalIdCopyInput
+                  #idCopyInput
                   style="display:none"
-                  (change)="onUploadFile($event, 'nationalIdCopy')"
+                  (change)="onUploadFile($event, 'idCopy')"
                   accept=".pdf,.jpg,.jpeg,.png"
                 />
               </div>

@@ -2,7 +2,9 @@ import {Component, ElementRef, EventEmitter, Output, ViewChild, Input} from '@an
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { IndividualCreditService } from "./individual-credit-scoring-api-service";
 import { switchMap, tap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-individual-credit-scoring-modal',
   templateUrl: './individual-credit-scoring-modal.component.html',
@@ -17,7 +19,7 @@ export class IndividualCreditScoringModalComponent {
   @Output() saved= new EventEmitter<any>();
 
   // Add these ViewChild references with the others:
-  @ViewChild('nationalIdCopyInput') nationalIdCopyInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('idCopyInput') idCopyInput!: ElementRef<HTMLInputElement>;
   @ViewChild('photographInput') photographInput!: ElementRef<HTMLInputElement>;
   @ViewChild('salaryCertificateInput') salaryCertificateInput!: ElementRef<HTMLInputElement>;
   @ViewChild('bankStatementInput') bankStatementInput!: ElementRef<HTMLInputElement>;
@@ -49,6 +51,8 @@ export class IndividualCreditScoringModalComponent {
 
   // ✅ ADDED: Track the individual being processed (customer/applicant)
   individualId: number = Number(localStorage.getItem('individualId'));
+
+  pendingUploads: { [key: string]: File } = {};
 
   personalInfoForm!: FormGroup;
   locationForm!: FormGroup;
@@ -140,81 +144,73 @@ export class IndividualCreditScoringModalComponent {
     private creditService: IndividualCreditService
   ) {}
 
+  private uploadPendingFiles(): Observable<{ [key: string]: string }> {
+    const uploadObservables: { [key: string]: Observable<{ path: string }> } = {};
+
+    if (Object.keys(this.pendingUploads).length === 0) {
+      return of({});  // No files to upload
+    }
+
+    Object.keys(this.pendingUploads).forEach((fieldName) => {
+      const file = this.pendingUploads[fieldName];
+      uploadObservables[fieldName] = this.creditService.uploadDocument(file, this.individualId, fieldName);
+    });
+
+    // Upload all in parallel and collect paths
+    return forkJoin(uploadObservables).pipe(
+      map((results: { [key: string]: { path: string } }) => {
+        const paths: { [key: string]: string } = {};
+        Object.keys(results).forEach((key) => {
+          paths[key] = results[key].path;
+        });
+        return paths;
+      })
+    );
+  }
+
+  private getConsolidatedPayload() {
+    return {
+      personal: {
+        ...this.personalInfoForm.value,
+        id: this.individualId || null
+      },
+      location: this.locationForm.value,
+      financial: {
+        financialId: Number(localStorage.getItem('financialInfoId')) || null,
+        basicInfo: this.basicInfoForm.value,
+        employerInfo: this.employerInfoForm.value,
+        businessInfo: this.businessInfoForm.value,
+        creditInfo: this.creditInfoForm.value,
+        securityInfo: this.securityInfoForm.value
+      },
+      uploads: this.uploadForm.value
+    };
+  }
+
   ngOnInit(): void {
     this.initializeForm();
     this.initializeLocationForm();
     this.initializeFinancialForms();
     this.initializeUploadForm();
   }
-
-
-  // onSaveAll(submit: boolean = false) {
-  //
-  //   if (submit) {
-  //     this.closeModal.emit();
-  //   }
-  //
-  //   if (!this.currentUserId) {
-  //     this.showNotification('User ID is not set. Please log in.', 'error');
-  //     return;
-  //   }
-  //
-  //   const step3Data = {
-  //     basicInfo: this.basicInfoForm.value,
-  //     employerInfo: this.employerInfoForm.value,
-  //     businessInfo: this.businessInfoForm.value,
-  //     creditInfo: this.creditInfoForm.value,
-  //     securityInfo: this.securityInfoForm.value
-  //   };
-  //
-  //   this.creditService.submitStepOne(this.personalInfoForm.value, this.currentUserId, this.individualId).pipe(
-  //     tap(response => {
-  //       if (response.individualId) {
-  //
-  //         localStorage.setItem('individualId', String(response.individualId));
-  //         this.individualId = response.individualId;
-  //       }
-  //     }),
-  //     switchMap(() =>
-  //       this.creditService.submitStepTwo(this.locationForm.value, this.currentUserId, this.individualId)
-  //     ),
-  //     switchMap(() =>
-  //       this.creditService.submitStepThree(step3Data, this.individualId, this.currentUserId)
-  //     ),
-  //     switchMap(() =>
-  //       this.creditService.submitStepFour(this.uploadForm.value, this.individualId, this.currentUserId)
-  //     ),
-  //     // If submit is true, call the submitIndividual function
-  //     switchMap(response => {
-  //       if (submit && this.individualId) {
-  //         localStorage.removeItem('individualId');  // ✅ Use removeItem instead of setItem
-  //         return this.creditService.submitIndividual(this.individualId, this.currentUserId);
-  //
-  //       }
-  //       return of(response); // If not submitting, pass through the last response
-  //     }),
-  //     catchError(err => {
-  //       console.error('❌ Save All Error:', err);
-  //       this.showNotification('Failed to save information', 'error');
-  //       return of(null);
-  //     })
-  //   ).subscribe({
-  //     next: (response) => {
-  //       if (response?.status === 'SUCCESS') {
-  //         if (submit) {
-  //           this.showNotification('All information saved and submitted successfully!', 'success');
-  //         } else {
-  //           this.showNotification('All information saved successfully!', 'success');
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
-  // UPDATED: Load Saved Data from LocalStorage
-  // ============================================
-
-
-
+  private ensureIndividualId(): Observable<number> {
+    if (this.individualId) {
+      return of(this.individualId);  // Already have ID, return it
+    } else {
+      // Save progress to generate ID (non-final save)
+      return this.creditService.saveFullCreditScoring(this.getConsolidatedPayload(), this.currentUserId, 'SAVE').pipe(
+        switchMap((response) => {
+          if (response.status === 'SUCCESS' && response.individualId) {
+            this.individualId = response.individualId;
+            localStorage.setItem('individualId', String(this.individualId));
+            return of(this.individualId);
+          } else {
+            throw new Error('Failed to generate individual ID');
+          }
+        })
+      );
+    }
+  }
   onSaveAll(isFinalSubmit: boolean = false): void {
     // 1. Validation for Final Submission
     if (isFinalSubmit && !this.consentAccepted) {
@@ -227,65 +223,76 @@ export class IndividualCreditScoringModalComponent {
       return;
     }
 
-    // 2. Aggregate Data from all FormGroups and Component State
-    const consolidatedPayload = {
-      // Personal & Identity
-      personal: {
-        ...this.personalInfoForm.value,
-        id: this.individualId || null // NULL = Insert, VALUE = Update
-      },
-      // Address Info
-      location: this.locationForm.value,
-      // Combined Financial Sections
-      financial: {
-        // Get existing financialId from storage if we've saved before
-        financialId: Number(localStorage.getItem('financialInfoId')) || null,
-        basicInfo: this.basicInfoForm.value,
-        employerInfo: this.employerInfoForm.value,
-        businessInfo: this.businessInfoForm.value,
-        creditInfo: this.creditInfoForm.value,
-        securityInfo: this.securityInfoForm.value
-      },
-      // Document URLs from Step 4
-      uploads: this.uploadForm.value
-    };
 
-    const action = isFinalSubmit ? 'SUBMIT' : 'SAVE';
+    // 2. Ensure individualId exists
+    this.ensureIndividualId().subscribe({
+      next: (id) => {
+        this.individualId = id;
 
-    // 3. Single API call to handle everything
-    this.creditService.saveFullCreditScoring(consolidatedPayload, this.currentUserId, action).subscribe({
-      next: (response) => {
-        if (response.status === 'SUCCESS') {
-          // Update IDs returned from the database
-          if (response.individualId) {
-            this.individualId = response.individualId;
-            localStorage.setItem('individualId', String(this.individualId));
-          }
-          if (response.financialInfoId) {
-            localStorage.setItem('financialInfoId', String(response.financialInfoId));
-          }
+        // 3. Upload pending files if any
+        this.uploadPendingFiles().subscribe({
+          next: (uploadedPaths: { [key: string]: string }) => {
+            // Update uploadForm with real paths
+            Object.keys(uploadedPaths).forEach((fieldName) => {
+              this.uploadForm.patchValue({
+                [fieldName]: uploadedPaths[fieldName]
+              });
+              this.uploadedFiles[fieldName] = uploadedPaths[fieldName];  // Update for compatibility
+            });
 
-          if (isFinalSubmit) {
-            // Cleanup on successful submission
-            localStorage.removeItem('individualId');
-            localStorage.removeItem('financialInfoId');
-            localStorage.removeItem('creditScoringFormData');
-            this.showNotification('Application submitted successfully!', 'success');
-            setTimeout(() => this.closeModal.emit(), 1500);
-          } else {
-            this.showNotification('Progress saved successfully!', 'success');
+            // Clear pending uploads
+            this.pendingUploads = {};
+
+            // 4. Now aggregate data with updated uploads
+            const consolidatedPayload = this.getConsolidatedPayload();  // Assuming you added this helper as before
+
+            const action = isFinalSubmit ? 'SUBMIT' : 'SAVE';
+
+            // 5. Single API call to handle everything
+            this.creditService.saveFullCreditScoring(consolidatedPayload, this.currentUserId, action).subscribe({
+              next: (response) => {
+                if (response.status === 'SUCCESS') {
+                  // Update IDs returned from the database
+                  if (response.individualId) {
+                    this.individualId = response.individualId;
+                    localStorage.setItem('individualId', String(this.individualId));
+                  }
+                  if (response.financialInfoId) {
+                    localStorage.setItem('financialInfoId', String(response.financialInfoId));
+                  }
+
+                  if (isFinalSubmit) {
+                    // Cleanup on successful submission
+                    localStorage.removeItem('individualId');
+                    localStorage.removeItem('financialInfoId');
+                    localStorage.removeItem('creditScoringFormData');
+                    this.showNotification('Application submitted successfully!', 'success');
+                    setTimeout(() => this.closeModal.emit(), 1500);
+                  } else {
+                    this.showNotification('Progress saved successfully!', 'success');
+                  }
+                } else {
+                  this.showNotification(response.message || 'Failed to save data.', 'error');
+                }
+              },
+              error: (err) => {
+                console.error('Server error during unified save:', err);
+                this.showNotification('A connection error occurred.', 'error');
+              }
+            });
+          },
+          error: (err) => {
+            console.error('Error uploading files:', err);
+            this.showNotification('Failed to upload one or more files. Please try again.', 'error');
           }
-        } else {
-          this.showNotification(response.message || 'Failed to save data.', 'error');
-        }
+        });
       },
       error: (err) => {
-        console.error('Server error during unified save:', err);
-        this.showNotification('A connection error occurred.', 'error');
+        console.error('Error ensuring individual ID:', err);
+        this.showNotification('Please complete required steps before saving.', 'error');
       }
     });
   }
-
   initializeForm(): void {
     this.personalInfoForm = this.fb.group({
       firstName: [
@@ -426,7 +433,7 @@ export class IndividualCreditScoringModalComponent {
   initializeUploadForm(): void {
     this.uploadForm = this.fb.group({
       // File uploads (store file paths as strings)
-      nationalIdCopy: ['', Validators.required],
+      idCopy: ['', Validators.required],
       photograph: ['', Validators.required],
       salaryCertificate: ['', Validators.required],
       bankStatement: ['', Validators.required],
@@ -524,7 +531,7 @@ export class IndividualCreditScoringModalComponent {
   updateUploadSectionStatus(): void {
     // Identity & Verification
     this.uploadSections.identity = !!(
-      this.uploadForm.get('nationalIdCopy')?.value &&
+      this.uploadForm.get('idCopy')?.value &&
       this.uploadForm.get('photograph')?.value
     );
 
@@ -614,34 +621,11 @@ export class IndividualCreditScoringModalComponent {
     this.isSelectDropdownOpen = false;
     console.log('Selected option:', option);
   }
-
-  // ============================================
-  // UPDATED: onSave (Save button in Step 1)
-  // ============================================
-  // onSave(): void {
-  //   if (this.personalInfoForm.valid) {
-  //     this.onSaveStepOne();
-  //   } else {
-  //     this.markFormGroupTouched(this.personalInfoForm);
-  //     this.showNotification('Please fill in all required fields correctly.', 'error');
-  //   }
-  // }
-
-  // onSaveFinancial(): void {
-  //   this.saveAllDataToLocalStorage();
-  //   this.showNotification('Form saved successfully!', 'success');
-  // }
-
-
-
-
-
-
   triggerUploadInput(type: string): void {
     switch(type) {
       // New upload form fields
-      case 'nationalIdCopy':
-        this.nationalIdCopyInput?.nativeElement.click();
+      case 'idCopy':
+        this.idCopyInput?.nativeElement.click();
         break;
       case 'photograph':
         this.photographInput?.nativeElement.click();
@@ -727,33 +711,22 @@ export class IndividualCreditScoringModalComponent {
 
       this.fileErrorMessage = '';
 
-      // For now, store the file name as the path
-      // In production, you would upload to server and get actual path
-      const filePath = `/uploads/${file.name}`;
+      // Store the file temporarily for later upload
+      this.pendingUploads[fieldName] = file;
 
-      // Update the form control
+      // Update form with placeholder (file name) for validation/display
       this.uploadForm.patchValue({
-        [fieldName]: filePath
+        [fieldName]: file.name  // Placeholder; real path set during save
       });
 
-      // Also update the old uploadedFiles object for backward compatibility
+      // Update uploadedFiles for compatibility
       this.uploadedFiles[fieldName] = file.name;
 
-      console.log(`File uploaded for ${fieldName}:`, filePath);
+      this.showNotification(`File selected for ${fieldName}. It will be uploaded on save.`, 'success');
+      console.log(`File selected for ${fieldName}:`, file.name);
+      input.value = '';
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
   private showNotification(message: string, type: 'success' | 'error'): void {
     this.notificationMessage = message;
@@ -765,7 +738,4 @@ export class IndividualCreditScoringModalComponent {
     }, 3000);
   }
 
-  dismissNotification(): void {
-    this.showNotificationFlag = false;
-  }
 }

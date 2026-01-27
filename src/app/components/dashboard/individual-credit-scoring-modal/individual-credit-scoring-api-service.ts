@@ -94,6 +94,16 @@ export class IndividualCreditService {
     return this.http.post<IndividualCreditResponse>(`${this.baseUrl}/process`, payload, { headers });
   }
 
+  /**
+   * Upload a document file to the backend, which will store it in an individual-specific folder.
+   * Returns the path to the stored file.
+   */
+  uploadDocument(file: File, individualId: number, fieldName: string): Observable<{ path: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ path: string }>(`${this.baseUrl}/upload/${individualId}/${fieldName}`, formData);
+  }
+
   // --- Helpers ---
   private toInt(val: any): number | null { return val ? parseInt(val) : null; }
   private toFloat(val: any): number | null { return val ? parseFloat(val) : null; }
