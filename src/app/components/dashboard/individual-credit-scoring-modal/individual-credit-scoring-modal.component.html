@@ -30,7 +30,7 @@
       <div class="plan-label">
         Plan: <span class="plan-name">{{selectedPlanInput}}</span>
       </div>
-      <div class="for-label">For: <span class="plan-name">Sanjit Ara Kabir</span></div>
+      <div class="for-label">For: <span class="plan-name">{{currentUserName}}</span></div>
     </div>
 
     <!-- Steps Navigation -->
@@ -57,120 +57,80 @@
       <h3 class="form-title">Person's Information</h3>
       <p class="form-subtitle">Provide your Person's Information below</p>
 
-      <form [formGroup]="personalInfoForm" style="display: flex; flex-direction: column; align-items: center; width: 65%;">
-        <div class="select-for-container">
-          <label class="select-label">SELECT FOR:</label>
-          <div class="custom-select" (click)="toggleSelectDropdown()">
-            <img src="assets/images/icons/triangle.svg" alt="">
+      <form [formGroup]="personalInfoForm" class="form-step">
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="text" formControlName="firstName" placeholder="First Name" class="form-input" [class.filled]="personalInfoForm.get('firstName')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="text" formControlName="lastName" placeholder="Last Name" class="form-input" [class.filled]="personalInfoForm.get('lastName')?.value" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group half">
-            <input
-              type="text"
-              formControlName="firstName"
-              placeholder="First Name"
-              class="form-input"
-              [class.filled]="personalInfoForm.get('firstName')?.value"
-            />
+            <input type="text" formControlName="fathersName" placeholder="Father's Name" class="form-input" [class.filled]="personalInfoForm.get('fathersName')?.value" />
           </div>
           <div class="form-group half">
-            <input
-              type="text"
-              formControlName="lastName"
-              placeholder="Last Name"
-              class="form-input"
-              [class.filled]="personalInfoForm.get('lastName')?.value"
-            />
+            <input type="text" formControlName="mothersName" placeholder="Mother's Name" class="form-input" [class.filled]="personalInfoForm.get('mothersName')?.value" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="date" formControlName="dateOfBirth" placeholder="Date of Birth" class="form-input" [class.filled]="personalInfoForm.get('dateOfBirth')?.value" />
+          </div>
+          <div class="form-group half">
+            <select formControlName="gender" class="form-input form-select" [class.filled]="personalInfoForm.get('gender')?.value">
+              <option value="" disabled selected>Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="maritalStatus" class="form-input form-select" [class.filled]="personalInfoForm.get('maritalStatus')?.value">
+              <option value="" disabled selected>Marital Status</option>
+              <option value="single">Single</option>
+              <option value="married">Married</option>
+              <option value="divorced">Divorced</option>
+              <option value="widowed">Widowed</option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <input type="text" formControlName="idNumber" placeholder="ID Number" class="form-input" [class.filled]="personalInfoForm.get('idNumber')?.value" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="tel" formControlName="phoneNumber" placeholder="Phone Number" class="form-input" [class.filled]="personalInfoForm.get('phoneNumber')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="email" formControlName="email" placeholder="Email Address" class="form-input" [class.filled]="personalInfoForm.get('email')?.value" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group full">
-            <input
-              type="date"
-              formControlName="dateOfBirth"
-              placeholder="Date of Birth"
-              class="form-input"
-              [class.filled]="personalInfoForm.get('dateOfBirth')?.value"
-            />
-            <div class="info-icon">
-              <img src="assets/images/icons/info-circle-icon.png" alt="Info" width="18" height="18" />
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group half">
-            <input
-              type="text"
-              formControlName="gender"
-              placeholder="Gender"
-              class="form-input"
-              [class.filled]="personalInfoForm.get('gender')?.value"
-            />
-          </div>
-          <div class="form-group half">
-            <input
-              type="tel"
-              formControlName="phoneNumber"
-              placeholder="Phone Number"
-              class="form-input"
-              [class.filled]="personalInfoForm.get('phoneNumber')?.value"
-            />
-            <div class="info-icon">
-              <img src="assets/images/icons/info-circle-icon.png" alt="Info" width="18" height="18" />
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group half">
-            <input
-              type="text"
-              formControlName="idNumber"
-              placeholder="ID Number"
-              class="form-input"
-              [class.filled]="personalInfoForm.get('idNumber')?.value"
-            />
-            <div class="info-icon">
-              <img src="assets/images/icons/info-circle-icon.png" alt="Info" width="18" height="18" />
-            </div>
-          </div>
-          <div class="form-group half">
-            <div class="upload-container"
-                 (click)="triggerFileInput()"
-                 [class.filled]="selectedFileName">
-              <input
-                type="file"
-                #fileInput
-                id="fileUpload"
-                (change)="onFileSelected($event)"
-                style="display: none;"
-                accept=".pdf,.jpg,.jpeg,.png"
-              />
+            <div class="upload-container" (click)="triggerFileInput()" [class.filled]="selectedFileName">
+              <input type="file" #fileInput id="fileUpload" (change)="onFileSelected($event)" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" />
               <span class="upload-placeholder">{{ selectedFileName || 'Upload ID' }}</span>
-              <div class="info-icon">
-                <img src="assets/images/icons/upload-icon.svg" alt="Info" width="18" height="18" />
-              </div>
             </div>
           </div>
         </div>
 
         <div class="button-row">
-          <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
-          <button
-            type="button"
-            class="btn-next"
-            [disabled]="personalInfoForm.invalid"
-            (click)="onNext()"
-          >
-            NEXT
-          </button>
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="personalInfoForm.invalid" (click)="onNext()">NEXT</button>
         </div>
       </form>
     </div>
+
 
     <!-- Form Content - Location -->
     <div class="form-content" *ngIf="currentStep === 2">
@@ -179,30 +139,33 @@
 
       <form [formGroup]="locationForm" style="display: flex; flex-direction: column; align-items: center; width: 65%;">
 
+        <!-- Present Address -->
         <div class="form-row">
           <div class="form-group full">
             <input
               type="text"
-              formControlName="addressLine1"
-              placeholder="Address Line 1"
+              formControlName="presentAddress"
+              placeholder="Present Address"
               class="form-input"
-              [class.filled]="locationForm.get('addressLine1')?.value"
+              [class.filled]="locationForm.get('presentAddress')?.value"
             />
           </div>
         </div>
 
+        <!-- Permanent Address -->
         <div class="form-row">
           <div class="form-group full">
             <input
               type="text"
-              formControlName="addressLine2"
-              placeholder="Address Line 2"
+              formControlName="permanentAddress"
+              placeholder="Permanent Address"
               class="form-input"
-              [class.filled]="locationForm.get('addressLine2')?.value"
+              [class.filled]="locationForm.get('permanentAddress')?.value"
             />
           </div>
         </div>
 
+        <!-- City and State/District -->
         <div class="form-row">
           <div class="form-group half">
             <input
@@ -215,11 +178,11 @@
           </div>
           <div class="form-group half">
             <select
-              formControlName="stateProvince"
+              formControlName="stateOrDistrict"
               class="form-input form-select"
-              [class.filled]="locationForm.get('stateProvince')?.value"
+              [class.filled]="locationForm.get('stateOrDistrict')?.value"
             >
-              <option value="" disabled selected>State/Province/Region</option>
+              <option value="" disabled selected>State / District</option>
               <option value="dhaka">Dhaka</option>
               <option value="chittagong">Chittagong</option>
               <option value="rajshahi">Rajshahi</option>
@@ -232,14 +195,15 @@
           </div>
         </div>
 
+        <!-- Postal Code and Country -->
         <div class="form-row">
           <div class="form-group half">
             <input
               type="text"
-              formControlName="zipPostalCode"
-              placeholder="Zip/Postal Code"
+              formControlName="postalCode"
+              placeholder="Postal Code"
               class="form-input"
-              [class.filled]="locationForm.get('zipPostalCode')?.value"
+              [class.filled]="locationForm.get('postalCode')?.value"
             />
           </div>
           <div class="form-group half">
@@ -263,8 +227,22 @@
           </div>
         </div>
 
+        <!-- Length of Stay -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input
+              type="number"
+              formControlName="lengthOfStay"
+              placeholder="Length of Stay (Years)"
+              class="form-input"
+              [class.filled]="locationForm.get('lengthOfStay')?.value"
+              min="0"
+            />
+          </div>
+        </div>
+
         <div class="button-row">
-          <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
           <button
             type="button"
             class="btn-next"
@@ -277,12 +255,15 @@
       </form>
     </div>
 
+
     <!-- Form Content - Financial Information -->
     <div class="form-content financial-content" *ngIf="currentStep === 3">
       <h3 class="form-title">Financial Information</h3>
       <p class="form-subtitle">Provide your Financial Information below</p>
 
       <div class="accordion-container">
+
+        <!-- 1. Basic Information -->
         <div class="accordion-item" [class.completed]="financialSections.basicInfo">
           <div class="accordion-header" (click)="toggleAccordion('basicInfo')">
             <div class="accordion-title">
@@ -303,30 +284,33 @@
             <form [formGroup]="basicInfoForm">
               <div class="form-row">
                 <div class="form-group half">
-                  <input type="text" formControlName="occupation" placeholder="Occupation" class="form-input" [class.filled]="basicInfoForm.get('occupation')?.value" />
-                </div>
-                <div class="form-group half">
-                  <input type="text" formControlName="monthlyIncome" placeholder="Monthly Income" class="form-input" [class.filled]="basicInfoForm.get('monthlyIncome')?.value" />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group half">
-                  <select formControlName="employmentStatus" class="form-input form-select" [class.filled]="basicInfoForm.get('employmentStatus')?.value">
-                    <option value="" disabled selected>Employment Status</option>
-                    <option value="employed">Employed</option>
-                    <option value="self-employed">Self-Employed</option>
-                    <option value="unemployed">Unemployed</option>
-                    <option value="retired">Retired</option>
+                  <select formControlName="creditPurpose" class="form-input form-select" [class.filled]="basicInfoForm.get('creditPurpose')?.value">
+                    <option value="" disabled selected>Credit Purpose</option>
+                    <option value="1">Loan Application</option>
+                    <option value="2">Investor / Partner Review</option>
+                    <option value="3">Supplier / Vendor Assessment</option>
+                    <option value="4">Advertisement / Public Rating</option>
+                    <option value="5">Self-Assessment</option>
+                    <option value="6">Other</option>
                   </select>
                 </div>
                 <div class="form-group half">
-                  <input type="text" formControlName="sourceOfIncome" placeholder="Source of Income" class="form-input" [class.filled]="basicInfoForm.get('sourceOfIncome')?.value" />
+                  <select formControlName="incomeType" class="form-input form-select" [class.filled]="basicInfoForm.get('incomeType')?.value">
+                    <option value="" disabled selected>Income Type</option>
+                    <option value="1">Salaried</option>
+                    <option value="2">Self-Employed / Business</option>
+                    <option value="3">Contractual</option>
+                    <option value="4">Rental</option>
+                    <option value="5">Investment</option>
+                    <option value="6">Multiple Sources</option>
+                  </select>
                 </div>
               </div>
             </form>
           </div>
         </div>
 
+        <!-- 2. Employment Information -->
         <div class="accordion-item" [class.completed]="financialSections.employerInfo">
           <div class="accordion-header" (click)="toggleAccordion('employerInfo')">
             <div class="accordion-title">
@@ -337,7 +321,7 @@
               <svg *ngIf="!financialSections.employerInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
               </svg>
-              <span>Employer Information:</span>
+              <span>Employment Information</span>
             </div>
             <svg class="chevron-icon" [class.rotate]="expandedSection === 'employerInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -346,27 +330,49 @@
           <div class="accordion-content" *ngIf="expandedSection === 'employerInfo'">
             <form [formGroup]="employerInfoForm">
               <div class="form-row">
-                <div class="form-group full">
+                <div class="form-group half">
+                  <select formControlName="employerType" class="form-input form-select" [class.filled]="employerInfoForm.get('employerType')?.value">
+                    <option value="" disabled selected>Employer Type</option>
+                    <option value="1">Government</option>
+                    <option value="2">Private</option>
+                    <option value="3">NGO</option>
+                    <option value="4">Self-Employed</option>
+                  </select>
+                </div>
+                <div class="form-group half">
                   <input type="text" formControlName="employerName" placeholder="Employer Name" class="form-input" [class.filled]="employerInfoForm.get('employerName')?.value" />
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group half">
-                  <input type="text" formControlName="jobTitle" placeholder="Job Title" class="form-input" [class.filled]="employerInfoForm.get('jobTitle')?.value" />
+                  <select formControlName="employmentStatus" class="form-input form-select" [class.filled]="employerInfoForm.get('employmentStatus')?.value">
+                    <option value="" disabled selected>Employment Status</option>
+                    <option value="1">Permanent</option>
+                    <option value="2">Contract</option>
+                  </select>
                 </div>
                 <div class="form-group half">
-                  <input type="text" formControlName="yearsEmployed" placeholder="Years Employed" class="form-input" [class.filled]="employerInfoForm.get('yearsEmployed')?.value" />
+                  <input type="text" formControlName="jobDesignation" placeholder="Job Designation" class="form-input" [class.filled]="employerInfoForm.get('jobDesignation')?.value" />
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group full">
-                  <input type="text" formControlName="employerAddress" placeholder="Employer Address" class="form-input" [class.filled]="employerInfoForm.get('employerAddress')?.value" />
+                <div class="form-group half">
+                  <input type="number" formControlName="jobTenureYears" placeholder="Job Tenure (Years)" class="form-input" [class.filled]="employerInfoForm.get('jobTenureYears')?.value" min="0" />
+                </div>
+                <div class="form-group half">
+                  <input type="number" formControlName="monthlyGrossIncome" placeholder="Monthly Gross Income" class="form-input" [class.filled]="employerInfoForm.get('monthlyGrossIncome')?.value" min="0" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="number" formControlName="monthlyNetIncome" placeholder="Monthly Net Income" class="form-input" [class.filled]="employerInfoForm.get('monthlyNetIncome')?.value" min="0" />
                 </div>
               </div>
             </form>
           </div>
         </div>
 
+        <!-- 3. Business Information -->
         <div class="accordion-item" [class.completed]="financialSections.businessInfo">
           <div class="accordion-header" (click)="toggleAccordion('businessInfo')">
             <div class="accordion-title">
@@ -377,7 +383,7 @@
               <svg *ngIf="!financialSections.businessInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
               </svg>
-              <span>Business Information:</span>
+              <span>Business Information</span>
             </div>
             <svg class="chevron-icon" [class.rotate]="expandedSection === 'businessInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -392,24 +398,29 @@
               </div>
               <div class="form-row">
                 <div class="form-group half">
-                  <input type="text" formControlName="businessType" placeholder="Business Type" class="form-input" [class.filled]="businessInfoForm.get('businessType')?.value" />
+                  <select formControlName="businessType" class="form-input form-select" [class.filled]="businessInfoForm.get('businessType')?.value">
+                    <option value="" disabled selected>Business Type / Nature</option>
+                    <option value="1">Trading</option>
+                    <option value="2">Service</option>
+                  </select>
                 </div>
                 <div class="form-group half">
-                  <input type="text" formControlName="registrationNumber" placeholder="Registration Number" class="form-input" [class.filled]="businessInfoForm.get('registrationNumber')?.value" />
+                  <input type="text" formControlName="industryType" placeholder="Industry Type" class="form-input" [class.filled]="businessInfoForm.get('industryType')?.value" />
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group half">
-                  <input type="text" formControlName="annualRevenue" placeholder="Annual Revenue" class="form-input" [class.filled]="businessInfoForm.get('annualRevenue')?.value" />
+                  <input type="number" formControlName="yearsInBusiness" placeholder="Years in Business" class="form-input" [class.filled]="businessInfoForm.get('yearsInBusiness')?.value" min="0" />
                 </div>
                 <div class="form-group half">
-                  <input type="text" formControlName="yearsInBusiness" placeholder="Years in Business" class="form-input" [class.filled]="businessInfoForm.get('yearsInBusiness')?.value" />
+                  <input type="number" formControlName="monthlyBusinessIncome" placeholder="Monthly Business Income" class="form-input" [class.filled]="businessInfoForm.get('monthlyBusinessIncome')?.value" min="0" />
                 </div>
               </div>
             </form>
           </div>
         </div>
 
+        <!-- 4. Financial and Credit Information -->
         <div class="accordion-item" [class.completed]="financialSections.creditInfo">
           <div class="accordion-header" (click)="toggleAccordion('creditInfo')">
             <div class="accordion-title">
@@ -420,7 +431,7 @@
               <svg *ngIf="!financialSections.creditInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
               </svg>
-              <span>Financial/Credit Information:</span>
+              <span>Financial and Credit Information</span>
             </div>
             <svg class="chevron-icon" [class.rotate]="expandedSection === 'creditInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -430,40 +441,102 @@
             <form [formGroup]="creditInfoForm">
               <div class="form-row">
                 <div class="form-group half">
-                  <input type="text" formControlName="bankName" placeholder="Bank Name" class="form-input" [class.filled]="creditInfoForm.get('bankName')?.value" />
+                  <input type="number" formControlName="requestedLoanAmount" placeholder="Requested Loan Amount" class="form-input" [class.filled]="creditInfoForm.get('requestedLoanAmount')?.value" min="0" />
                 </div>
                 <div class="form-group half">
-                  <input type="text" formControlName="accountNumber" placeholder="Account Number" class="form-input" [class.filled]="creditInfoForm.get('accountNumber')?.value" />
+                  <input type="number" formControlName="downPaymentAmount" placeholder="Down Payment Amount" class="form-input" [class.filled]="creditInfoForm.get('downPaymentAmount')?.value" min="0" />
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group half">
-                  <select formControlName="existingLoans" class="form-input form-select" [class.filled]="creditInfoForm.get('existingLoans')?.value">
-                    <option value="" disabled selected>Existing Loans</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                  <input type="number" formControlName="loanTenureMonths" placeholder="Loan Tenure (Months)" class="form-input" [class.filled]="creditInfoForm.get('loanTenureMonths')?.value" min="0" />
+                </div>
+                <div class="form-group half">
+                  <select formControlName="repaymentPreference" class="form-input form-select" [class.filled]="creditInfoForm.get('repaymentPreference')?.value">
+                    <option value="" disabled selected>Repayment Preference</option>
+                    <option value="1">EMI</option>
                   </select>
                 </div>
-                <div class="form-group half">
-                  <input type="text" formControlName="totalDebt" placeholder="Total Debt Amount" class="form-input" [class.filled]="creditInfoForm.get('totalDebt')?.value" />
+              </div>
+              <div class="form-row">
+                <div class="form-group full">
+                  <textarea formControlName="existingLoanDetails" placeholder="Existing Loan Details" class="form-input" rows="3" [class.filled]="creditInfoForm.get('existingLoanDetails')?.value"></textarea>
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group half">
-                  <input type="text" formControlName="creditScore" placeholder="Credit Score (if known)" class="form-input" [class.filled]="creditInfoForm.get('creditScore')?.value" />
-                </div>
-                <div class="form-group half">
-                  <input type="text" formControlName="assets" placeholder="Total Assets" class="form-input" [class.filled]="creditInfoForm.get('assets')?.value" />
+                <div class="form-group full">
+                  <textarea formControlName="creditCardDetails" placeholder="Credit Card Details" class="form-input" rows="3" [class.filled]="creditInfoForm.get('creditCardDetails')?.value"></textarea>
                 </div>
               </div>
             </form>
           </div>
         </div>
+
+        <!-- 5. Security / Collateral & Risk Mitigation -->
+        <div class="accordion-item" [class.completed]="financialSections.securityInfo">
+          <div class="accordion-header" (click)="toggleAccordion('securityInfo')">
+            <div class="accordion-title">
+              <svg *ngIf="financialSections.securityInfo" class="check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="!financialSections.securityInfo" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+              </svg>
+              <span>Security / Collateral & Risk Mitigation</span>
+            </div>
+            <svg class="chevron-icon" [class.rotate]="expandedSection === 'securityInfo'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="accordion-content" *ngIf="expandedSection === 'securityInfo'">
+            <form [formGroup]="securityInfoForm">
+              <div class="form-row">
+                <div class="form-group half">
+                  <select formControlName="collateralAvailable" class="form-input form-select" [class.filled]="securityInfoForm.get('collateralAvailable')?.value">
+                    <option value="" disabled selected>Collateral Available</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </div>
+                <div class="form-group half">
+                  <select formControlName="collateralType" class="form-input form-select" [class.filled]="securityInfoForm.get('collateralType')?.value">
+                    <option value="" disabled selected>Collateral Type</option>
+                    <option value="1">Property</option>
+                    <option value="2">FDR</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <input type="number" formControlName="estimatedCollateralValue" placeholder="Estimated Collateral Value" class="form-input" [class.filled]="securityInfoForm.get('estimatedCollateralValue')?.value" min="0" />
+                </div>
+                <div class="form-group half">
+                  <select formControlName="guarantorAvailable" class="form-input form-select" [class.filled]="securityInfoForm.get('guarantorAvailable')?.value">
+                    <option value="" disabled selected>Guarantor Available</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <select formControlName="coApplicantAvailable" class="form-input form-select" [class.filled]="securityInfoForm.get('coApplicantAvailable')?.value">
+                    <option value="" disabled selected>Co-Applicant Available</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
       </div>
 
       <div class="button-row financial-buttons">
-        <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
-        <button type="button" class="btn-next" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid" (click)="onSubmitFinancial()">NEXT</button>
+        <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+        <button type="button" class="btn-next" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid || securityInfoForm.invalid" (click)="onSubmitFinancial()">NEXT</button>
       </div>
     </div>
 

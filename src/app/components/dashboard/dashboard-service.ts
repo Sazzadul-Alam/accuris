@@ -5,10 +5,6 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 
-export interface UserName {
-  firstName: string;
-  lastName: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -35,21 +31,8 @@ export class DashboardService {
     );
   }
 
-  getUserNameFromId(id: number): Observable<UserName | null> {
-    if (!id) {
-      return of(null);
-    }
 
-    const url = `${this.webBackendUrl}/auth/username?id=${id}`;
-
-    return this.http.get<UserName>(url).pipe(
-      catchError(error => {
-        console.error('Error fetching user name:', error);
-        return of(null); // fallback to null if error
-      })
-    );
-  }
-
+  // http://localhost:8181/web-backend/auth/username?id=29
 
 
 }

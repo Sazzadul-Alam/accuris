@@ -64,7 +64,10 @@
             <div class="profile-header">
               <img src="assets/images/profile-avatar.png" alt="Profile" class="profile-avatar" />
               <div>
-                <h4 class="profile-name">Sanjit A. Kabir</h4>
+                <h4 class="profile-name">
+                  {{ currentUserName?.firstName }} {{ currentUserName?.lastName }}
+                </h4>
+
                 <p class="profile-role">Business Analyst</p>
                 <p class="profile-company">DataSoft</p>
               </div>
@@ -631,6 +634,8 @@
   <app-individual-credit-scoring-modal
     *ngIf="showIndividualModal"
     [selectedPlanInput]="selectedPlan"
+    [currentUserId]="currentUserId"
+    [currentUserName]="fullName"
     (closeModal)="closeIndividualModal()"
     (saved)="stepStatus['Individual Information'] = Status.draft"
     (formSubmit)="handleFormSubmit($event)">
@@ -648,7 +653,7 @@
     *ngIf="isPaymentModalOpen"
     [isOpen]="isPaymentModalOpen"
     [selectedPlan]="selectedPlan"
-    [userName]="'Sanjit Ara Kabir'"
+    [userName]="fullName"
     (closeModal)="closePaymentModal()"
     (paymentComplete)="onPaymentComplete($event)">
   </app-payment-modal>

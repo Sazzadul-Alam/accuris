@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DashboardService} from "../../services/dashboard_service/dashboard.service";
+import { UserName } from "../../services/dashboard_service/dashboard.service";
 
 enum Status {
   draft = "Draft",
@@ -16,8 +17,9 @@ enum Status {
 })
 export class DashboardComponent {
 
-
-
+  currentUserId: number = null;
+  currentUserName: UserName;
+  fullName = '';
   selectedPlan = "";
 
   Status = Status;
@@ -91,23 +93,55 @@ export class DashboardComponent {
     ) {
   }
   ngOnInit() {
-    this.currentTable ='individual_credit';
+    const token = localStorage.getItem('access_token');
+
+    if (token) {
+      const payload = token.split('.')[1];
+      const decodedPayload = JSON.parse(atob(payload));
+      console.log('JWT sub:', decodedPayload.sub);
+
+      // Step 1: Get userId from email
+      this.dashboardService.getUserIdFromEmail(decodedPayload.sub)
+        .subscribe(currentUserId => {
+          console.log('Fetched userId:', currentUserId);
+          this.currentUserId = currentUserId;
+
+          if (currentUserId) {
+            // Step 2: Get username from userId
+            this.dashboardService.getUserNameFromId(currentUserId)
+              .subscribe(userName => {
+                if (userName) {
+                  console.log('Fetched userName:', userName);
+                  this.currentUserName = userName; // <-- store in class variable
+                  this.fullName = `${userName.firstName} ${userName.lastName}`;
+                } else {
+                  console.log('User name not found');
+                }
+              });
+          }
+        });
+    }
+
+    // Dashboard setup
+    this.currentTable = 'individual_credit';
     this.tables[this.currentTable].selected = true;
     this.dashOffset = this.circumference - (this.progressValue / 100) * this.circumference;
-    this.getData();
+    // this.getData();
   }
-  getData() {
-    this.dashboardService.getdashboardInfo({
-      page: 1,
-      limit: 10
-    })
-      .subscribe(res => {
 
-        }, error => {
-       }
-      );
 
-  }
+  // getData() {
+  //   this.dashboardService.getdashboardInfo({
+  //     page: 1,
+  //     limit: 10
+  //   })
+  //     .subscribe(res => {
+  //
+  //       }, error => {
+  //      }
+  //     );
+  //
+  // }
 
   get progressColor() {
     if (this.progressValue < 40) return '#ef4444';
@@ -220,6 +254,7 @@ export class DashboardComponent {
     // this.selectedPlanForPayment = planName;
     this.isPricingModalOpen = false;
     this.runningProcesses['Individual Information'] = true;
+    this.openIndividualModal();
     this.selectedPlan = planName;
     // setTimeout(() => {
     //   this.isPaymentModalOpen = true;
