@@ -1,7 +1,8 @@
 import {Component, ElementRef, EventEmitter, Output, ViewChild, Input} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { IndividualCreditService } from "./individual-credit-scoring-api-service";
-
+import { switchMap, tap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 @Component({
   selector: 'app-individual-credit-scoring-modal',
   templateUrl: './individual-credit-scoring-modal.component.html',
@@ -14,6 +15,15 @@ export class IndividualCreditScoringModalComponent {
   @Output() closeModal= new EventEmitter<void>();
   @Output() formSubmit= new EventEmitter<any>();
   @Output() saved= new EventEmitter<any>();
+
+  // Add these ViewChild references with the others:
+  @ViewChild('nationalIdCopyInput') nationalIdCopyInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('photographInput') photographInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('salaryCertificateInput') salaryCertificateInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('bankStatementInput') bankStatementInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('incomeTaxReturnInput') incomeTaxReturnInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('cibConsentFormInput') cibConsentFormInput!: ElementRef<HTMLInputElement>;
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   // Identity & Verification
@@ -48,6 +58,8 @@ export class IndividualCreditScoringModalComponent {
   creditInfoForm!: FormGroup;
   securityInfoForm!: FormGroup;
 
+  uploadForm!: FormGroup;
+
   currentStep: number = 1;
   selectedFileName: string = '';
   selectedOption: string = 'Select Option';
@@ -67,9 +79,8 @@ export class IndividualCreditScoringModalComponent {
   uploadSections = {
     identity: false,
     employment: false,
-    business: false,
     credit: false,
-    collateral: false
+    declaration: false  // Add this
   };
 
   expandedNestedSection: string = '';
@@ -133,335 +144,165 @@ export class IndividualCreditScoringModalComponent {
     this.initializeForm();
     this.initializeLocationForm();
     this.initializeFinancialForms();
-    this.loadSavedDataFromLocalStorage();
+    this.initializeUploadForm();
   }
 
-  onSaveAll() {
-    this.onSavePersonalInfo();
-    this.onSaveLocation();
-    this.onSaveFinancialInfo();
-  }
 
-  // ============================================
-  // UPDATED: Save Step One (Person Info)
-  // ============================================
-  onSavePersonalInfo(): void {
-    // if (this.personalInfoForm.valid) {
-      console.log(`In the save step 1 function`);
-      const formData = this.personalInfoForm.value;
-
-      // Check if we have a currentUserId
-      if (!this.currentUserId) {
-        this.showNotification('User ID is not set. Please log in.', 'error');
-        console.error('currentUserId is null - cannot save');
-        return;
-      }
-
-      console.log('Saving Step 1 with userId:', this.currentUserId);
-      console.log('Form data:', formData);
-
-      this.creditService.submitStepOne(formData, this.currentUserId, this.individualId).subscribe({
-
-        next: (response) => {
-          console.log('✅ Step 1 Success!', response);
-
-          if (response.status === 'SUCCESS' && response.individualId) {
-            this.individualId = response.individualId;
-            console.log('Individual created with ID:', this.individualId);
-            localStorage.setItem('individualId', String(response.individualId));
-            this.showNotification(
-              response.message || 'Personal information saved successfully!',
-              'success'
-            );
-
-            // ✅ Only save individualId to localStorage, not full step1
-            const savedData = JSON.parse(localStorage.getItem('creditScoringFormData') || '{}');
-            savedData.individualId = this.individualId;
-            localStorage.setItem('creditScoringFormData', JSON.stringify(savedData));
-          } else {
-            this.showNotification(
-              response.message || 'Failed to save personal info',
-              'error'
-            );
-          }
-        },
-        error: (err) => {
-          console.error('❌ API Error:', err);
-          this.showNotification(
-            'Failed to save personal info. Please try again.',
-            'error'
-          );
-        }
-      });
-    // } else {
-    //   this.markFormGroupTouched(this.personalInfoForm);
-    //   this.showNotification('Please fill in all required fields correctly.', 'error');
-    // }
-  }
-
-  // ============================================
-  // UPDATED: Save Location (Step 2)
-  // ============================================
-  onSaveLocation(): void {
-    // if (this.personalInfoForm.valid) {
-    console.log(`In the save step 2 function`);
-    const formData = this.locationForm.value;
-
-    // Check if we have a currentUserId
-    if (!this.currentUserId) {
-      this.showNotification('User ID is not set. Please log in.', 'error');
-      console.error('currentUserId is null - cannot save');
-      return;
-    }
-
-    console.log('Saving Step 2 with userId:', this.currentUserId);
-    console.log('Form data:', formData);
-
-    // Construct the payload for the unified endpoint
-    // const payload: IndividualCreditRequest = {
-    //   param: 'location',
-    //   pId: individualId,  // The individual to update
-    //   userId: userId,
-    //   dataSet: {
-    //     id: individualId,  // Include in dataSet as well
-    //     presentAddress: step2Data.presentAddress,
-    //     permanentAddress: step2Data.permanentAddress,
-    //     city: step2Data.city,
-    //     stateProvince: step2Data.stateOrDistrict,  // Map from form field name
-    //     postalCode: step2Data.postalCode,
-    //     countryCode: step2Data.country  // Map from form field name
-    //   }
-    // };
-
-    this.creditService.submitStepTwo(formData, this.currentUserId, this.individualId).subscribe({
-
-      next: (response) => {
-        console.log('✅ Step 1 Success!', response);
-
-        if (response.status === 'SUCCESS') {
-          // this.individualId = response.individualId;
-          // localStorage.setItem('individualId', String(response.individualId));
-          this.showNotification(
-            response.message || 'Location information saved successfully!',
-            'success'
-          );
-        } else {
-          this.showNotification(
-            response.message || 'Failed to save locationinfo',
-            'error'
-          );
-        }
-      },
-      error: (err) => {
-        console.error('❌ API Error:', err);
-        this.showNotification(
-          'Failed to save personal info. Please try again.',
-          'error'
-        );
-      }
-    });
-    // } else {
-    //   this.markFormGroupTouched(this.personalInfoForm);
-    //   this.showNotification('Please fill in all required fields correctly.', 'error');
-    // }
-  }
-
-  // ============================================
-// Save Financial Info (Step 3)
-// ============================================
-  onSaveFinancialInfo(): void {
-    console.log(`In the save step 3 function`);
-
-    // Check if we have a currentUserId
-    if (!this.currentUserId) {
-      this.showNotification('User ID is not set. Please log in.', 'error');
-      console.error('currentUserId is null - cannot save');
-      return;
-    }
-
-    // Check if we have an individualId
-    if (!this.individualId) {
-      this.showNotification('Please save personal info first.', 'error');
-      console.error('individualId is null - cannot save financial info');
-      return;
-    }
-
-    const step3Data = {
-      basicInfo: this.basicInfoForm.value,
-      employerInfo: this.employerInfoForm.value,
-      businessInfo: this.businessInfoForm.value,
-      creditInfo: this.creditInfoForm.value,
-      securityInfo: this.securityInfoForm.value
-    };
-
-    console.log('Saving Step 3 with userId:', this.currentUserId);
-    console.log('Individual ID:', this.individualId);
-    console.log('Form data:', step3Data);
-
-    this.creditService.submitStepThree(step3Data, this.individualId, this.currentUserId).subscribe({
-      next: (response) => {
-        console.log('✅ Step 3 Success!', response);
-
-        if (response.status === 'SUCCESS') {
-          this.showNotification(
-            response.message || 'Financial information saved successfully!',
-            'success'
-          );
-
-          // Store financial info ID if returned
-          if (response.financialInfoId) {
-            console.log('Financial Info created with ID:', response.financialInfoId);
-          }
-        } else {
-          this.showNotification(
-            response.message || 'Failed to save financial info',
-            'error'
-          );
-        }
-      },
-      error: (err) => {
-        console.error('❌ API Error:', err);
-        this.showNotification(
-          'Failed to save financial info. Please try again.',
-          'error'
-        );
-      }
-    });
-  }
-
-  // ============================================
-  // UPDATED: Save All Data to LocalStorage
-  // ============================================
-  saveAllDataToLocalStorage(): void {
-    // const allFormData = {
-    //   individualId: this.individualId,  // ✅ Save the individual ID
-    //   currentUserId: this.currentUserId,  // ✅ Save the user ID
-    //   step1: this.personalInfoForm.value,
-    //   step2: this.locationForm.value,
-    //   step3: {
-    //     basicInfo: this.basicInfoForm.value,
-    //     employerInfo: this.employerInfoForm.value,
-    //     businessInfo: this.businessInfoForm.value,
-    //     creditInfo: this.creditInfoForm.value
-    //   },
-    //   step4: {
-    //     uploadedFiles: this.uploadedFiles,
-    //     businessUploadInfo: this.businessUploadInfo,
-    //     selectedFileName: this.selectedFileName
-    //   },
-    //   step5: {
-    //     consentAccepted: this.consentAccepted
-    //   },
-    //   savedAt: new Date().toISOString()
-    // };
-    //
-    // console.log('Saving all data to localStorage:', allFormData);
-    //
-    //
-    //
-    // // if (this.currentStep === 2) {
-    // //   this.onSaveLocation();
-    // //   return; // Don't save to localStorage yet, wait for API response
-    // // }
-    //
-    // localStorage.setItem('creditScoringFormData', JSON.stringify(allFormData));
-    // console.log('All form data saved to localStorage');
-    // this.saved.emit();
-  }
-
-  // ============================================
+  // onSaveAll(submit: boolean = false) {
+  //
+  //   if (submit) {
+  //     this.closeModal.emit();
+  //   }
+  //
+  //   if (!this.currentUserId) {
+  //     this.showNotification('User ID is not set. Please log in.', 'error');
+  //     return;
+  //   }
+  //
+  //   const step3Data = {
+  //     basicInfo: this.basicInfoForm.value,
+  //     employerInfo: this.employerInfoForm.value,
+  //     businessInfo: this.businessInfoForm.value,
+  //     creditInfo: this.creditInfoForm.value,
+  //     securityInfo: this.securityInfoForm.value
+  //   };
+  //
+  //   this.creditService.submitStepOne(this.personalInfoForm.value, this.currentUserId, this.individualId).pipe(
+  //     tap(response => {
+  //       if (response.individualId) {
+  //
+  //         localStorage.setItem('individualId', String(response.individualId));
+  //         this.individualId = response.individualId;
+  //       }
+  //     }),
+  //     switchMap(() =>
+  //       this.creditService.submitStepTwo(this.locationForm.value, this.currentUserId, this.individualId)
+  //     ),
+  //     switchMap(() =>
+  //       this.creditService.submitStepThree(step3Data, this.individualId, this.currentUserId)
+  //     ),
+  //     switchMap(() =>
+  //       this.creditService.submitStepFour(this.uploadForm.value, this.individualId, this.currentUserId)
+  //     ),
+  //     // If submit is true, call the submitIndividual function
+  //     switchMap(response => {
+  //       if (submit && this.individualId) {
+  //         localStorage.removeItem('individualId');  // ✅ Use removeItem instead of setItem
+  //         return this.creditService.submitIndividual(this.individualId, this.currentUserId);
+  //
+  //       }
+  //       return of(response); // If not submitting, pass through the last response
+  //     }),
+  //     catchError(err => {
+  //       console.error('❌ Save All Error:', err);
+  //       this.showNotification('Failed to save information', 'error');
+  //       return of(null);
+  //     })
+  //   ).subscribe({
+  //     next: (response) => {
+  //       if (response?.status === 'SUCCESS') {
+  //         if (submit) {
+  //           this.showNotification('All information saved and submitted successfully!', 'success');
+  //         } else {
+  //           this.showNotification('All information saved successfully!', 'success');
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
   // UPDATED: Load Saved Data from LocalStorage
   // ============================================
-  loadSavedDataFromLocalStorage(): void {
-    const savedData = localStorage.getItem('creditScoringFormData');
 
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
 
-        // ✅ Restore the individual ID and user ID
-        if (parsedData.individualId) {
-          this.individualId = parsedData.individualId;
-          console.log('Restored individualId from localStorage:', this.individualId);
-        }
 
-        if (parsedData.currentUserId) {
-          // Only restore if not already set via @Input
-          if (!this.currentUserId) {
-            this.currentUserId = parsedData.currentUserId;
-          }
-        }
-
-        // Load Step 1 - Personal Info
-        if (parsedData.step1) {
-          this.personalInfoForm.patchValue(parsedData.step1);
-          if (parsedData.step4?.selectedFileName) {
-            this.selectedFileName = parsedData.step4.selectedFileName;
-          }
-        }
-
-        // Load Step 2 - Location
-        if (parsedData.step2) {
-          this.locationForm.patchValue(parsedData.step2);
-        }
-
-        // Load Step 3 - Financial Info
-        if (parsedData.step3) {
-          if (parsedData.step3.basicInfo) {
-            this.basicInfoForm.patchValue(parsedData.step3.basicInfo);
-          }
-          if (parsedData.step3.employerInfo) {
-            this.employerInfoForm.patchValue(parsedData.step3.employerInfo);
-          }
-          if (parsedData.step3.businessInfo) {
-            this.businessInfoForm.patchValue(parsedData.step3.businessInfo);
-          }
-          if (parsedData.step3.creditInfo) {
-            this.creditInfoForm.patchValue(parsedData.step3.creditInfo);
-          }
-        }
-
-        // Load Step 4 - Upload Info
-        if (parsedData.step4) {
-          if (parsedData.step4.uploadedFiles) {
-            this.uploadedFiles = { ...parsedData.step4.uploadedFiles };
-          }
-          if (parsedData.step4.businessUploadInfo) {
-            this.businessUploadInfo = { ...parsedData.step4.businessUploadInfo };
-          }
-          this.updateUploadSectionStatus();
-          this.validateUploadSection();
-        }
-
-        // Load Step 5 - Consent
-        if (parsedData.step5) {
-          this.consentAccepted = parsedData.step5.consentAccepted || false;
-        }
-
-        console.log('Form data loaded from localStorage');
-      } catch (error) {
-        console.error('Error loading saved data:', error);
-      }
+  onSaveAll(isFinalSubmit: boolean = false): void {
+    // 1. Validation for Final Submission
+    if (isFinalSubmit && !this.consentAccepted) {
+      this.showNotification('Please accept the user consent to submit.', 'error');
+      return;
     }
+
+    if (!this.currentUserId) {
+      this.showNotification('User session expired. Please log in.', 'error');
+      return;
+    }
+
+    // 2. Aggregate Data from all FormGroups and Component State
+    const consolidatedPayload = {
+      // Personal & Identity
+      personal: {
+        ...this.personalInfoForm.value,
+        id: this.individualId || null // NULL = Insert, VALUE = Update
+      },
+      // Address Info
+      location: this.locationForm.value,
+      // Combined Financial Sections
+      financial: {
+        // Get existing financialId from storage if we've saved before
+        financialId: Number(localStorage.getItem('financialInfoId')) || null,
+        basicInfo: this.basicInfoForm.value,
+        employerInfo: this.employerInfoForm.value,
+        businessInfo: this.businessInfoForm.value,
+        creditInfo: this.creditInfoForm.value,
+        securityInfo: this.securityInfoForm.value
+      },
+      // Document URLs from Step 4
+      uploads: this.uploadForm.value
+    };
+
+    const action = isFinalSubmit ? 'SUBMIT' : 'SAVE';
+
+    // 3. Single API call to handle everything
+    this.creditService.saveFullCreditScoring(consolidatedPayload, this.currentUserId, action).subscribe({
+      next: (response) => {
+        if (response.status === 'SUCCESS') {
+          // Update IDs returned from the database
+          if (response.individualId) {
+            this.individualId = response.individualId;
+            localStorage.setItem('individualId', String(this.individualId));
+          }
+          if (response.financialInfoId) {
+            localStorage.setItem('financialInfoId', String(response.financialInfoId));
+          }
+
+          if (isFinalSubmit) {
+            // Cleanup on successful submission
+            localStorage.removeItem('individualId');
+            localStorage.removeItem('financialInfoId');
+            localStorage.removeItem('creditScoringFormData');
+            this.showNotification('Application submitted successfully!', 'success');
+            setTimeout(() => this.closeModal.emit(), 1500);
+          } else {
+            this.showNotification('Progress saved successfully!', 'success');
+          }
+        } else {
+          this.showNotification(response.message || 'Failed to save data.', 'error');
+        }
+      },
+      error: (err) => {
+        console.error('Server error during unified save:', err);
+        this.showNotification('A connection error occurred.', 'error');
+      }
+    });
   }
 
   initializeForm(): void {
     this.personalInfoForm = this.fb.group({
       firstName: [
         '',
-        [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\s]*$/)]
+        [Validators.required, Validators.minLength(2)]
       ],
       lastName: [
         '',
-        [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\s]*$/)]
+        [Validators.required, Validators.minLength(2)]
       ],
       fathersName: [
         '',
-        [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\s]*$/)]
+        [Validators.required, Validators.minLength(2)]
       ],
       mothersName: [
         '',
-        [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\s]*$/)]
+        [Validators.required, Validators.minLength(2)]
       ],
       dateOfBirth: [
         '',
@@ -477,11 +318,11 @@ export class IndividualCreditScoringModalComponent {
       ],
       idNumber: [
         '',
-        [Validators.required, Validators.minLength(5)]
+        [Validators.required]
       ],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)]
+        [Validators.required]
       ],
       email: [
         '',
@@ -581,6 +422,22 @@ export class IndividualCreditScoringModalComponent {
     });
   }
 
+
+  initializeUploadForm(): void {
+    this.uploadForm = this.fb.group({
+      // File uploads (store file paths as strings)
+      nationalIdCopy: ['', Validators.required],
+      photograph: ['', Validators.required],
+      salaryCertificate: ['', Validators.required],
+      bankStatement: ['', Validators.required],
+      incomeTaxReturn: ['', Validators.required],
+      cibConsentForm: ['', Validators.required],  // ✅ Changed to file upload
+
+      // Checkbox
+      finalDeclaration: [false, Validators.requiredTrue]
+    });
+  }
+
   ageValidator(control: any) {
     if (!control.value) return null;
 
@@ -665,42 +522,26 @@ export class IndividualCreditScoringModalComponent {
   }
 
   updateUploadSectionStatus(): void {
-    // Identity & Verification (passport is optional, others required)
+    // Identity & Verification
     this.uploadSections.identity = !!(
-      this.uploadedFiles.passportPhoto &&
-      this.uploadedFiles.utility &&
-      this.uploadedFiles.tin
+      this.uploadForm.get('nationalIdCopy')?.value &&
+      this.uploadForm.get('photograph')?.value
     );
 
-    // Employment Document (all required)
+    // Employment Documents
     this.uploadSections.employment = !!(
-      this.uploadedFiles.salary &&
-      this.uploadedFiles.employerId &&
-      this.uploadedFiles.paySlip &&
-      this.uploadedFiles.appointment
+      this.uploadForm.get('salaryCertificate')?.value
     );
 
-    // Business Information (all required)
-    this.uploadSections.business = !!(
-      this.businessUploadInfo.businessType &&
-      this.businessUploadInfo.yearsInBusiness &&
-      this.businessUploadInfo.businessRevenue &&
-      this.businessUploadInfo.industryType &&
-      this.businessUploadInfo.businessName
-    );
-
-    // Credit Verification (all required)
+    // Credit Verification
     this.uploadSections.credit = !!(
-      this.uploadedFiles.cibConsent &&
-      this.uploadedFiles.loanStatements &&
-      this.uploadedFiles.creditCard
+      this.uploadForm.get('bankStatement')?.value &&
+      this.uploadForm.get('incomeTaxReturn')?.value &&
+      this.uploadForm.get('cibConsentForm')?.value
     );
 
-    // Collateral / Asset Verification (all required)
-    this.uploadSections.collateral = !!(
-      this.uploadedFiles.fdr &&
-      this.uploadedFiles.gold
-    );
+    // Declaration
+    this.uploadSections.declaration = this.uploadForm.get('finalDeclaration')?.value || false;
   }
 
   validateUploadSection(): boolean {
@@ -786,28 +627,39 @@ export class IndividualCreditScoringModalComponent {
   //   }
   // }
 
-  onSaveFinancial(): void {
-    this.saveAllDataToLocalStorage();
-    this.showNotification('Form saved successfully!', 'success');
-  }
+  // onSaveFinancial(): void {
+  //   this.saveAllDataToLocalStorage();
+  //   this.showNotification('Form saved successfully!', 'success');
+  // }
 
-  onSubmitFinancial(): void {
-    if (!this.basicInfoForm.valid || !this.employerInfoForm.valid || !this.businessInfoForm.valid || !this.creditInfoForm.valid || !this.securityInfoForm.valid) {
-      this.showNotification('Please complete all required sections.', 'error');
-      return;
-    }
 
-    this.onSaveFinancial();
 
-    if (this.currentStep < 5) {
-      this.currentStep++;
-      this.loadStepData(this.currentStep);
-    }
-  }
+
+
 
   triggerUploadInput(type: string): void {
     switch(type) {
-      // Identity & Verification
+      // New upload form fields
+      case 'nationalIdCopy':
+        this.nationalIdCopyInput?.nativeElement.click();
+        break;
+      case 'photograph':
+        this.photographInput?.nativeElement.click();
+        break;
+      case 'salaryCertificate':
+        this.salaryCertificateInput?.nativeElement.click();
+        break;
+      case 'bankStatement':
+        this.bankStatementInput?.nativeElement.click();
+        break;
+      case 'incomeTaxReturn':
+        this.incomeTaxReturnInput?.nativeElement.click();
+        break;
+      case 'cibConsentForm':
+        this.cibConsentFormInput?.nativeElement.click();
+        break;
+
+      // Old upload fields (Identity & Verification)
       case 'passport':
         this.passportInput?.nativeElement.click();
         break;
@@ -856,7 +708,7 @@ export class IndividualCreditScoringModalComponent {
     }
   }
 
-  onUploadFile(event: Event, type: string): void {
+  onUploadFile(event: Event, fieldName: string): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
@@ -874,161 +726,34 @@ export class IndividualCreditScoringModalComponent {
       }
 
       this.fileErrorMessage = '';
-      this.uploadedFiles[type] = file.name;
-      this.updateUploadSectionStatus();
-      this.validateUploadSection();
-      console.log(`File uploaded for ${type}:`, file.name);
+
+      // For now, store the file name as the path
+      // In production, you would upload to server and get actual path
+      const filePath = `/uploads/${file.name}`;
+
+      // Update the form control
+      this.uploadForm.patchValue({
+        [fieldName]: filePath
+      });
+
+      // Also update the old uploadedFiles object for backward compatibility
+      this.uploadedFiles[fieldName] = file.name;
+
+      console.log(`File uploaded for ${fieldName}:`, filePath);
     }
   }
 
-  onBusinessInfoChange(field: string, value: string): void {
-    this.businessUploadInfo[field as keyof typeof this.businessUploadInfo] = value;
-    this.updateUploadSectionStatus();
-    this.validateUploadSection();
-  }
 
-  onSaveUpload(): void {
-    this.saveAllDataToLocalStorage();
-    this.showNotification('Form saved successfully!', 'success');
-  }
 
-  saveAll() {
-    this.saveAllDataToLocalStorage();
-  }
 
-  onNextFromUpload(): void {
-    this.onSaveUpload();
 
-    if (this.currentStep < 5) {
-      this.currentStep++;
-      this.loadStepData(this.currentStep);
-    }
-  }
 
-  onSaveConsent(): void {
-    this.saveAllDataToLocalStorage();
-    this.showNotification('Form saved successfully!', 'success');
-  }
 
-  onSubmitConsent(): void {
-    if (!this.consentAccepted) {
-      this.showNotification('Please accept the terms and conditions to proceed.', 'error');
-      return;
-    }
-    this.onSaveConsent();
-    this.submitForm();
-  }
 
-  onNext(): void {
-    if (this.currentStep === 1 && !this.personalInfoForm.valid) {
-      this.markFormGroupTouched(this.personalInfoForm);
-      this.showNotification('Please fill in all required fields correctly.', 'error');
-      return;
-    }
 
-    if (this.currentStep === 2 && !this.locationForm.valid) {
-      this.markFormGroupTouched(this.locationForm);
-      this.showNotification('Please fill in all required fields correctly.', 'error');
-      return;
-    }
 
-    if (this.currentStep < 5) {
-      this.saveCurrentStepData();
-      this.currentStep++;
-      this.loadStepData(this.currentStep);
-    } else {
-      this.submitForm();
-    }
-  }
 
-  saveCurrentStepData(): void {
-    console.log(`Current data for step ${this.currentStep} is held in forms.`);
-  }
 
-  submitForm(): void {
-    const completeFormData = {
-      step1: this.personalInfoForm.value,
-      step2: this.locationForm.value,
-      step3: {
-        basicInfo: this.basicInfoForm.value,
-        employerInfo: this.employerInfoForm.value,
-        businessInfo: this.businessInfoForm.value,
-        creditInfo: this.creditInfoForm.value,
-        securityInfo: this.securityInfoForm.value
-      },
-      step4: {
-        uploadedFiles: this.uploadedFiles,
-        businessUploadInfo: this.businessUploadInfo
-      },
-      step5: { consentAccepted: this.consentAccepted },
-      submittedAt: new Date().toISOString()
-    };
-
-    console.log('Submitting complete form:', completeFormData);
-    this.formSubmit.emit(completeFormData);
-
-    // Clear saved data from localStorage
-    localStorage.removeItem('creditScoringFormData');
-
-    setTimeout(() => {
-      this.closeModal.emit();
-    }, 1500);
-  }
-
-  triggerFileInput(): void {
-    if (this.fileInput) {
-      this.fileInput.nativeElement.click();
-    }
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    if (file) {
-      const maxSize = 5 * 1024 * 1024;
-      if (file.size > maxSize) {
-        this.fileErrorMessage = 'File size must be less than 5MB';
-        return;
-      }
-
-      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-      if (!allowedTypes.includes(file.type)) {
-        this.fileErrorMessage = 'Only PDF, JPG, JPEG, and PNG files are allowed';
-        return;
-      }
-
-      this.fileErrorMessage = '';
-      this.selectedFileName = file.name;
-      this.personalInfoForm.patchValue({ uploadId: file });
-      this.convertFileToBase64(file);
-    }
-  }
-
-  convertFileToBase64(file: File): void {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64String = reader.result as string;
-      console.log('File converted to base64');
-    };
-    reader.readAsDataURL(file);
-  }
-
-  returnHome(): void {
-    this.close();
-  }
-
-  private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      control?.markAsTouched();
-      control?.markAsDirty();
-
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
-    });
-  }
 
   private showNotification(message: string, type: 'success' | 'error'): void {
     this.notificationMessage = message;

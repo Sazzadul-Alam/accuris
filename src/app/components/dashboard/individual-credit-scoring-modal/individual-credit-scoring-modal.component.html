@@ -115,18 +115,18 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group full">
-            <div class="upload-container" (click)="triggerFileInput()" [class.filled]="selectedFileName">
-              <input type="file" #fileInput id="fileUpload" (change)="onFileSelected($event)" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" />
-              <span class="upload-placeholder">{{ selectedFileName || 'Upload ID' }}</span>
-            </div>
-          </div>
-        </div>
+<!--        <div class="form-row">-->
+<!--          <div class="form-group full">-->
+<!--            <div class="upload-container" (click)="triggerFileInput()" [class.filled]="selectedFileName">-->
+<!--              <input type="file" #fileInput id="fileUpload" (change)="onFileSelected($event)" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" />-->
+<!--              <span class="upload-placeholder">{{ selectedFileName || 'Upload ID' }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <div class="button-row">
           <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
-          <button type="button" class="btn-next" [disabled]="personalInfoForm.invalid" (click)="onNext()">NEXT</button>
+          <button type="button" class="btn-next" [disabled]="personalInfoForm.invalid" >NEXT</button>
         </div>
       </form>
     </div>
@@ -247,7 +247,7 @@
             type="button"
             class="btn-next"
             [disabled]="locationForm.invalid"
-            (click)="onNext()"
+
           >
             NEXT
           </button>
@@ -536,7 +536,7 @@
 
       <div class="button-row financial-buttons">
         <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
-        <button type="button" class="btn-next" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid || securityInfoForm.invalid" (click)="onSubmitFinancial()">NEXT</button>
+        <button type="button" class="btn-next" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid || securityInfoForm.invalid" >NEXT</button>
       </div>
     </div>
 
@@ -545,297 +545,276 @@
       <h3 class="form-title">Upload Information</h3>
       <p class="form-subtitle">Provide your Upload Information below</p>
 
-      <div class="upload-sections-container">
+      <form style="width:  100%; display: flex; flex-direction: column; align-items: center;" [formGroup]="uploadForm">
+        <div class="upload-sections-container">
 
-        <!-- 1. Identity & Verification -->
-        <div class="upload-section" [class.completed]="uploadSections.identity" [class.expanded]="expandedUploadSection === 'identity'">
-          <div class="upload-section-header" (click)="toggleUploadSection('identity')">
-            <div class="upload-section-title">
-              <svg *ngIf="uploadSections.identity" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
-                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg *ngIf="!uploadSections.identity" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
-              </svg>
-              <span>Identity & Verification</span>
-            </div>
-            <div class="upload-icons">
-              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'identity'" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-          <div class="upload-section-content" *ngIf="expandedUploadSection === 'identity'">
-            <div class="upload-grid">
-              <div class="upload-field-group">
-                <input type="text" placeholder="Passport (optional)" class="upload-field" [value]="uploadedFiles.passport || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('passport')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #passportInput style="display:none" (change)="onUploadFile($event, 'passport')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-              <div class="upload-field-group">
-                <input type="text" placeholder="Passport Size Photo" class="upload-field" [value]="uploadedFiles.passportPhoto || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('passportPhoto')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #passportPhotoInput style="display:none" (change)="onUploadFile($event, 'passportPhoto')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-            </div>
-            <div class="upload-grid">
-              <div class="upload-field-group">
-                <input type="text" placeholder="Utility Bill" class="upload-field" [value]="uploadedFiles.utility || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('utility')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #utilityInput style="display:none" (change)="onUploadFile($event, 'utility')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-              <div class="upload-field-group">
-                <input type="text" placeholder="Tin Certificate" class="upload-field" [value]="uploadedFiles.tin || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('tin')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #tinInput style="display:none" (change)="onUploadFile($event, 'tin')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Employment Document -->
-        <div class="upload-section" [class.completed]="uploadSections.employment" [class.expanded]="expandedUploadSection === 'employment'">
-          <div class="upload-section-header" (click)="toggleUploadSection('employment')">
-            <div class="upload-section-title">
-              <svg *ngIf="uploadSections.employment" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
-                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg *ngIf="!uploadSections.employment" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
-              </svg>
-              <span>Employment Document</span>
-            </div>
-            <div class="upload-icons">
-              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'employment'" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-          <div class="upload-section-content" *ngIf="expandedUploadSection === 'employment'">
-            <div class="upload-grid">
-              <div class="upload-field-group">
-                <input type="text" placeholder="Salary Certificate" class="upload-field" [value]="uploadedFiles.salary || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('salary')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #salaryInput style="display:none" (change)="onUploadFile($event, 'salary')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-              <div class="upload-field-group">
-                <input type="text" placeholder="Employer ID" class="upload-field" [value]="uploadedFiles.employerId || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('employerId')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #employerIdInput style="display:none" (change)="onUploadFile($event, 'employerId')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-            </div>
-            <div class="upload-grid">
-              <div class="upload-field-group">
-                <input type="text" placeholder="Pay Slip" class="upload-field" [value]="uploadedFiles.paySlip || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('paySlip')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #paySlipInput style="display:none" (change)="onUploadFile($event, 'paySlip')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-              <div class="upload-field-group">
-                <input type="text" placeholder="Appointment Letter" class="upload-field" [value]="uploadedFiles.appointment || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('appointment')">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <input type="file" #appointmentInput style="display:none" (change)="onUploadFile($event, 'appointment')" accept=".pdf,.jpg,.jpeg,.png" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. Business Information -->
-        <div class="upload-section" [class.completed]="uploadSections.business" [class.expanded]="expandedUploadSection === 'business'">
-          <div class="upload-section-header" (click)="toggleUploadSection('business')">
-            <div class="upload-section-title">
-              <svg *ngIf="uploadSections.business" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
-                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg *ngIf="!uploadSections.business" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
-              </svg>
-              <span>Business Information</span>
-            </div>
-            <div class="upload-icons">
-              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'business'" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-          <div class="upload-section-content" *ngIf="expandedUploadSection === 'business'">
-            <div class="form-row">
-              <div class="form-group half">
-                <input type="text" placeholder="Business Type / Nature" class="form-input" [(ngModel)]="businessUploadInfo.businessType" (ngModelChange)="onBusinessInfoChange('businessType', $event)" />
-              </div>
-              <div class="form-group half">
-                <input type="text" placeholder="Years in Business" class="form-input" [(ngModel)]="businessUploadInfo.yearsInBusiness" (ngModelChange)="onBusinessInfoChange('yearsInBusiness', $event)" />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group half">
-                <input type="text" placeholder="Business Revenue" class="form-input" [(ngModel)]="businessUploadInfo.businessRevenue" (ngModelChange)="onBusinessInfoChange('businessRevenue', $event)" />
-              </div>
-              <div class="form-group half">
-                <input type="text" placeholder="Industry Type" class="form-input" [(ngModel)]="businessUploadInfo.industryType" (ngModelChange)="onBusinessInfoChange('industryType', $event)" />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group full">
-                <input type="text" placeholder="Business Name" class="form-input" [(ngModel)]="businessUploadInfo.businessName" (ngModelChange)="onBusinessInfoChange('businessName', $event)" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Credit Verification -->
-        <div class="upload-section" [class.completed]="uploadSections.credit" [class.expanded]="expandedUploadSection === 'credit'">
-          <div class="upload-section-header" (click)="toggleUploadSection('credit')">
-            <div class="upload-section-title">
-              <svg *ngIf="uploadSections.credit" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
-                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg *ngIf="!uploadSections.credit" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
-              </svg>
-              <span>Credit Verification</span>
-            </div>
-            <div class="upload-icons">
-              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'credit'" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-          <div class="upload-section-content" *ngIf="expandedUploadSection === 'credit'">
-            <div class="upload-field-group full-width">
-              <input type="text" placeholder="CIB Consent Form (signed)" class="upload-field" [value]="uploadedFiles.cibConsent || ''" readonly />
-              <button class="upload-btn-icon" (click)="triggerUploadInput('cibConsent')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- 1. Identity & Verification -->
+          <div class="upload-section" [class.completed]="uploadSections.identity" [class.expanded]="expandedUploadSection === 'identity'">
+            <div class="upload-section-header" (click)="toggleUploadSection('identity')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadSections.identity" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-              </button>
-              <input type="file" #cibConsentInput style="display:none" (change)="onUploadFile($event, 'cibConsent')" accept=".pdf,.jpg,.jpeg,.png" />
-            </div>
-            <div class="upload-field-group full-width">
-              <input type="text" placeholder="Existing Loan Statements (all banks)" class="upload-field" [value]="uploadedFiles.loanStatements || ''" readonly />
-              <button class="upload-btn-icon" (click)="triggerUploadInput('loanStatements')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg *ngIf="!uploadSections.identity" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
                 </svg>
-              </button>
-              <input type="file" #loanStatementsInput style="display:none" (change)="onUploadFile($event, 'loanStatements')" accept=".pdf,.jpg,.jpeg,.png" />
-            </div>
-            <div class="upload-field-group full-width">
-              <input type="text" placeholder="Credit Card Statements" class="upload-field" [value]="uploadedFiles.creditCard || ''" readonly />
-              <button class="upload-btn-icon" (click)="triggerUploadInput('creditCard')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                <span>Identity & Verification</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-              </button>
-              <input type="file" #creditCardInput style="display:none" (change)="onUploadFile($event, 'creditCard')" accept=".pdf,.jpg,.jpeg,.png" />
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'identity'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
             </div>
-          </div>
-        </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'identity'">
 
-        <!-- 5. Collateral / Asset Verification -->
-        <div class="upload-section" [class.completed]="uploadSections.collateral" [class.expanded]="expandedUploadSection === 'collateral'">
-          <div class="upload-section-header" (click)="toggleUploadSection('collateral')">
-            <div class="upload-section-title">
-              <svg *ngIf="uploadSections.collateral" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
-                <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg *ngIf="!uploadSections.collateral" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
-              </svg>
-              <span>Collateral / Asset Verification</span>
-            </div>
-            <div class="upload-icons">
-              <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'collateral'" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-          <div class="upload-section-content" *ngIf="expandedUploadSection === 'collateral'">
-            <div class="upload-grid">
-              <div class="upload-field-group">
-                <input type="text" placeholder="FDR Original Receipt" class="upload-field" [value]="uploadedFiles.fdr || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('fdr')">
+              <!-- National ID Copy -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="ID Copy"
+                  class="upload-field"
+                  [value]="uploadForm.get('nationalIdCopy')?.value || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('nationalIdCopy')">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
-                <input type="file" #fdrInput style="display:none" (change)="onUploadFile($event, 'fdr')" accept=".pdf,.jpg,.jpeg,.png" />
+                <input
+                  type="file"
+                  #nationalIdCopyInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'nationalIdCopy')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
               </div>
-              <div class="upload-field-group">
-                <input type="text" placeholder="Gold Ornaments (for valuation)" class="upload-field" [value]="uploadedFiles.gold || ''" readonly />
-                <button class="upload-btn-icon" (click)="triggerUploadInput('gold')">
+
+              <!-- Photograph -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Photograph"
+                  class="upload-field"
+                  [value]="uploadForm.get('photograph')?.value || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('photograph')">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
-                <input type="file" #goldInput style="display:none" (change)="onUploadFile($event, 'gold')" accept=".pdf,.jpg,.jpeg,.png" />
+                <input
+                  type="file"
+                  #photographInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'photograph')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
               </div>
+
             </div>
           </div>
+
+          <!-- 2. Employment Documents -->
+          <div class="upload-section" [class.completed]="uploadSections.employment" [class.expanded]="expandedUploadSection === 'employment'">
+            <div class="upload-section-header" (click)="toggleUploadSection('employment')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadSections.employment" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="!uploadSections.employment" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+                </svg>
+                <span>Employment Documents</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'employment'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'employment'">
+
+              <!-- Salary Certificate -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Salary Certificate"
+                  class="upload-field"
+                  [value]="uploadForm.get('salaryCertificate')?.value || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('salaryCertificate')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #salaryCertificateInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'salaryCertificate')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 3. Credit Verification -->
+          <div class="upload-section" [class.completed]="uploadSections.credit" [class.expanded]="expandedUploadSection === 'credit'">
+            <div class="upload-section-header" (click)="toggleUploadSection('credit')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadSections.credit" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="!uploadSections.credit" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+                </svg>
+                <span>Credit Verification</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'credit'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'credit'">
+
+              <!-- Bank Statement -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Bank Statement"
+                  class="upload-field"
+                  [value]="uploadForm.get('bankStatement')?.value || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('bankStatement')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #bankStatementInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'bankStatement')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+              <!-- Income Tax Return -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Income Tax Return"
+                  class="upload-field"
+                  [value]="uploadForm.get('incomeTaxReturn')?.value || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('incomeTaxReturn')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #incomeTaxReturnInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'incomeTaxReturn')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+              <!-- CIB Consent Form -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="CIB Consent Form"
+                  class="upload-field"
+                  [value]="uploadForm.get('cibConsentForm')?.value || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('cibConsentForm')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #cibConsentFormInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'cibConsentForm')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 4. Final Declaration -->
+          <div class="upload-section" [class.completed]="uploadForm.get('finalDeclaration')?.value" [class.expanded]="expandedUploadSection === 'declaration'">
+            <div class="upload-section-header" (click)="toggleUploadSection('declaration')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadForm.get('finalDeclaration')?.value" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="!uploadForm.get('finalDeclaration')?.value" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+                </svg>
+                <span>Final Declaration</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'declaration'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'declaration'">
+              <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                <input
+                  type="checkbox"
+                  formControlName="finalDeclaration"
+                  class="checkbox-input"
+                  style="margin-top: 4px;"
+                />
+                <span class="checkbox-text" style="flex: 1;">
+              I hereby declare that all information provided is true and accurate
+            </span>
+              </label>
+            </div>
+          </div>
+
         </div>
 
-      </div>
-
-      <div class="button-row upload-buttons">
-        <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
-        <button type="button" class="btn-next" [disabled]="!isUploadSectionValid" (click)="onNextFromUpload()">NEXT</button>
-      </div>
+        <div class="button-row upload-buttons">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="uploadForm.invalid" >NEXT</button>
+        </div>
+      </form>
     </div>
 
     <!-- Form Content - User Consent -->
@@ -883,14 +862,14 @@
       </div>
 
       <div class="button-row consent-buttons">
-        <button type="button" class="btn-save" (click)="saveAllDataToLocalStorage()">SAVE</button>
-        <button type="button" class="btn-next" [disabled]="!consentAccepted" (click)="onSubmitConsent()">Submit</button>
+        <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+        <button type="button" class="btn-next" [disabled]="!consentAccepted" (click)="onSaveAll(true)">Submit</button>
       </div>
     </div>
 
     <!-- Footer -->
     <div class="modal-footer">
-      <button class="return-home-btn" (click)="returnHome()">
+      <button class="return-home-btn" >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
