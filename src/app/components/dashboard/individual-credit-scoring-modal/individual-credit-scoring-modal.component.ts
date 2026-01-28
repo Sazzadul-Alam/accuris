@@ -102,26 +102,12 @@ export class IndividualCreditScoringModalComponent {
   expandedNestedSection: string = '';
 
   uploadedFiles: any = {
-    // Identity & Verification
-    passport: null,
-    passportPhoto: null,
-    utility: null,
-    tin: null,
-
-    // Employment Document
-    salary: null,
-    employerId: null,
-    paySlip: null,
-    appointment: null,
-
-    // Credit Verification
-    cibConsent: null,
-    loanStatements: null,
-    creditCard: null,
-
-    // Collateral / Asset Verification
-    fdr: null,
-    gold: null
+    idCopy: { path: null, filename: null },
+    photograph: { path: null, filename: null },
+    salaryCertificate: { path: null, filename: null },
+    bankStatement: { path: null, filename: null },
+    incomeTaxReturn: { path: null, filename: null },
+    cibConsentForm: { path: null, filename: null }
   };
 
   isUploadSectionValid: boolean = false;
@@ -156,11 +142,11 @@ export class IndividualCreditScoringModalComponent {
     private creditService: IndividualCreditService
   ) {}
 
-  private uploadPendingFiles(): Observable<{ [key: string]: string }> {
-    const uploadObservables: { [key: string]: Observable<{ path: string }> } = {};
+  private uploadPendingFiles(): Observable<{ [key: string]: { path: string; filename: string } }> {
+    const uploadObservables: { [key: string]: Observable<{ path: string; filename: string }> } = {};
 
     if (Object.keys(this.pendingUploads).length === 0) {
-      return of({});  // No files to upload
+      return of({});
     }
 
     Object.keys(this.pendingUploads).forEach((fieldName) => {
@@ -168,29 +154,17 @@ export class IndividualCreditScoringModalComponent {
       uploadObservables[fieldName] = this.creditService.uploadDocument(file, this.individualId, fieldName);
     });
 
-    // Upload all in parallel and collect paths
     return forkJoin(uploadObservables).pipe(
-      map((results: { [key: string]: { path: string } }) => {
-        const paths: { [key: string]: string } = {};
-        Object.keys(results).forEach((key) => {
-          paths[key] = results[key].path;
-        });
-        return paths;
+      map((results: { [key: string]: { path: string; filename: string } }) => {
+        return results;
       })
     );
   }
 
   private getConsolidatedPayload() {
-    console.log('💾 Creating payload...');
-    console.log('   personalInfoForm.value:', this.personalInfoForm.value);
-    console.log('   Gender from form:', this.personalInfoForm.value.gender);
-    console.log('   Marital Status from form:', this.personalInfoForm.value.maritalStatus);
-
-
     const basicInfo = this.basicInfoForm.value;
 
     return {
-      // Personal Info (flattened at root level)
       id: this.individualId || null,
       firstName: this.personalInfoForm.value.firstName,
       lastName: this.personalInfoForm.value.lastName,
@@ -203,7 +177,6 @@ export class IndividualCreditScoringModalComponent {
       email: this.personalInfoForm.value.email,
       nationalIdPassportNo: this.personalInfoForm.value.idNumber,
 
-      // Location Info (flattened at root level)
       presentAddress: this.locationForm.value.presentAddress,
       permanentAddress: this.locationForm.value.permanentAddress,
       city: this.locationForm.value.city,
@@ -211,18 +184,22 @@ export class IndividualCreditScoringModalComponent {
       postalCode: this.locationForm.value.postalCode,
       countryCode: this.locationForm.value.country,
 
-      // Upload URLs (flattened at root level)
+      // ✅ UPLOAD URLS AND FILENAMES
       idCopyUrl: this.uploadForm.value.idCopy,
+      idCopyFilename: this.uploadForm.value.idCopyFilename,
       photographUrl: this.uploadForm.value.photograph,
+      photographFilename: this.uploadForm.value.photographFilename,
       salaryCertificateUrl: this.uploadForm.value.salaryCertificate,
+      salaryCertificateFilename: this.uploadForm.value.salaryCertificateFilename,
       bankStatementUrl: this.uploadForm.value.bankStatement,
+      bankStatementFilename: this.uploadForm.value.bankStatementFilename,
       incomeTaxReturnUrl: this.uploadForm.value.incomeTaxReturn,
+      incomeTaxReturnFilename: this.uploadForm.value.incomeTaxReturnFilename,
       cibConsentFormUrl: this.uploadForm.value.cibConsentForm,
+      cibConsentFormFilename: this.uploadForm.value.cibConsentFormFilename,
 
-      // Financial Info (flattened at root level)
       financialId: this.financialInfoId || null,
 
-      // Employer Info
       employerTypeId: this.employerInfoForm.value.employerType,
       employerName: this.employerInfoForm.value.employerName,
       employmentStatusId: this.employerInfoForm.value.employmentStatus,
@@ -231,14 +208,12 @@ export class IndividualCreditScoringModalComponent {
       monthlyGrossIncome: this.employerInfoForm.value.monthlyGrossIncome,
       monthlyNetIncome: this.employerInfoForm.value.monthlyNetIncome,
 
-      // Business Info
       businessName: this.businessInfoForm.value.businessName,
       businessTypeId: this.businessInfoForm.value.businessType,
       industryType: this.businessInfoForm.value.industryType,
       yearsInBusiness: this.businessInfoForm.value.yearsInBusiness,
       monthlyBusinessIncome: this.businessInfoForm.value.monthlyBusinessIncome,
 
-      // Credit Info
       requestedLoanAmount: this.creditInfoForm.value.requestedLoanAmount,
       downPaymentAmount: this.creditInfoForm.value.downPaymentAmount,
       loanTenureMonths: this.creditInfoForm.value.loanTenureMonths,
@@ -246,14 +221,12 @@ export class IndividualCreditScoringModalComponent {
       existingLoanDetails: this.creditInfoForm.value.existingLoanDetails,
       creditCardDetails: this.creditInfoForm.value.creditCardDetails,
 
-      // Security Info
       collateralAvailable: this.securityInfoForm.value.collateralAvailable,
       collateralTypeId: this.securityInfoForm.value.collateralType,
       estimatedCollateralValue: this.securityInfoForm.value.estimatedCollateralValue,
       guarantorAvailable: this.securityInfoForm.value.guarantorAvailable,
       coApplicantAvailable: this.securityInfoForm.value.coApplicantAvailable,
 
-      // ✅ CRITICAL: Mapping arrays at root level (as expected by SP)
       incomeTypeId: basicInfo.incomeType ? [basicInfo.incomeType] : [],
       creditPurposeId: basicInfo.creditPurpose ? [basicInfo.creditPurpose] : []
     };
@@ -320,14 +293,8 @@ export class IndividualCreditScoringModalComponent {
   }
 
   private populateForms(data: any): void {
-    // Populate Personal Info Form
+    // Personal Info Form
     if (data.personal) {
-
-      console.log('🔧 About to populate form with:');
-      console.log('   Gender ID:', data.personal.gender?.id);
-      console.log('   Marital Status ID:', data.personal.maritalStatus?.id);
-
-
       this.personalInfoForm.patchValue({
         firstName: data.personal.firstName,
         lastName: data.personal.lastName,
@@ -341,13 +308,9 @@ export class IndividualCreditScoringModalComponent {
         email: data.personal.email,
         uploadId: data.personal.uploadId
       });
-
-      console.log('✅ Form populated. Current form values:');
-      console.log('   Gender:', this.personalInfoForm.value.gender);
-      console.log('   Marital Status:', this.personalInfoForm.value.maritalStatus);
     }
 
-    // Populate Location Form
+    // Location Form
     if (data.location) {
       this.locationForm.patchValue({
         presentAddress: data.location.presentAddress,
@@ -360,12 +323,10 @@ export class IndividualCreditScoringModalComponent {
       });
     }
 
-    // Populate Financial Forms
+    // Financial Forms
     if (data.financial) {
-      // Set financialInfoId
       this.financialInfoId = data.financial.financialId;
 
-      // Basic Info Form
       if (data.financial.basicInfo) {
         this.basicInfoForm.patchValue({
           creditPurpose: data.financial.basicInfo.creditPurpose && data.financial.basicInfo.creditPurpose.length > 0
@@ -377,7 +338,6 @@ export class IndividualCreditScoringModalComponent {
         });
       }
 
-      // Employer Info Form
       if (data.financial.employerInfo) {
         this.employerInfoForm.patchValue({
           employerType: data.financial.employerInfo.employerType?.id || '',
@@ -390,7 +350,6 @@ export class IndividualCreditScoringModalComponent {
         });
       }
 
-      // Business Info Form
       if (data.financial.businessInfo) {
         this.businessInfoForm.patchValue({
           businessName: data.financial.businessInfo.businessName,
@@ -401,7 +360,6 @@ export class IndividualCreditScoringModalComponent {
         });
       }
 
-      // Credit Info Form
       if (data.financial.creditInfo) {
         this.creditInfoForm.patchValue({
           requestedLoanAmount: data.financial.creditInfo.requestedLoanAmount,
@@ -413,7 +371,6 @@ export class IndividualCreditScoringModalComponent {
         });
       }
 
-      // Security Info Form
       if (data.financial.securityInfo) {
         this.securityInfoForm.patchValue({
           collateralAvailable: data.financial.securityInfo.collateralAvailable,
@@ -425,35 +382,54 @@ export class IndividualCreditScoringModalComponent {
       }
     }
 
-    // Populate Upload Form
+    // ✅ Upload Form - Store BOTH path and filename
     if (data.uploads) {
       this.uploadForm.patchValue({
         idCopy: data.uploads.idCopy || '',
+        idCopyFilename: data.uploads.idCopyFilename || '',
         photograph: data.uploads.photograph || '',
+        photographFilename: data.uploads.photographFilename || '',
         salaryCertificate: data.uploads.salaryCertificate || '',
+        salaryCertificateFilename: data.uploads.salaryCertificateFilename || '',
         bankStatement: data.uploads.bankStatement || '',
+        bankStatementFilename: data.uploads.bankStatementFilename || '',
         incomeTaxReturn: data.uploads.incomeTaxReturn || '',
-        cibConsentForm: data.uploads.cibConsentForm || ''
+        incomeTaxReturnFilename: data.uploads.incomeTaxReturnFilename || '',
+        cibConsentForm: data.uploads.cibConsentForm || '',
+        cibConsentFormFilename: data.uploads.cibConsentFormFilename || ''
       });
 
-      // Also update uploadedFiles for display
-      this.uploadedFiles.idCopy = data.uploads.idCopy;
-      this.uploadedFiles.photograph = data.uploads.photograph;
-      this.uploadedFiles.salaryCertificate = data.uploads.salaryCertificate;
-      this.uploadedFiles.bankStatement = data.uploads.bankStatement;
-      this.uploadedFiles.incomeTaxReturn = data.uploads.incomeTaxReturn;
-      this.uploadedFiles.cibConsentForm = data.uploads.cibConsentForm;
+      // Update uploadedFiles for display
+      this.uploadedFiles.idCopy = {
+        path: data.uploads.idCopy,
+        filename: data.uploads.idCopyFilename
+      };
+      this.uploadedFiles.photograph = {
+        path: data.uploads.photograph,
+        filename: data.uploads.photographFilename
+      };
+      this.uploadedFiles.salaryCertificate = {
+        path: data.uploads.salaryCertificate,
+        filename: data.uploads.salaryCertificateFilename
+      };
+      this.uploadedFiles.bankStatement = {
+        path: data.uploads.bankStatement,
+        filename: data.uploads.bankStatementFilename
+      };
+      this.uploadedFiles.incomeTaxReturn = {
+        path: data.uploads.incomeTaxReturn,
+        filename: data.uploads.incomeTaxReturnFilename
+      };
+      this.uploadedFiles.cibConsentForm = {
+        path: data.uploads.cibConsentForm,
+        filename: data.uploads.cibConsentFormFilename
+      };
     }
 
     console.log('Forms populated successfully');
   }
 
   onSaveAll(isFinalSubmit: boolean = false): void {
-    console.log('🔴 SAVE CLICKED - Current form state:');
-    console.log('   Gender:', this.personalInfoForm.get('gender')?.value);
-    console.log('   Marital Status:', this.personalInfoForm.get('maritalStatus')?.value);
-    console.log('   Full form:', this.personalInfoForm.value);
-    // 1. Validation for Final Submission
     if (isFinalSubmit && !this.consentAccepted) {
       this.showNotification('Please accept the user consent to submit.', 'error');
       return;
@@ -464,16 +440,21 @@ export class IndividualCreditScoringModalComponent {
       return;
     }
 
-    // 2. Upload pending files first (if individualId exists)
+    // Upload pending files first (if individualId exists)
     if (this.individualId && Object.keys(this.pendingUploads).length > 0) {
       this.uploadPendingFiles().subscribe({
-        next: (uploadedPaths: { [key: string]: string }) => {
-          // Update uploadForm with real paths
-          Object.keys(uploadedPaths).forEach((fieldName) => {
+        next: (uploadedData: { [key: string]: { path: string; filename: string } }) => {
+          // Update uploadForm with paths and filenames
+          Object.keys(uploadedData).forEach((fieldName) => {
             this.uploadForm.patchValue({
-              [fieldName]: uploadedPaths[fieldName]
+              [fieldName]: uploadedData[fieldName].path,
+              [`${fieldName}Filename`]: uploadedData[fieldName].filename
             });
-            this.uploadedFiles[fieldName] = uploadedPaths[fieldName];
+
+            this.uploadedFiles[fieldName] = {
+              path: uploadedData[fieldName].path,
+              filename: uploadedData[fieldName].filename
+            };
           });
 
           // Clear pending uploads
@@ -488,7 +469,6 @@ export class IndividualCreditScoringModalComponent {
         }
       });
     } else {
-      // No files to upload or no individualId yet, proceed directly to save
       this.performSave(isFinalSubmit);
     }
   }
@@ -673,13 +653,19 @@ export class IndividualCreditScoringModalComponent {
 
   initializeUploadForm(): void {
     this.uploadForm = this.fb.group({
-      // File uploads (store file paths as strings)
+      // File paths
       idCopy: ['', Validators.required],
+      idCopyFilename: [''],
       photograph: ['', Validators.required],
+      photographFilename: [''],
       salaryCertificate: ['', Validators.required],
+      salaryCertificateFilename: [''],
       bankStatement: ['', Validators.required],
+      bankStatementFilename: [''],
       incomeTaxReturn: ['', Validators.required],
-      cibConsentForm: ['', Validators.required],  // ✅ Changed to file upload
+      incomeTaxReturnFilename: [''],
+      cibConsentForm: ['', Validators.required],
+      cibConsentFormFilename: [''],
 
       // Checkbox
       finalDeclaration: [false, Validators.requiredTrue]
@@ -955,16 +941,18 @@ export class IndividualCreditScoringModalComponent {
       // Store the file temporarily for later upload
       this.pendingUploads[fieldName] = file;
 
-      // Update form with placeholder (file name) for validation/display
+      // Update form with original filename for display
       this.uploadForm.patchValue({
-        [fieldName]: file.name  // Placeholder; real path set during save
+        [`${fieldName}Filename`]: file.name
       });
 
-      // Update uploadedFiles for compatibility
-      this.uploadedFiles[fieldName] = file.name;
+      // Update uploadedFiles for display
+      this.uploadedFiles[fieldName] = {
+        path: null,
+        filename: file.name
+      };
 
-      this.showNotification(`File selected for ${fieldName}. It will be uploaded on save.`, 'success');
-      console.log(`File selected for ${fieldName}:`, file.name);
+      this.showNotification(`File selected: ${file.name}`, 'success');
       input.value = '';
     }
   }

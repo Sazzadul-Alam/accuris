@@ -576,7 +576,7 @@
                   type="text"
                   placeholder="ID Copy"
                   class="upload-field"
-                  [value]="uploadForm.get('idCopy')?.value || ''"
+                  [value]="uploadedFiles.idCopy?.filename || ''"
                   readonly
                 />
                 <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('idCopy')">
@@ -599,7 +599,7 @@
                   type="text"
                   placeholder="Photograph"
                   class="upload-field"
-                  [value]="uploadForm.get('photograph')?.value || ''"
+                  [value]="uploadedFiles.photograph?.filename || ''"
                   readonly
                 />
                 <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('photograph')">
@@ -650,7 +650,7 @@
                   type="text"
                   placeholder="Salary Certificate"
                   class="upload-field"
-                  [value]="uploadForm.get('salaryCertificate')?.value || ''"
+                  [value]="uploadedFiles.salaryCertificate?.filename || ''"
                   readonly
                 />
                 <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('salaryCertificate')">
@@ -701,7 +701,7 @@
                   type="text"
                   placeholder="Bank Statement"
                   class="upload-field"
-                  [value]="uploadForm.get('bankStatement')?.value || ''"
+                  [value]="uploadedFiles.bankStatement?.filename || ''"
                   readonly
                 />
                 <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('bankStatement')">
@@ -724,7 +724,7 @@
                   type="text"
                   placeholder="Income Tax Return"
                   class="upload-field"
-                  [value]="uploadForm.get('incomeTaxReturn')?.value || ''"
+                  [value]="uploadedFiles.incomeTaxReturn?.filename || ''"
                   readonly
                 />
                 <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('incomeTaxReturn')">
@@ -747,7 +747,7 @@
                   type="text"
                   placeholder="CIB Consent Form"
                   class="upload-field"
-                  [value]="uploadForm.get('cibConsentForm')?.value || ''"
+                  [value]="uploadedFiles.cibConsentForm?.filename || ''"
                   readonly
                 />
                 <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('cibConsentForm')">

@@ -17,6 +17,16 @@ enum Status {
 })
 export class DashboardComponent {
 
+  showBusinessCreditModal = false;
+
+  openBusinessCreditModal() {
+    this.showBusinessCreditModal = true;
+  }
+
+  closeBusinessCreditModal() {
+    this.showBusinessCreditModal = false;
+  }
+
   currentUserId: number = null;
   currentUserName: UserName;
   fullName = '';

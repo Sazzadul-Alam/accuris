@@ -1,0 +1,895 @@
+<!-- Close Confirmation Modal -->
+<div class="confirmation-overlay" *ngIf="showCloseConfirmation" (click)="cancelClose()">
+  <div class="confirmation-modal" (click)="$event.stopPropagation()">
+    <h3 class="confirmation-title">Are you sure you want to quit?</h3>
+    <p class="confirmation-message">Any unsaved data will be lost</p>
+    <div class="confirmation-buttons">
+      <button class="btn-save" (click)="cancelClose()">No</button>
+      <button class="btn-next" (click)="confirmClose()">Yes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-left">
+        <img src="assets/images/accuris-logo.png" alt="Accuris Logo" class="modal-logo" />
+      </div>
+      <h2 class="modal-title">BUSINESS CREDIT SCORING FORM</h2>
+      <button class="close-btn" (click)="close()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Plan Info -->
+    <div class="plan-info">
+      <div class="plan-label">
+        Plan: <span class="plan-name">{{selectedPlanInput}}</span>
+      </div>
+      <div class="for-label">For: <span class="plan-name">{{currentUserName}}</span></div>
+    </div>
+
+    <!-- Steps Navigation -->
+    <div class="steps-container">
+      <div
+        *ngFor="let step of steps"
+        class="step-item"
+        [class.active]="currentStep === step.id"
+        (click)="onStepClick(step.id)"
+      >
+        <div class="step-icon">
+          <img *ngIf="step.icon === 'business'" src="assets/images/icons/business-icon.svg" alt="Business Profile" width="28" height="28" />
+          <img *ngIf="step.icon === 'people'" src="assets/images/icons/people-icon.svg" alt="Ownership" width="28" height="28" />
+          <img *ngIf="step.icon === 'finance'" src="assets/images/icons/financial-icon.svg" alt="Financial" width="28" height="28" />
+          <img *ngIf="step.icon === 'bank'" src="assets/images/icons/bank-icon.svg" alt="Banking" width="28" height="28" />
+          <img *ngIf="step.icon === 'loan'" src="assets/images/icons/loan-icon.svg" alt="Loan" width="28" height="28" />
+          <img *ngIf="step.icon === 'security'" src="assets/images/icons/security-icon.svg" alt="Security" width="28" height="28" />
+          <img *ngIf="step.icon === 'upload'" src="assets/images/icons/upload-icon.svg" alt="Upload" width="28" height="28" />
+        </div>
+        <span class="step-name">{{ step.name }}</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: Business Profile & Basic Information -->
+    <div class="form-content" *ngIf="currentStep === 1">
+      <h3 class="form-title">Business Profile & Basic Information</h3>
+      <p class="form-subtitle">Provide your business information below</p>
+
+      <form [formGroup]="businessProfileForm" class="form-step">
+
+        <!-- Business Name -->
+        <div class="form-row">
+          <div class="form-group full">
+            <input type="text" formControlName="businessName" placeholder="Business Name" class="form-input" [class.filled]="businessProfileForm.get('businessName')?.value" />
+          </div>
+        </div>
+
+        <!-- Legal Status & Nature of Business -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="legalStatus" class="form-input form-select" [class.filled]="businessProfileForm.get('legalStatus')?.value">
+              <option value="" disabled selected>Legal Status</option>
+              <option *ngFor="let status of configurations.legalStatuses" [value]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="natureOfBusiness" class="form-input form-select" [class.filled]="businessProfileForm.get('natureOfBusiness')?.value">
+              <option value="" disabled selected>Nature of Business</option>
+              <option *ngFor="let nature of configurations.natureOfBusinesses" [value]="nature.id">
+                {{ nature.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Date of Incorporation & Trade License Number -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="date" formControlName="dateOfIncorporation" placeholder="Date of Incorporation" class="form-input" [class.filled]="businessProfileForm.get('dateOfIncorporation')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="text" formControlName="tradeLicenseNumber" placeholder="Trade License Number" class="form-input" [class.filled]="businessProfileForm.get('tradeLicenseNumber')?.value" />
+          </div>
+        </div>
+
+        <!-- Trade License Expiry Date & TIN Number -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="date" formControlName="tradeLicenseExpiryDate" placeholder="Trade License Expiry Date" class="form-input" [class.filled]="businessProfileForm.get('tradeLicenseExpiryDate')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="text" formControlName="tinNumber" placeholder="TIN Number" class="form-input" [class.filled]="businessProfileForm.get('tinNumber')?.value" />
+          </div>
+        </div>
+
+        <!-- VAT/BIN Number & RJSC Registration Number -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="text" formControlName="vatBinNumber" placeholder="VAT/BIN Number" class="form-input" [class.filled]="businessProfileForm.get('vatBinNumber')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="text" formControlName="rjscRegistrationNumber" placeholder="RJSC Registration Number" class="form-input" [class.filled]="businessProfileForm.get('rjscRegistrationNumber')?.value" />
+          </div>
+        </div>
+
+        <!-- Business Address -->
+        <div class="form-row">
+          <div class="form-group full">
+            <textarea formControlName="businessAddress" placeholder="Business Address" class="form-input" rows="2" [class.filled]="businessProfileForm.get('businessAddress')?.value"></textarea>
+          </div>
+        </div>
+
+        <!-- Factory Address -->
+        <div class="form-row">
+          <div class="form-group full">
+            <textarea formControlName="factoryAddress" placeholder="Factory Address (Optional)" class="form-input" rows="2" [class.filled]="businessProfileForm.get('factoryAddress')?.value"></textarea>
+          </div>
+        </div>
+
+        <!-- Business Mobile Number & Business Email -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="tel" formControlName="businessMobileNumber" placeholder="Business Mobile Number" class="form-input" [class.filled]="businessProfileForm.get('businessMobileNumber')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="email" formControlName="businessEmail" placeholder="Business Email" class="form-input" [class.filled]="businessProfileForm.get('businessEmail')?.value" />
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="businessProfileForm.invalid" (click)="nextStep()">NEXT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 2: Ownership & Management Information -->
+    <div class="form-content" *ngIf="currentStep === 2">
+      <h3 class="form-title">Ownership & Management Information</h3>
+      <p class="form-subtitle">Provide ownership and management details below</p>
+
+      <form [formGroup]="ownershipManagementForm" class="form-step">
+
+        <!-- Owner/Director Name & Father/Mother Name -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="text" formControlName="ownerDirectorName" placeholder="Owner/Director Name" class="form-input" [class.filled]="ownershipManagementForm.get('ownerDirectorName')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="text" formControlName="fatherMotherName" placeholder="Father/Mother Name" class="form-input" [class.filled]="ownershipManagementForm.get('fatherMotherName')?.value" />
+          </div>
+        </div>
+
+        <!-- National ID Number & Date of Birth -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="text" formControlName="nationalIdNumber" placeholder="National ID Number" class="form-input" [class.filled]="ownershipManagementForm.get('nationalIdNumber')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="date" formControlName="dateOfBirth" placeholder="Date of Birth" class="form-input" [class.filled]="ownershipManagementForm.get('dateOfBirth')?.value" />
+          </div>
+        </div>
+
+        <!-- Shareholding (%) & Designation -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="shareholdingPercentage" placeholder="Shareholding (%)" class="form-input" [class.filled]="ownershipManagementForm.get('shareholdingPercentage')?.value" min="0" max="100" />
+          </div>
+          <div class="form-group half">
+            <select formControlName="designation" class="form-input form-select" [class.filled]="ownershipManagementForm.get('designation')?.value">
+              <option value="" disabled selected>Designation</option>
+              <option *ngFor="let designation of configurations.designations" [value]="designation.id">
+                {{ designation.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Years of Business Experience -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="yearsOfBusinessExperience" placeholder="Years of Business Experience" class="form-input" [class.filled]="ownershipManagementForm.get('yearsOfBusinessExperience')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="tel" formControlName="mobileNumber" placeholder="Mobile Number" class="form-input" [class.filled]="ownershipManagementForm.get('mobileNumber')?.value" />
+          </div>
+        </div>
+
+        <!-- Email & CIB Status -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="email" formControlName="email" placeholder="Email Address" class="form-input" [class.filled]="ownershipManagementForm.get('email')?.value" />
+          </div>
+          <div class="form-group half">
+            <select formControlName="cibStatus" class="form-input form-select" [class.filled]="ownershipManagementForm.get('cibStatus')?.value">
+              <option value="" disabled selected>CIB Status</option>
+              <option *ngFor="let status of configurations.cibStatuses" [value]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Related Business Details -->
+        <div class="form-row">
+          <div class="form-group full">
+            <textarea formControlName="relatedBusinessDetails" placeholder="Related Business Details (Optional)" class="form-input" rows="3" [class.filled]="ownershipManagementForm.get('relatedBusinessDetails')?.value"></textarea>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="ownershipManagementForm.invalid" (click)="nextStep()">NEXT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 3: Business Financial Information -->
+    <div class="form-content" *ngIf="currentStep === 3">
+      <h3 class="form-title">Business Financial Information</h3>
+      <p class="form-subtitle">Provide your financial information below</p>
+
+      <form [formGroup]="financialInfoForm" class="form-step">
+
+        <!-- Financial Year & Audited/Unaudited -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="financialYear" class="form-input form-select" [class.filled]="financialInfoForm.get('financialYear')?.value">
+              <option value="" disabled selected>Financial Year</option>
+              <option *ngFor="let year of configurations.financialYears" [value]="year.id">
+                {{ year.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="auditStatus" class="form-input form-select" [class.filled]="financialInfoForm.get('auditStatus')?.value">
+              <option value="" disabled selected>Audited / Unaudited</option>
+              <option *ngFor="let status of configurations.auditStatuses" [value]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Annual Turnover & Gross Profit -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="annualTurnover" placeholder="Annual Turnover (Sales)" class="form-input" [class.filled]="financialInfoForm.get('annualTurnover')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="grossProfit" placeholder="Gross Profit" class="form-input" [class.filled]="financialInfoForm.get('grossProfit')?.value" min="0" />
+          </div>
+        </div>
+
+        <!-- Net Profit After Tax & Total Assets -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="netProfitAfterTax" placeholder="Net Profit After Tax" class="form-input" [class.filled]="financialInfoForm.get('netProfitAfterTax')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="totalAssets" placeholder="Total Assets" class="form-input" [class.filled]="financialInfoForm.get('totalAssets')?.value" min="0" />
+          </div>
+        </div>
+
+        <!-- Total Liabilities & Net Worth -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="totalLiabilities" placeholder="Total Liabilities" class="form-input" [class.filled]="financialInfoForm.get('totalLiabilities')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="netWorth" placeholder="Net Worth" class="form-input" [class.filled]="financialInfoForm.get('netWorth')?.value" />
+          </div>
+        </div>
+
+        <!-- Current Assets & Current Liabilities -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="currentAssets" placeholder="Current Assets" class="form-input" [class.filled]="financialInfoForm.get('currentAssets')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="currentLiabilities" placeholder="Current Liabilities" class="form-input" [class.filled]="financialInfoForm.get('currentLiabilities')?.value" min="0" />
+          </div>
+        </div>
+
+        <!-- Interest Expense & EBITDA -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="interestExpense" placeholder="Interest Expense" class="form-input" [class.filled]="financialInfoForm.get('interestExpense')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="ebitda" placeholder="EBITDA" class="form-input" [class.filled]="financialInfoForm.get('ebitda')?.value" />
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="financialInfoForm.invalid" (click)="nextStep()">NEXT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 4: Banking Relationship & Account Conduct -->
+    <div class="form-content" *ngIf="currentStep === 4">
+      <h3 class="form-title">Banking Relationship & Account Conduct</h3>
+      <p class="form-subtitle">Provide your banking relationship details below</p>
+
+      <form [formGroup]="bankingRelationshipForm" class="form-step">
+
+        <!-- Existing Bank Name & Account Type -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="text" formControlName="existingBankName" placeholder="Existing Bank Name" class="form-input" [class.filled]="bankingRelationshipForm.get('existingBankName')?.value" />
+          </div>
+          <div class="form-group half">
+            <select formControlName="accountType" class="form-input form-select" [class.filled]="bankingRelationshipForm.get('accountType')?.value">
+              <option value="" disabled selected>Account Type</option>
+              <option *ngFor="let type of configurations.accountTypes" [value]="type.id">
+                {{ type.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Relationship Duration & Average Balance -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="relationshipDurationYears" placeholder="Relationship Duration (Years)" class="form-input" [class.filled]="bankingRelationshipForm.get('relationshipDurationYears')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="averageBalance" placeholder="Average Balance" class="form-input" [class.filled]="bankingRelationshipForm.get('averageBalance')?.value" min="0" />
+          </div>
+        </div>
+
+        <!-- Limit Sanctioned & Average Utilization (%) -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="limitSanctioned" placeholder="Limit Sanctioned" class="form-input" [class.filled]="bankingRelationshipForm.get('limitSanctioned')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="averageUtilizationPercentage" placeholder="Average Utilization (%)" class="form-input" [class.filled]="bankingRelationshipForm.get('averageUtilizationPercentage')?.value" min="0" max="100" />
+          </div>
+        </div>
+
+        <!-- Repayment Behavior & Past Due Status -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="repaymentBehavior" class="form-input form-select" [class.filled]="bankingRelationshipForm.get('repaymentBehavior')?.value">
+              <option value="" disabled selected>Repayment Behavior</option>
+              <option *ngFor="let behavior of configurations.repaymentBehaviors" [value]="behavior.id">
+                {{ behavior.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="pastDueStatus" class="form-input form-select" [class.filled]="bankingRelationshipForm.get('pastDueStatus')?.value">
+              <option value="" disabled selected>Past Due Status</option>
+              <option *ngFor="let status of configurations.pastDueStatuses" [value]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cheque Return History -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="chequeReturnHistory" class="form-input form-select" [class.filled]="bankingRelationshipForm.get('chequeReturnHistory')?.value">
+              <option value="" disabled selected>Cheque Return History</option>
+              <option *ngFor="let history of configurations.chequeReturnHistories" [value]="history.id">
+                {{ history.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="bankingRelationshipForm.invalid" (click)="nextStep()">NEXT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 5: Loan Requirement Details -->
+    <div class="form-content" *ngIf="currentStep === 5">
+      <h3 class="form-title">Loan Requirement Details</h3>
+      <p class="form-subtitle">Provide your loan requirement details below</p>
+
+      <form [formGroup]="loanRequirementForm" class="form-step">
+
+        <!-- Loan Type & Requested Loan Amount -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="loanType" class="form-input form-select" [class.filled]="loanRequirementForm.get('loanType')?.value">
+              <option value="" disabled selected>Loan Type</option>
+              <option *ngFor="let type of configurations.loanTypes" [value]="type.id">
+                {{ type.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="requestedLoanAmount" placeholder="Requested Loan Amount" class="form-input" [class.filled]="loanRequirementForm.get('requestedLoanAmount')?.value" min="0" />
+          </div>
+        </div>
+
+        <!-- Purpose of Loan -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="loanPurpose" class="form-input form-select" [class.filled]="loanRequirementForm.get('loanPurpose')?.value">
+              <option value="" disabled selected>Purpose of Loan</option>
+              <option *ngFor="let purpose of configurations.loanPurposes" [value]="purpose.id">
+                {{ purpose.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="loanTenureMonths" placeholder="Loan Tenure (Months)" class="form-input" [class.filled]="loanRequirementForm.get('loanTenureMonths')?.value" min="1" />
+          </div>
+        </div>
+
+        <!-- Detailed Purpose Description -->
+        <div class="form-row">
+          <div class="form-group full">
+            <textarea formControlName="detailedPurposeDescription" placeholder="Detailed Purpose Description" class="form-input" rows="4" [class.filled]="loanRequirementForm.get('detailedPurposeDescription')?.value"></textarea>
+          </div>
+        </div>
+
+        <!-- Repayment Mode & Proposed Interest Type -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="repaymentMode" class="form-input form-select" [class.filled]="loanRequirementForm.get('repaymentMode')?.value">
+              <option value="" disabled selected>Repayment Mode</option>
+              <option *ngFor="let mode of configurations.repaymentModes" [value]="mode.id">
+                {{ mode.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="proposedInterestType" class="form-input form-select" [class.filled]="loanRequirementForm.get('proposedInterestType')?.value">
+              <option value="" disabled selected>Proposed Interest Type</option>
+              <option *ngFor="let type of configurations.interestTypes" [value]="type.id">
+                {{ type.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="loanRequirementForm.invalid" (click)="nextStep()">NEXT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 6: Security & Collateral Information -->
+    <div class="form-content" *ngIf="currentStep === 6">
+      <h3 class="form-title">Security & Collateral Information</h3>
+      <p class="form-subtitle">Provide your security and collateral details below</p>
+
+      <form [formGroup]="securityCollateralForm" class="form-step">
+
+        <!-- Security Type & Property Type -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="securityType" class="form-input form-select" [class.filled]="securityCollateralForm.get('securityType')?.value">
+              <option value="" disabled selected>Security Type</option>
+              <option *ngFor="let type of configurations.securityTypes" [value]="type.id">
+                {{ type.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="propertyType" class="form-input form-select" [class.filled]="securityCollateralForm.get('propertyType')?.value">
+              <option value="" disabled selected>Property Type</option>
+              <option *ngFor="let type of configurations.propertyTypes" [value]="type.id">
+                {{ type.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Property Location & Ownership Name -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="text" formControlName="propertyLocation" placeholder="Property Location" class="form-input" [class.filled]="securityCollateralForm.get('propertyLocation')?.value" />
+          </div>
+          <div class="form-group half">
+            <input type="text" formControlName="ownershipName" placeholder="Ownership Name" class="form-input" [class.filled]="securityCollateralForm.get('ownershipName')?.value" />
+          </div>
+        </div>
+
+        <!-- Market Value & Forced Sale Value (FSV) -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="marketValue" placeholder="Market Value" class="form-input" [class.filled]="securityCollateralForm.get('marketValue')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="forcedSaleValue" placeholder="Forced Sale Value (FSV)" class="form-input" [class.filled]="securityCollateralForm.get('forcedSaleValue')?.value" min="0" />
+          </div>
+        </div>
+
+        <!-- Mortgage Status -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="mortgageStatus" class="form-input form-select" [class.filled]="securityCollateralForm.get('mortgageStatus')?.value">
+              <option value="" disabled selected>Mortgage Status</option>
+              <option *ngFor="let status of configurations.mortgageStatuses" [value]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Personal Guarantee & Corporate Guarantee -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="personalGuarantee" class="form-input form-select" [class.filled]="securityCollateralForm.get('personalGuarantee')?.value">
+              <option value="" disabled selected>Personal Guarantee</option>
+              <option *ngFor="let status of configurations.guaranteeStatuses" [value]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="corporateGuarantee" class="form-input form-select" [class.filled]="securityCollateralForm.get('corporateGuarantee')?.value">
+              <option value="" disabled selected>Corporate Guarantee</option>
+              <option *ngFor="let status of configurations.guaranteeStatuses" [value]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="securityCollateralForm.invalid" (click)="nextStep()">NEXT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 7: Upload Information & Declaration -->
+    <div class="form-content upload-content" *ngIf="currentStep === 7">
+      <h3 class="form-title">Upload Information</h3>
+      <p class="form-subtitle">Provide your document uploads below</p>
+
+      <form style="width: 100%; display: flex; flex-direction: column; align-items: center;" [formGroup]="uploadForm">
+        <div class="upload-sections-container">
+
+          <!-- 1. Business Documents -->
+          <div class="upload-section" [class.completed]="uploadSections.businessDocs" [class.expanded]="expandedUploadSection === 'businessDocs'">
+            <div class="upload-section-header" (click)="toggleUploadSection('businessDocs')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadSections.businessDocs" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="!uploadSections.businessDocs" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+                </svg>
+                <span>Business Documents</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'businessDocs'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'businessDocs'">
+
+              <!-- Trade License Copy -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Trade License Copy"
+                  class="upload-field"
+                  [value]="uploadedFiles.tradeLicense?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('tradeLicense')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #tradeLicenseInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'tradeLicense')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+              <!-- TIN Certificate -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="TIN Certificate"
+                  class="upload-field"
+                  [value]="uploadedFiles.tinCertificate?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('tinCertificate')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #tinCertificateInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'tinCertificate')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+              <!-- VAT Certificate -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="VAT Certificate"
+                  class="upload-field"
+                  [value]="uploadedFiles.vatCertificate?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('vatCertificate')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #vatCertificateInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'vatCertificate')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 2. Financial Documents -->
+          <div class="upload-section" [class.completed]="uploadSections.financialDocs" [class.expanded]="expandedUploadSection === 'financialDocs'">
+            <div class="upload-section-header" (click)="toggleUploadSection('financialDocs')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadSections.financialDocs" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="!uploadSections.financialDocs" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+                </svg>
+                <span>Financial Documents</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'financialDocs'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'financialDocs'">
+
+              <!-- Financial Statements -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Financial Statements"
+                  class="upload-field"
+                  [value]="uploadedFiles.financialStatements?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('financialStatements')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #financialStatementsInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'financialStatements')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+              <!-- Bank Statement -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Bank Statement"
+                  class="upload-field"
+                  [value]="uploadedFiles.bankStatement?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('bankStatement')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #bankStatementInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'bankStatement')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 3. Security Documents -->
+          <div class="upload-section" [class.completed]="uploadSections.securityDocs" [class.expanded]="expandedUploadSection === 'securityDocs'">
+            <div class="upload-section-header" (click)="toggleUploadSection('securityDocs')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadSections.securityDocs" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="!uploadSections.securityDocs" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+                </svg>
+                <span>Security Documents</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'securityDocs'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'securityDocs'">
+
+              <!-- Title Deed -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Title Deed"
+                  class="upload-field"
+                  [value]="uploadedFiles.titleDeed?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('titleDeed')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #titleDeedInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'titleDeed')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+              <!-- Valuation Report -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="Valuation Report"
+                  class="upload-field"
+                  [value]="uploadedFiles.valuationReport?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('valuationReport')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #valuationReportInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'valuationReport')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+              <!-- CIB Consent Form -->
+              <div class="upload-field-group full-width">
+                <input
+                  type="text"
+                  placeholder="CIB Consent Form"
+                  class="upload-field"
+                  [value]="uploadedFiles.cibConsentForm?.filename || ''"
+                  readonly
+                />
+                <button type="button" class="upload-btn-icon" (click)="triggerUploadInput('cibConsentForm')">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20C0A0" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  #cibConsentFormInput
+                  style="display:none"
+                  (change)="onUploadFile($event, 'cibConsentForm')"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 4. Final Declaration -->
+          <div class="upload-section" [class.completed]="uploadForm.get('finalDeclaration')?.value" [class.expanded]="expandedUploadSection === 'declaration'">
+            <div class="upload-section-header" (click)="toggleUploadSection('declaration')">
+              <div class="upload-section-title">
+                <svg *ngIf="uploadForm.get('finalDeclaration')?.value" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
+                  <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="!uploadForm.get('finalDeclaration')?.value" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
+                </svg>
+                <span>Final Declaration</span>
+              </div>
+              <div class="upload-icons">
+                <svg class="info-icon-upload" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#20C0A0">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="chevron-icon" [class.rotate]="expandedUploadSection === 'declaration'" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M4 6L8 10L12 6" stroke="#20C0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="upload-section-content" *ngIf="expandedUploadSection === 'declaration'">
+              <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                <input
+                  type="checkbox"
+                  formControlName="finalDeclaration"
+                  class="checkbox-input"
+                  style="margin-top: 4px;"
+                />
+                <span class="checkbox-text" style="flex: 1;">
+                  I hereby declare that all business information provided is true and accurate
+                </span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="button-row upload-buttons">
+          <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
+          <button type="button" class="btn-next" [disabled]="uploadForm.invalid" (click)="onSaveAll(true)">SUBMIT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="return-home-btn" (click)="close()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Return Home
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Notification Message (Error/Success) -->
+<div class="notification" *ngIf="showNotificationFlag" [class.success]="notificationType === 'success'" [class.error]="notificationType === 'error'">
+  {{ notificationMessage }}
+</div>

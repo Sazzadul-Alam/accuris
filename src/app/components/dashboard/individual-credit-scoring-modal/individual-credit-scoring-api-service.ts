@@ -17,10 +17,17 @@ export class IndividualCreditService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * THE UNIFIED FUNCTION
-   * Consolidates all steps into one payload for sp_save_full_individual_credit_scoring
-   */
+  // individual-credit-scoring-api-service.ts
+
+  uploadDocument(file: File, individualId: number, fieldName: string): Observable<{ path: string; filename: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ path: string; filename: string }>(
+      `${this.baseUrl}/upload/${individualId}/${fieldName}`,
+      formData
+    );
+  }
+
   saveFullCreditScoring(allData: any, userId: number, action: 'SAVE' | 'SUBMIT'): Observable<IndividualCreditResponse> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
@@ -28,14 +35,14 @@ export class IndividualCreditService {
       param: action,
       userId: userId,
       dataSet: {
-        id: allData.id || null,  // ✅ Changed from allData.personal?.id
-        firstName: allData.firstName,  // ✅ Flattened structure
+        id: allData.id || null,
+        firstName: allData.firstName,
         lastName: allData.lastName,
         fatherName: allData.fatherName,
         motherName: allData.motherName,
         dateOfBirth: this.formatDate(allData.dateOfBirth),
-        genderId: allData.genderId,  // ✅ No mapping needed!
-        maritalStatusId: allData.maritalStatusId,  // ✅ No mapping needed!
+        genderId: allData.genderId,
+        maritalStatusId: allData.maritalStatusId,
         phoneNumber: allData.phoneNumber,
         email: allData.email,
         nationalIdPassportNo: allData.nationalIdPassportNo,
@@ -47,7 +54,6 @@ export class IndividualCreditService {
         postalCode: allData.postalCode,
         countryCode: allData.countryCode,
 
-        // Financial Info
         financialId: allData.financialId || null,
         employerTypeId: this.toInt(allData.employerTypeId),
         employerName: allData.employerName,
@@ -79,30 +85,23 @@ export class IndividualCreditService {
         incomeTypeId: allData.incomeTypeId || [],
         creditPurposeId: allData.creditPurposeId || [],
 
+        // ✅ PATHS AND FILENAMES
         idCopyUrl: allData.idCopyUrl || '',
+        idCopyFilename: allData.idCopyFilename || '',
         photographUrl: allData.photographUrl || '',
+        photographFilename: allData.photographFilename || '',
         salaryCertificateUrl: allData.salaryCertificateUrl || '',
+        salaryCertificateFilename: allData.salaryCertificateFilename || '',
         bankStatementUrl: allData.bankStatementUrl || '',
+        bankStatementFilename: allData.bankStatementFilename || '',
         incomeTaxReturnUrl: allData.incomeTaxReturnUrl || '',
-        cibConsentFormUrl: allData.cibConsentFormUrl || ''
+        incomeTaxReturnFilename: allData.incomeTaxReturnFilename || '',
+        cibConsentFormUrl: allData.cibConsentFormUrl || '',
+        cibConsentFormFilename: allData.cibConsentFormFilename || ''
       }
     };
 
     return this.http.post<IndividualCreditResponse>(`${this.baseUrl}/process`, payload, { headers });
-  }
-
-// ✅ DELETE these methods - they're causing the bug!
-// private mapGender(gender: string): number { ... }
-// private mapMaritalStatus(status: string): number { ... }
-
-  /**
-   * Upload a document file to the backend, which will store it in an individual-specific folder.
-   * Returns the path to the stored file.
-   */
-  uploadDocument(file: File, individualId: number, fieldName: string): Observable<{ path: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post<{ path: string }>(`${this.baseUrl}/upload/${individualId}/${fieldName}`, formData);
   }
 
   // --- Helpers ---
