@@ -1,6 +1,17 @@
 <div class="dashboard_background">
   <!-- Sidebar -->
 
+
+  <app-business-credit-scoring-modal
+    *ngIf="showBusinessCreditModal"
+    [selectedPlanInput]="selectedPlan"
+    [currentUserId]="currentUserId"
+    [currentUserName]="fullName"
+    (closeModal)="closeBusinessCreditModal()"
+  >
+  </app-business-credit-scoring-modal>
+
+
   <button class="hamburger" (click)="toggleSidebar()">
     ☰
   </button>
@@ -474,6 +485,9 @@
                 <div class="step-info">
                   <p>Individual <br /> Information</p>
                 </div>
+                <button (click)="openBusinessCreditModal()">
+                  Open Business Credit Scoring
+                </button>
 
                 <div
                   *ngIf="stepStatus['Individual Information'] !== Status.nothing"

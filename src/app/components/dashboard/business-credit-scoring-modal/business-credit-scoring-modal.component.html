@@ -143,6 +143,66 @@
           </div>
         </div>
 
+        <!-- Industry Growth Outlook & Degree of Market Competition -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="industryGrowthOutlook" class="form-input form-select" [class.filled]="businessProfileForm.get('industryGrowthOutlook')?.value">
+              <option value="" disabled selected>Industry Growth Outlook</option>
+              <option *ngFor="let outlook of configurations.industryGrowthOutlooks" [value]="outlook.id">
+                {{ outlook.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="degreeOfMarketCompetition" class="form-input form-select" [class.filled]="businessProfileForm.get('degreeOfMarketCompetition')?.value">
+              <option value="" disabled selected>Degree of Market Competition</option>
+              <option *ngFor="let competition of configurations.degreeOfMarketCompetitions" [value]="competition.id">
+                {{ competition.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Entry Barrier Assessment & Regulatory Sensitivity -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="entryBarrierAssessment" class="form-input form-select" [class.filled]="businessProfileForm.get('entryBarrierAssessment')?.value">
+              <option value="" disabled selected>Entry Barrier Assessment</option>
+              <option *ngFor="let assessment of configurations.entryBarrierAssessments" [value]="assessment.id">
+                {{ assessment.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="regulatorySensitivity" class="form-input form-select" [class.filled]="businessProfileForm.get('regulatorySensitivity')?.value">
+              <option value="" disabled selected>Regulatory Sensitivity (Business)</option>
+              <option *ngFor="let sensitivity of configurations.regulatorySensitivities" [value]="sensitivity.id">
+                {{ sensitivity.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Supplier Concentration Assessment & Buyer Concentration Assessment -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="supplierConcentrationAssessment" class="form-input form-select" [class.filled]="businessProfileForm.get('supplierConcentrationAssessment')?.value">
+              <option value="" disabled selected>Supplier Concentration Assessment</option>
+              <option *ngFor="let assessment of configurations.supplierConcentrationAssessments" [value]="assessment.id">
+                {{ assessment.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="buyerConcentrationAssessment" class="form-input form-select" [class.filled]="businessProfileForm.get('buyerConcentrationAssessment')?.value">
+              <option value="" disabled selected>Buyer Concentration Assessment</option>
+              <option *ngFor="let assessment of configurations.buyerConcentrationAssessments" [value]="assessment.id">
+                {{ assessment.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
         <div class="button-row">
           <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
           <button type="button" class="btn-next" [disabled]="businessProfileForm.invalid" (click)="nextStep()">NEXT</button>
@@ -221,6 +281,78 @@
         <div class="form-row">
           <div class="form-group full">
             <textarea formControlName="relatedBusinessDetails" placeholder="Related Business Details (Optional)" class="form-input" rows="3" [class.filled]="ownershipManagementForm.get('relatedBusinessDetails')?.value"></textarea>
+          </div>
+        </div>
+
+        <!-- Management Structure & Key Person Dependency -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="managementStructure" class="form-input form-select" [class.filled]="ownershipManagementForm.get('managementStructure')?.value">
+              <option value="" disabled selected>Management Structure</option>
+              <option *ngFor="let structure of configurations.managementStructures" [value]="structure.id">
+                {{ structure.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="keyPersonDependency" class="form-input form-select" [class.filled]="ownershipManagementForm.get('keyPersonDependency')?.value">
+              <option value="" disabled selected>Key Person Dependency</option>
+              <option *ngFor="let dependency of configurations.keyPersonDependencies" [value]="dependency.id">
+                {{ dependency.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Succession Plan Availability & Management Continuity Risk -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="successionPlanAvailability" class="form-input form-select" [class.filled]="ownershipManagementForm.get('successionPlanAvailability')?.value">
+              <option value="" disabled selected>Succession Plan Availability</option>
+              <option *ngFor="let availability of configurations.successionPlanAvailabilities" [value]="availability.id">
+                {{ availability.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="managementContinuityRisk" class="form-input form-select" [class.filled]="ownershipManagementForm.get('managementContinuityRisk')?.value">
+              <option value="" disabled selected>Management Continuity Risk</option>
+              <option *ngFor="let risk of configurations.managementContinuityRisks" [value]="risk.id">
+                {{ risk.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Corporate Governance Practice & Related Party Exposure Risk -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="corporateGovernancePractice" class="form-input form-select" [class.filled]="ownershipManagementForm.get('corporateGovernancePractice')?.value">
+              <option value="" disabled selected>Corporate Governance Practice</option>
+              <option *ngFor="let practice of configurations.corporateGovernancePractices" [value]="practice.id">
+                {{ practice.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select formControlName="relatedPartyExposureRisk" class="form-input form-select" [class.filled]="ownershipManagementForm.get('relatedPartyExposureRisk')?.value">
+              <option value="" disabled selected>Related Party Exposure Risk</option>
+              <option *ngFor="let risk of configurations.relatedPartyExposureRisks" [value]="risk.id">
+                {{ risk.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Management Integrity Concern -->
+        <div class="form-row">
+          <div class="form-group half">
+            <select formControlName="managementIntegrityConcern" class="form-input form-select" [class.filled]="ownershipManagementForm.get('managementIntegrityConcern')?.value">
+              <option value="" disabled selected>Management Integrity Concern</option>
+              <option *ngFor="let concern of configurations.managementIntegrityConcerns" [value]="concern.id">
+                {{ concern.name }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -389,6 +521,16 @@
           </div>
         </div>
 
+        <!-- Total Outstanding Amount & Number of Active Credit Facilities -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="totalOutstandingAmount" placeholder="Total Outstanding Amount" class="form-input" [class.filled]="bankingRelationshipForm.get('totalOutstandingAmount')?.value" min="0" />
+          </div>
+          <div class="form-group half">
+            <input type="number" formControlName="numberOfActiveCreditFacilities" placeholder="Number of Active Credit Facilities" class="form-input" [class.filled]="bankingRelationshipForm.get('numberOfActiveCreditFacilities')?.value" min="0" />
+          </div>
+        </div>
+
         <div class="button-row">
           <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
           <button type="button" class="btn-next" [disabled]="bankingRelationshipForm.invalid" (click)="nextStep()">NEXT</button>
@@ -457,6 +599,13 @@
                 {{ type.name }}
               </option>
             </select>
+          </div>
+        </div>
+
+        <!-- Proposed Monthly Installment -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="proposedMonthlyInstallment" placeholder="Proposed Monthly Installment" class="form-input" [class.filled]="loanRequirementForm.get('proposedMonthlyInstallment')?.value" min="0" />
           </div>
         </div>
 
@@ -543,6 +692,13 @@
                 {{ status.name }}
               </option>
             </select>
+          </div>
+        </div>
+
+        <!-- Exposure Covered by Security -->
+        <div class="form-row">
+          <div class="form-group half">
+            <input type="number" formControlName="exposureCoveredBySecurity" placeholder="Exposure Covered by Security" class="form-input" [class.filled]="securityCollateralForm.get('exposureCoveredBySecurity')?.value" min="0" />
           </div>
         </div>
 
@@ -830,14 +986,14 @@
           </div>
 
           <!-- 4. Final Declaration -->
-          <div class="upload-section" [class.completed]="uploadForm.get('finalDeclaration')?.value" [class.expanded]="expandedUploadSection === 'declaration'">
+          <div class="upload-section" [class.completed]="uploadSections.declaration" [class.expanded]="expandedUploadSection === 'declaration'">
             <div class="upload-section-header" (click)="toggleUploadSection('declaration')">
               <div class="upload-section-title">
-                <svg *ngIf="uploadForm.get('finalDeclaration')?.value" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
+                <svg *ngIf="uploadSections.declaration" class="check-icon" width="20" height="20" viewBox="0 0 20 20">
                   <circle cx="10" cy="10" r="10" fill="#20C0A0"/>
                   <path d="M6 10l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <svg *ngIf="!uploadForm.get('finalDeclaration')?.value" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
+                <svg *ngIf="!uploadSections.declaration" class="check-icon-empty" width="20" height="20" viewBox="0 0 20 20">
                   <circle cx="10" cy="10" r="9" stroke="#D0D0D0" stroke-width="2" fill="none"/>
                 </svg>
                 <span>Final Declaration</span>
@@ -853,6 +1009,7 @@
               </div>
             </div>
             <div class="upload-section-content" *ngIf="expandedUploadSection === 'declaration'">
+
               <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
                 <input
                   type="checkbox"

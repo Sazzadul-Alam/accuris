@@ -46,7 +46,20 @@ export class BusinessCreditScoringModalComponent {
     securityTypes: [],
     propertyTypes: [],
     mortgageStatuses: [],
-    guaranteeStatuses: []
+    guaranteeStatuses: [],
+    managementStructures: [],  // New: For Management Structure dropdown
+    keyPersonDependencies: [],  // New: For Key Person Dependency dropdown
+    successionPlanAvailabilities: [],  // New: For Succession Plan Availability dropdown
+    managementContinuityRisks: [],  // New: For Management Continuity Risk dropdown
+    corporateGovernancePractices: [],  // New: For Corporate Governance Practice dropdown
+    relatedPartyExposureRisks: [],  // New: For Related Party Exposure Risk dropdown
+    managementIntegrityConcerns: [],  // New: For Management Integrity Concern dropdown
+    industryGrowthOutlooks: [], // New
+    degreeOfMarketCompetitions: [], // New
+    entryBarrierAssessments: [], // New
+    regulatorySensitivities: [], // New
+    supplierConcentrationAssessments: [], // New
+    buyerConcentrationAssessments: [] // New
   };
 
   // Track the business being processed
@@ -160,6 +173,12 @@ export class BusinessCreditScoringModalComponent {
       factoryAddress: this.businessProfileForm.value.factoryAddress,
       businessMobileNumber: this.businessProfileForm.value.businessMobileNumber,
       businessEmail: this.businessProfileForm.value.businessEmail,
+      industryGrowthOutlookId: this.businessProfileForm.value.industryGrowthOutlook,
+      degreeOfMarketCompetitionId: this.businessProfileForm.value.degreeOfMarketCompetition,
+      entryBarrierAssessmentId: this.businessProfileForm.value.entryBarrierAssessment,
+      regulatorySensitivityId: this.businessProfileForm.value.regulatorySensitivity,
+      supplierConcentrationAssessmentId: this.businessProfileForm.value.supplierConcentrationAssessment,
+      buyerConcentrationAssessmentId: this.businessProfileForm.value.buyerConcentrationAssessment,
 
       // Ownership & Management Information
       ownerDirectorName: this.ownershipManagementForm.value.ownerDirectorName,
@@ -173,6 +192,13 @@ export class BusinessCreditScoringModalComponent {
       ownerEmail: this.ownershipManagementForm.value.email,
       cibStatusId: this.ownershipManagementForm.value.cibStatus,
       relatedBusinessDetails: this.ownershipManagementForm.value.relatedBusinessDetails,
+      managementStructureId: this.ownershipManagementForm.value.managementStructure,  // New
+      keyPersonDependencyId: this.ownershipManagementForm.value.keyPersonDependency,  // New
+      successionPlanAvailabilityId: this.ownershipManagementForm.value.successionPlanAvailability,  // New
+      managementContinuityRiskId: this.ownershipManagementForm.value.managementContinuityRisk,  // New
+      corporateGovernancePracticeId: this.ownershipManagementForm.value.corporateGovernancePractice,  // New
+      relatedPartyExposureRiskId: this.ownershipManagementForm.value.relatedPartyExposureRisk,  // New
+      managementIntegrityConcernId: this.ownershipManagementForm.value.managementIntegrityConcern,  // New
 
       // Financial Information
       financialInfoId: this.financialInfoId || null,
@@ -200,6 +226,8 @@ export class BusinessCreditScoringModalComponent {
       repaymentBehaviorId: this.bankingRelationshipForm.value.repaymentBehavior,
       pastDueStatusId: this.bankingRelationshipForm.value.pastDueStatus,
       chequeReturnHistoryId: this.bankingRelationshipForm.value.chequeReturnHistory,
+      totalOutstandingAmount: this.bankingRelationshipForm.value.totalOutstandingAmount,
+      numberOfActiveCreditFacilities: this.bankingRelationshipForm.value.numberOfActiveCreditFacilities,
 
       // Loan Requirement Details
       loanInfoId: this.loanInfoId || null,
@@ -210,6 +238,7 @@ export class BusinessCreditScoringModalComponent {
       loanTenureMonths: this.loanRequirementForm.value.loanTenureMonths,
       repaymentModeId: this.loanRequirementForm.value.repaymentMode,
       proposedInterestTypeId: this.loanRequirementForm.value.proposedInterestType,
+      proposedMonthlyInstallment: this.loanRequirementForm.value.proposedMonthlyInstallment,
 
       // Security & Collateral Information
       securityInfoId: this.securityInfoId || null,
@@ -222,6 +251,7 @@ export class BusinessCreditScoringModalComponent {
       mortgageStatusId: this.securityCollateralForm.value.mortgageStatus,
       personalGuaranteeId: this.securityCollateralForm.value.personalGuarantee,
       corporateGuaranteeId: this.securityCollateralForm.value.corporateGuarantee,
+      exposureCoveredBySecurity: this.securityCollateralForm.value.exposureCoveredBySecurity,
 
       // Document Upload URLs and Filenames
       tradeLicenseUrl: this.uploadForm.value.tradeLicense,
@@ -316,7 +346,13 @@ export class BusinessCreditScoringModalComponent {
         businessAddress: data.businessProfile.businessAddress,
         factoryAddress: data.businessProfile.factoryAddress,
         businessMobileNumber: data.businessProfile.businessMobileNumber,
-        businessEmail: data.businessProfile.businessEmail
+        businessEmail: data.businessProfile.businessEmail,
+        industryGrowthOutlook: data.businessProfile.industryGrowthOutlook?.id || '',
+        degreeOfMarketCompetition: data.businessProfile.degreeOfMarketCompetition?.id || '',
+        entryBarrierAssessment: data.businessProfile.entryBarrierAssessment?.id || '',
+        regulatorySensitivity: data.businessProfile.regulatorySensitivity?.id || '',
+        supplierConcentrationAssessment: data.businessProfile.supplierConcentrationAssessment?.id || '',
+        buyerConcentrationAssessment: data.businessProfile.buyerConcentrationAssessment?.id || ''
       });
     }
 
@@ -333,7 +369,14 @@ export class BusinessCreditScoringModalComponent {
         mobileNumber: data.ownershipManagement.mobileNumber,
         email: data.ownershipManagement.email,
         cibStatus: data.ownershipManagement.cibStatus?.id || '',
-        relatedBusinessDetails: data.ownershipManagement.relatedBusinessDetails
+        relatedBusinessDetails: data.ownershipManagement.relatedBusinessDetails,
+        managementStructure: data.ownershipManagement.managementStructure?.id || '',  // New
+        keyPersonDependency: data.ownershipManagement.keyPersonDependency?.id || '',  // New
+        successionPlanAvailability: data.ownershipManagement.successionPlanAvailability?.id || '',  // New
+        managementContinuityRisk: data.ownershipManagement.managementContinuityRisk?.id || '',  // New
+        corporateGovernancePractice: data.ownershipManagement.corporateGovernancePractice?.id || '',  // New
+        relatedPartyExposureRisk: data.ownershipManagement.relatedPartyExposureRisk?.id || '',  // New
+        managementIntegrityConcern: data.ownershipManagement.managementIntegrityConcern?.id || ''  // New
       });
     }
 
@@ -370,7 +413,9 @@ export class BusinessCreditScoringModalComponent {
         averageUtilizationPercentage: data.bankingRelationship.averageUtilizationPercentage,
         repaymentBehavior: data.bankingRelationship.repaymentBehavior?.id || '',
         pastDueStatus: data.bankingRelationship.pastDueStatus?.id || '',
-        chequeReturnHistory: data.bankingRelationship.chequeReturnHistory?.id || ''
+        chequeReturnHistory: data.bankingRelationship.chequeReturnHistory?.id || '',
+        totalOutstandingAmount: data.bankingRelationship.totalOutstandingAmount,
+        numberOfActiveCreditFacilities: data.bankingRelationship.numberOfActiveCreditFacilities
       });
     }
 
@@ -385,7 +430,8 @@ export class BusinessCreditScoringModalComponent {
         detailedPurposeDescription: data.loanRequirement.detailedPurposeDescription,
         loanTenureMonths: data.loanRequirement.loanTenureMonths,
         repaymentMode: data.loanRequirement.repaymentMode?.id || '',
-        proposedInterestType: data.loanRequirement.proposedInterestType?.id || ''
+        proposedInterestType: data.loanRequirement.proposedInterestType?.id || '',
+        proposedMonthlyInstallment: data.loanRequirement.proposedMonthlyInstallment
       });
     }
 
@@ -402,7 +448,8 @@ export class BusinessCreditScoringModalComponent {
         forcedSaleValue: data.securityCollateral.forcedSaleValue,
         mortgageStatus: data.securityCollateral.mortgageStatus?.id || '',
         personalGuarantee: data.securityCollateral.personalGuarantee?.id || '',
-        corporateGuarantee: data.securityCollateral.corporateGuarantee?.id || ''
+        corporateGuarantee: data.securityCollateral.corporateGuarantee?.id || '',
+        exposureCoveredBySecurity: data.securityCollateral.exposureCoveredBySecurity
       });
     }
 
@@ -570,7 +617,13 @@ export class BusinessCreditScoringModalComponent {
       businessAddress: ['', [Validators.required, Validators.minLength(10)]],
       factoryAddress: ['', Validators.minLength(10)],
       businessMobileNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
-      businessEmail: ['', [Validators.required, Validators.email]]
+      businessEmail: ['', [Validators.required, Validators.email]],
+      industryGrowthOutlook: ['', Validators.required],
+      degreeOfMarketCompetition: ['', Validators.required],
+      entryBarrierAssessment: ['', Validators.required],
+      regulatorySensitivity: ['', Validators.required],
+      supplierConcentrationAssessment: ['', Validators.required],
+      buyerConcentrationAssessment: ['', Validators.required]
     });
 
     this.businessProfileForm.valueChanges.subscribe(() => {
@@ -590,7 +643,14 @@ export class BusinessCreditScoringModalComponent {
       mobileNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
       email: ['', [Validators.required, Validators.email]],
       cibStatus: ['', Validators.required],
-      relatedBusinessDetails: ['', Validators.minLength(10)]
+      relatedBusinessDetails: ['', Validators.minLength(10)],
+      managementStructure: ['', Validators.required],  // New: Dropdown
+      keyPersonDependency: ['', Validators.required],  // New: Dropdown
+      successionPlanAvailability: ['', Validators.required],  // New: Dropdown
+      managementContinuityRisk: ['', Validators.required],  // New: Dropdown
+      corporateGovernancePractice: ['', Validators.required],  // New: Dropdown
+      relatedPartyExposureRisk: ['', Validators.required],  // New: Dropdown
+      managementIntegrityConcern: ['', Validators.required]  // New: Dropdown
     });
 
     this.ownershipManagementForm.valueChanges.subscribe(() => {
@@ -629,7 +689,9 @@ export class BusinessCreditScoringModalComponent {
       averageUtilizationPercentage: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
       repaymentBehavior: ['', Validators.required],
       pastDueStatus: ['', Validators.required],
-      chequeReturnHistory: ['', Validators.required]
+      chequeReturnHistory: ['', Validators.required],
+      totalOutstandingAmount: ['', [Validators.required, Validators.min(0)]],
+      numberOfActiveCreditFacilities: ['', [Validators.required, Validators.min(0)]]
     });
 
     this.bankingRelationshipForm.valueChanges.subscribe(() => {
@@ -645,7 +707,8 @@ export class BusinessCreditScoringModalComponent {
       detailedPurposeDescription: ['', [Validators.required, Validators.minLength(20)]],
       loanTenureMonths: ['', [Validators.required, Validators.min(1)]],
       repaymentMode: ['', Validators.required],
-      proposedInterestType: ['', Validators.required]
+      proposedInterestType: ['', Validators.required],
+      proposedMonthlyInstallment: ['', [Validators.required, Validators.min(0)]]
     });
 
     this.loanRequirementForm.valueChanges.subscribe(() => {
@@ -663,7 +726,8 @@ export class BusinessCreditScoringModalComponent {
       forcedSaleValue: ['', [Validators.required, Validators.min(0)]],
       mortgageStatus: ['', Validators.required],
       personalGuarantee: ['', Validators.required],
-      corporateGuarantee: ['', Validators.required]
+      corporateGuarantee: ['', Validators.required],
+      exposureCoveredBySecurity: ['', [Validators.required, Validators.min(0)]]
     });
 
     this.securityCollateralForm.valueChanges.subscribe(() => {
