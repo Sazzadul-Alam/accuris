@@ -49,9 +49,21 @@ export class IndividualCreditScoringModalComponent {
   @ViewChild('fdrInput') fdrInput!: ElementRef<HTMLInputElement>;
   @ViewChild('goldInput') goldInput!: ElementRef<HTMLInputElement>;
 
-  // ✅ ADDED: Track the individual being processed (customer/applicant)
-  individualId: number = Number(localStorage.getItem('individualId'));
+  configurations: any = {
+    genders: [],
+    maritalStatuses: [],
+    employerTypes: [],
+    employmentStatuses: [],
+    businessTypes: [],
+    creditPurposes: [],
+    incomeTypes: [],
+    repaymentPreferences: [],
+    collateralTypes: []
+  };
 
+  // ✅ ADDED: Track the individual being processed (customer/applicant)
+  individualId: number = null;
+  financialInfoId: number = null;
   pendingUploads: { [key: string]: File } = {};
 
   personalInfoForm!: FormGroup;
@@ -169,49 +181,278 @@ export class IndividualCreditScoringModalComponent {
   }
 
   private getConsolidatedPayload() {
+    console.log('💾 Creating payload...');
+    console.log('   personalInfoForm.value:', this.personalInfoForm.value);
+    console.log('   Gender from form:', this.personalInfoForm.value.gender);
+    console.log('   Marital Status from form:', this.personalInfoForm.value.maritalStatus);
+
+
+    const basicInfo = this.basicInfoForm.value;
+
     return {
-      personal: {
-        ...this.personalInfoForm.value,
-        id: this.individualId || null
-      },
-      location: this.locationForm.value,
-      financial: {
-        financialId: Number(localStorage.getItem('financialInfoId')) || null,
-        basicInfo: this.basicInfoForm.value,
-        employerInfo: this.employerInfoForm.value,
-        businessInfo: this.businessInfoForm.value,
-        creditInfo: this.creditInfoForm.value,
-        securityInfo: this.securityInfoForm.value
-      },
-      uploads: this.uploadForm.value
+      // Personal Info (flattened at root level)
+      id: this.individualId || null,
+      firstName: this.personalInfoForm.value.firstName,
+      lastName: this.personalInfoForm.value.lastName,
+      fatherName: this.personalInfoForm.value.fathersName,
+      motherName: this.personalInfoForm.value.mothersName,
+      dateOfBirth: this.personalInfoForm.value.dateOfBirth,
+      genderId: this.personalInfoForm.value.gender,
+      maritalStatusId: this.personalInfoForm.value.maritalStatus,
+      phoneNumber: this.personalInfoForm.value.phoneNumber,
+      email: this.personalInfoForm.value.email,
+      nationalIdPassportNo: this.personalInfoForm.value.idNumber,
+
+      // Location Info (flattened at root level)
+      presentAddress: this.locationForm.value.presentAddress,
+      permanentAddress: this.locationForm.value.permanentAddress,
+      city: this.locationForm.value.city,
+      stateProvince: this.locationForm.value.stateOrDistrict,
+      postalCode: this.locationForm.value.postalCode,
+      countryCode: this.locationForm.value.country,
+
+      // Upload URLs (flattened at root level)
+      idCopyUrl: this.uploadForm.value.idCopy,
+      photographUrl: this.uploadForm.value.photograph,
+      salaryCertificateUrl: this.uploadForm.value.salaryCertificate,
+      bankStatementUrl: this.uploadForm.value.bankStatement,
+      incomeTaxReturnUrl: this.uploadForm.value.incomeTaxReturn,
+      cibConsentFormUrl: this.uploadForm.value.cibConsentForm,
+
+      // Financial Info (flattened at root level)
+      financialId: this.financialInfoId || null,
+
+      // Employer Info
+      employerTypeId: this.employerInfoForm.value.employerType,
+      employerName: this.employerInfoForm.value.employerName,
+      employmentStatusId: this.employerInfoForm.value.employmentStatus,
+      jobDesignation: this.employerInfoForm.value.jobDesignation,
+      jobTenureYears: this.employerInfoForm.value.jobTenureYears,
+      monthlyGrossIncome: this.employerInfoForm.value.monthlyGrossIncome,
+      monthlyNetIncome: this.employerInfoForm.value.monthlyNetIncome,
+
+      // Business Info
+      businessName: this.businessInfoForm.value.businessName,
+      businessTypeId: this.businessInfoForm.value.businessType,
+      industryType: this.businessInfoForm.value.industryType,
+      yearsInBusiness: this.businessInfoForm.value.yearsInBusiness,
+      monthlyBusinessIncome: this.businessInfoForm.value.monthlyBusinessIncome,
+
+      // Credit Info
+      requestedLoanAmount: this.creditInfoForm.value.requestedLoanAmount,
+      downPaymentAmount: this.creditInfoForm.value.downPaymentAmount,
+      loanTenureMonths: this.creditInfoForm.value.loanTenureMonths,
+      repaymentPreferenceId: this.creditInfoForm.value.repaymentPreference,
+      existingLoanDetails: this.creditInfoForm.value.existingLoanDetails,
+      creditCardDetails: this.creditInfoForm.value.creditCardDetails,
+
+      // Security Info
+      collateralAvailable: this.securityInfoForm.value.collateralAvailable,
+      collateralTypeId: this.securityInfoForm.value.collateralType,
+      estimatedCollateralValue: this.securityInfoForm.value.estimatedCollateralValue,
+      guarantorAvailable: this.securityInfoForm.value.guarantorAvailable,
+      coApplicantAvailable: this.securityInfoForm.value.coApplicantAvailable,
+
+      // ✅ CRITICAL: Mapping arrays at root level (as expected by SP)
+      incomeTypeId: basicInfo.incomeType ? [basicInfo.incomeType] : [],
+      creditPurposeId: basicInfo.creditPurpose ? [basicInfo.creditPurpose] : []
     };
   }
 
   ngOnInit(): void {
+
+
+
+    // Load configurations first
+    this.creditService.getAllConfigurations().subscribe({
+      next: (configs) => {
+        this.configurations = configs;
+
+
+        // Then load individual data
+        this.creditService.getLatestIndividualId(this.currentUserId).subscribe({
+          next: (response) => {
+            this.individualId = response.individualId;
+            console.log('Latest Individual ID:', this.individualId);
+
+            if (this.individualId) {
+              this.loadIndividualData(this.individualId);
+            }
+          },
+          error: (error) => {
+            console.error('Error fetching latest individual:', error);
+            this.individualId = null;
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error loading configurations:', error);
+      }
+    });
+
     this.initializeForm();
     this.initializeLocationForm();
     this.initializeFinancialForms();
     this.initializeUploadForm();
+
+
+    // Track changes to gender and marital status
+    this.personalInfoForm.get('gender')?.valueChanges.subscribe(value => {
+      console.log('👤 Gender changed to:', value);
+    });
+
+    this.personalInfoForm.get('maritalStatus')?.valueChanges.subscribe(value => {
+      console.log('💍 Marital Status changed to:', value);
+    });
   }
-  private ensureIndividualId(): Observable<number> {
-    if (this.individualId) {
-      return of(this.individualId);  // Already have ID, return it
-    } else {
-      // Save progress to generate ID (non-final save)
-      return this.creditService.saveFullCreditScoring(this.getConsolidatedPayload(), this.currentUserId, 'SAVE').pipe(
-        switchMap((response) => {
-          if (response.status === 'SUCCESS' && response.individualId) {
-            this.individualId = response.individualId;
-            localStorage.setItem('individualId', String(this.individualId));
-            return of(this.individualId);
-          } else {
-            throw new Error('Failed to generate individual ID');
-          }
-        })
-      );
+
+  private loadIndividualData(individualId: number): void {
+    this.creditService.getIndividualById(individualId).subscribe({
+      next: (data) => {
+
+        this.populateForms(data);
+      },
+      error: (error) => {
+        console.error('Error loading individual data:', error);
+        this.showNotification('Failed to load existing data', 'error');
+      }
+    });
+  }
+
+  private populateForms(data: any): void {
+    // Populate Personal Info Form
+    if (data.personal) {
+
+      console.log('🔧 About to populate form with:');
+      console.log('   Gender ID:', data.personal.gender?.id);
+      console.log('   Marital Status ID:', data.personal.maritalStatus?.id);
+
+
+      this.personalInfoForm.patchValue({
+        firstName: data.personal.firstName,
+        lastName: data.personal.lastName,
+        fathersName: data.personal.fathersName,
+        mothersName: data.personal.mothersName,
+        dateOfBirth: data.personal.dateOfBirth,
+        gender: data.personal.gender?.id || '',
+        maritalStatus: data.personal.maritalStatus?.id || '',
+        idNumber: data.personal.idNumber,
+        phoneNumber: data.personal.phoneNumber,
+        email: data.personal.email,
+        uploadId: data.personal.uploadId
+      });
+
+      console.log('✅ Form populated. Current form values:');
+      console.log('   Gender:', this.personalInfoForm.value.gender);
+      console.log('   Marital Status:', this.personalInfoForm.value.maritalStatus);
     }
+
+    // Populate Location Form
+    if (data.location) {
+      this.locationForm.patchValue({
+        presentAddress: data.location.presentAddress,
+        permanentAddress: data.location.permanentAddress,
+        city: data.location.city,
+        stateOrDistrict: data.location.stateOrDistrict,
+        postalCode: data.location.postalCode,
+        country: data.location.country,
+        lengthOfStay: data.location.lengthOfStay
+      });
+    }
+
+    // Populate Financial Forms
+    if (data.financial) {
+      // Set financialInfoId
+      this.financialInfoId = data.financial.financialId;
+
+      // Basic Info Form
+      if (data.financial.basicInfo) {
+        this.basicInfoForm.patchValue({
+          creditPurpose: data.financial.basicInfo.creditPurpose && data.financial.basicInfo.creditPurpose.length > 0
+            ? data.financial.basicInfo.creditPurpose[0].id
+            : '',
+          incomeType: data.financial.basicInfo.incomeType && data.financial.basicInfo.incomeType.length > 0
+            ? data.financial.basicInfo.incomeType[0].id
+            : ''
+        });
+      }
+
+      // Employer Info Form
+      if (data.financial.employerInfo) {
+        this.employerInfoForm.patchValue({
+          employerType: data.financial.employerInfo.employerType?.id || '',
+          employerName: data.financial.employerInfo.employerName,
+          employmentStatus: data.financial.employerInfo.employmentStatus?.id || '',
+          jobDesignation: data.financial.employerInfo.jobDesignation,
+          jobTenureYears: data.financial.employerInfo.jobTenureYears,
+          monthlyGrossIncome: data.financial.employerInfo.monthlyGrossIncome,
+          monthlyNetIncome: data.financial.employerInfo.monthlyNetIncome
+        });
+      }
+
+      // Business Info Form
+      if (data.financial.businessInfo) {
+        this.businessInfoForm.patchValue({
+          businessName: data.financial.businessInfo.businessName,
+          businessType: data.financial.businessInfo.businessType?.id || '',
+          industryType: data.financial.businessInfo.industryType,
+          yearsInBusiness: data.financial.businessInfo.yearsInBusiness,
+          monthlyBusinessIncome: data.financial.businessInfo.monthlyBusinessIncome
+        });
+      }
+
+      // Credit Info Form
+      if (data.financial.creditInfo) {
+        this.creditInfoForm.patchValue({
+          requestedLoanAmount: data.financial.creditInfo.requestedLoanAmount,
+          downPaymentAmount: data.financial.creditInfo.downPaymentAmount,
+          loanTenureMonths: data.financial.creditInfo.loanTenureMonths,
+          repaymentPreference: data.financial.creditInfo.repaymentPreference?.id || '',
+          existingLoanDetails: data.financial.creditInfo.existingLoanDetails,
+          creditCardDetails: data.financial.creditInfo.creditCardDetails
+        });
+      }
+
+      // Security Info Form
+      if (data.financial.securityInfo) {
+        this.securityInfoForm.patchValue({
+          collateralAvailable: data.financial.securityInfo.collateralAvailable,
+          collateralType: data.financial.securityInfo.collateralType?.id || '',
+          estimatedCollateralValue: data.financial.securityInfo.estimatedCollateralValue,
+          guarantorAvailable: data.financial.securityInfo.guarantorAvailable,
+          coApplicantAvailable: data.financial.securityInfo.coApplicantAvailable
+        });
+      }
+    }
+
+    // Populate Upload Form
+    if (data.uploads) {
+      this.uploadForm.patchValue({
+        idCopy: data.uploads.idCopy || '',
+        photograph: data.uploads.photograph || '',
+        salaryCertificate: data.uploads.salaryCertificate || '',
+        bankStatement: data.uploads.bankStatement || '',
+        incomeTaxReturn: data.uploads.incomeTaxReturn || '',
+        cibConsentForm: data.uploads.cibConsentForm || ''
+      });
+
+      // Also update uploadedFiles for display
+      this.uploadedFiles.idCopy = data.uploads.idCopy;
+      this.uploadedFiles.photograph = data.uploads.photograph;
+      this.uploadedFiles.salaryCertificate = data.uploads.salaryCertificate;
+      this.uploadedFiles.bankStatement = data.uploads.bankStatement;
+      this.uploadedFiles.incomeTaxReturn = data.uploads.incomeTaxReturn;
+      this.uploadedFiles.cibConsentForm = data.uploads.cibConsentForm;
+    }
+
+    console.log('Forms populated successfully');
   }
+
   onSaveAll(isFinalSubmit: boolean = false): void {
+    console.log('🔴 SAVE CLICKED - Current form state:');
+    console.log('   Gender:', this.personalInfoForm.get('gender')?.value);
+    console.log('   Marital Status:', this.personalInfoForm.get('maritalStatus')?.value);
+    console.log('   Full form:', this.personalInfoForm.value);
     // 1. Validation for Final Submission
     if (isFinalSubmit && !this.consentAccepted) {
       this.showNotification('Please accept the user consent to submit.', 'error');
@@ -223,73 +464,73 @@ export class IndividualCreditScoringModalComponent {
       return;
     }
 
-
-    // 2. Ensure individualId exists
-    this.ensureIndividualId().subscribe({
-      next: (id) => {
-        this.individualId = id;
-
-        // 3. Upload pending files if any
-        this.uploadPendingFiles().subscribe({
-          next: (uploadedPaths: { [key: string]: string }) => {
-            // Update uploadForm with real paths
-            Object.keys(uploadedPaths).forEach((fieldName) => {
-              this.uploadForm.patchValue({
-                [fieldName]: uploadedPaths[fieldName]
-              });
-              this.uploadedFiles[fieldName] = uploadedPaths[fieldName];  // Update for compatibility
+    // 2. Upload pending files first (if individualId exists)
+    if (this.individualId && Object.keys(this.pendingUploads).length > 0) {
+      this.uploadPendingFiles().subscribe({
+        next: (uploadedPaths: { [key: string]: string }) => {
+          // Update uploadForm with real paths
+          Object.keys(uploadedPaths).forEach((fieldName) => {
+            this.uploadForm.patchValue({
+              [fieldName]: uploadedPaths[fieldName]
             });
+            this.uploadedFiles[fieldName] = uploadedPaths[fieldName];
+          });
 
-            // Clear pending uploads
-            this.pendingUploads = {};
+          // Clear pending uploads
+          this.pendingUploads = {};
 
-            // 4. Now aggregate data with updated uploads
-            const consolidatedPayload = this.getConsolidatedPayload();  // Assuming you added this helper as before
+          // Now save with uploaded paths
+          this.performSave(isFinalSubmit);
+        },
+        error: (err) => {
+          console.error('Error uploading files:', err);
+          this.showNotification('Failed to upload one or more files. Please try again.', 'error');
+        }
+      });
+    } else {
+      // No files to upload or no individualId yet, proceed directly to save
+      this.performSave(isFinalSubmit);
+    }
+  }
 
-            const action = isFinalSubmit ? 'SUBMIT' : 'SAVE';
+  private performSave(isFinalSubmit: boolean): void {
+    console.log('🟡 PERFORM SAVE - Before creating payload:');
+    console.log('   Gender:', this.personalInfoForm.get('gender')?.value);
+    console.log('   Marital Status:', this.personalInfoForm.get('maritalStatus')?.value);
 
-            // 5. Single API call to handle everything
-            this.creditService.saveFullCreditScoring(consolidatedPayload, this.currentUserId, action).subscribe({
-              next: (response) => {
-                if (response.status === 'SUCCESS') {
-                  // Update IDs returned from the database
-                  if (response.individualId) {
-                    this.individualId = response.individualId;
-                    localStorage.setItem('individualId', String(this.individualId));
-                  }
-                  if (response.financialInfoId) {
-                    localStorage.setItem('financialInfoId', String(response.financialInfoId));
-                  }
+    const consolidatedPayload = this.getConsolidatedPayload();
 
-                  if (isFinalSubmit) {
-                    // Cleanup on successful submission
-                    localStorage.removeItem('individualId');
-                    localStorage.removeItem('financialInfoId');
-                    localStorage.removeItem('creditScoringFormData');
-                    this.showNotification('Application submitted successfully!', 'success');
-                    setTimeout(() => this.closeModal.emit(), 1500);
-                  } else {
-                    this.showNotification('Progress saved successfully!', 'success');
-                  }
-                } else {
-                  this.showNotification(response.message || 'Failed to save data.', 'error');
-                }
-              },
-              error: (err) => {
-                console.error('Server error during unified save:', err);
-                this.showNotification('A connection error occurred.', 'error');
-              }
-            });
-          },
-          error: (err) => {
-            console.error('Error uploading files:', err);
-            this.showNotification('Failed to upload one or more files. Please try again.', 'error');
+    console.log('🟢 PAYLOAD CREATED:', consolidatedPayload);
+    console.log('   Payload genderId:', consolidatedPayload.genderId);
+    console.log('   Payload maritalStatusId:', consolidatedPayload.maritalStatusId);
+
+    const action = isFinalSubmit ? 'SUBMIT' : 'SAVE';
+
+    // Single API call to handle everything
+    this.creditService.saveFullCreditScoring(consolidatedPayload, this.currentUserId, action).subscribe({
+      next: (response) => {
+        if (response.status === 'SUCCESS') {
+          // Update IDs returned from the database
+          if (response.individualId) {
+            this.individualId = response.individualId;
           }
-        });
+          if (response.financialInfoId) {
+            this.financialInfoId = response.financialInfoId;
+          }
+
+          if (isFinalSubmit) {
+            this.showNotification('Application submitted successfully!', 'success');
+            setTimeout(() => this.closeModal.emit(), 1500);
+          } else {
+            this.showNotification('Progress saved successfully!', 'success');
+          }
+        } else {
+          this.showNotification(response.message || 'Failed to save data.', 'error');
+        }
       },
       error: (err) => {
-        console.error('Error ensuring individual ID:', err);
-        this.showNotification('Please complete required steps before saving.', 'error');
+        console.error('Server error during unified save:', err);
+        this.showNotification('A connection error occurred.', 'error');
       }
     });
   }

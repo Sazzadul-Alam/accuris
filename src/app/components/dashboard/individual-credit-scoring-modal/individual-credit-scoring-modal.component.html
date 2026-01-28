@@ -84,9 +84,9 @@
           <div class="form-group half">
             <select formControlName="gender" class="form-input form-select" [class.filled]="personalInfoForm.get('gender')?.value">
               <option value="" disabled selected>Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option *ngFor="let gender of configurations.genders" [value]="gender.id">
+                {{ gender.name }}
+              </option>
             </select>
           </div>
         </div>
@@ -95,10 +95,9 @@
           <div class="form-group half">
             <select formControlName="maritalStatus" class="form-input form-select" [class.filled]="personalInfoForm.get('maritalStatus')?.value">
               <option value="" disabled selected>Marital Status</option>
-              <option value="single">Single</option>
-              <option value="married">Married</option>
-              <option value="divorced">Divorced</option>
-              <option value="widowed">Widowed</option>
+              <option *ngFor="let status of configurations.maritalStatuses" [value]="status.id">
+                {{ status.maritalStatus }}
+              </option>
             </select>
           </div>
           <div class="form-group half">
@@ -286,23 +285,17 @@
                 <div class="form-group half">
                   <select formControlName="creditPurpose" class="form-input form-select" [class.filled]="basicInfoForm.get('creditPurpose')?.value">
                     <option value="" disabled selected>Credit Purpose</option>
-                    <option value="1">Loan Application</option>
-                    <option value="2">Investor / Partner Review</option>
-                    <option value="3">Supplier / Vendor Assessment</option>
-                    <option value="4">Advertisement / Public Rating</option>
-                    <option value="5">Self-Assessment</option>
-                    <option value="6">Other</option>
+                    <option *ngFor="let purpose of configurations.creditPurposes" [value]="purpose.id">
+                      {{ purpose.name }}
+                    </option>
                   </select>
                 </div>
                 <div class="form-group half">
                   <select formControlName="incomeType" class="form-input form-select" [class.filled]="basicInfoForm.get('incomeType')?.value">
                     <option value="" disabled selected>Income Type</option>
-                    <option value="1">Salaried</option>
-                    <option value="2">Self-Employed / Business</option>
-                    <option value="3">Contractual</option>
-                    <option value="4">Rental</option>
-                    <option value="5">Investment</option>
-                    <option value="6">Multiple Sources</option>
+                    <option *ngFor="let type of configurations.incomeTypes" [value]="type.id">
+                      {{ type.incomeType }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -333,10 +326,9 @@
                 <div class="form-group half">
                   <select formControlName="employerType" class="form-input form-select" [class.filled]="employerInfoForm.get('employerType')?.value">
                     <option value="" disabled selected>Employer Type</option>
-                    <option value="1">Government</option>
-                    <option value="2">Private</option>
-                    <option value="3">NGO</option>
-                    <option value="4">Self-Employed</option>
+                    <option *ngFor="let type of configurations.employerTypes" [value]="type.id">
+                      {{ type.name }}
+                    </option>
                   </select>
                 </div>
                 <div class="form-group half">
@@ -347,8 +339,9 @@
                 <div class="form-group half">
                   <select formControlName="employmentStatus" class="form-input form-select" [class.filled]="employerInfoForm.get('employmentStatus')?.value">
                     <option value="" disabled selected>Employment Status</option>
-                    <option value="1">Permanent</option>
-                    <option value="2">Contract</option>
+                    <option *ngFor="let status of configurations.employmentStatuses" [value]="status.id">
+                      {{ status.employmentStatus }}
+                    </option>
                   </select>
                 </div>
                 <div class="form-group half">
@@ -400,8 +393,9 @@
                 <div class="form-group half">
                   <select formControlName="businessType" class="form-input form-select" [class.filled]="businessInfoForm.get('businessType')?.value">
                     <option value="" disabled selected>Business Type / Nature</option>
-                    <option value="1">Trading</option>
-                    <option value="2">Service</option>
+                    <option *ngFor="let type of configurations.businessTypes" [value]="type.id">
+                      {{ type.name }}
+                    </option>
                   </select>
                 </div>
                 <div class="form-group half">
@@ -454,7 +448,9 @@
                 <div class="form-group half">
                   <select formControlName="repaymentPreference" class="form-input form-select" [class.filled]="creditInfoForm.get('repaymentPreference')?.value">
                     <option value="" disabled selected>Repayment Preference</option>
-                    <option value="1">EMI</option>
+                    <option *ngFor="let pref of configurations.repaymentPreferences" [value]="pref.id">
+                      {{ pref.name }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -502,8 +498,9 @@
                 <div class="form-group half">
                   <select formControlName="collateralType" class="form-input form-select" [class.filled]="securityInfoForm.get('collateralType')?.value">
                     <option value="" disabled selected>Collateral Type</option>
-                    <option value="1">Property</option>
-                    <option value="2">FDR</option>
+                    <option *ngFor="let type of configurations.collateralTypes" [value]="type.id">
+                      {{ type.name }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -869,7 +866,7 @@
 
     <!-- Footer -->
     <div class="modal-footer">
-      <button class="return-home-btn" >
+      <button class="return-home-btn" (click)="close()">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>

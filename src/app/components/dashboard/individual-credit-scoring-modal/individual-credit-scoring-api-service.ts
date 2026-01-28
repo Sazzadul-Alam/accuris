@@ -25,74 +25,75 @@ export class IndividualCreditService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     const payload = {
-      param: action, // 'SAVE' or 'SUBMIT'
+      param: action,
       userId: userId,
       dataSet: {
-        // --- Individual & Location Info ---
-        id: allData.personal?.id || null, // NULL = Insert, Value = Update
-        firstName: allData.personal?.firstName,
-        lastName: allData.personal?.lastName,
-        fatherName: allData.personal?.fathersName,
-        motherName: allData.personal?.mothersName,
-        dateOfBirth: this.formatDate(allData.personal?.dateOfBirth),
-        genderId: this.mapGender(allData.personal?.gender),
-        maritalStatusId: this.mapMaritalStatus(allData.personal?.maritalStatus),
-        phoneNumber: allData.personal?.phoneNumber,
-        email: allData.personal?.email,
-        nationalIdPassportNo: allData.personal?.idNumber,
+        id: allData.id || null,  // ✅ Changed from allData.personal?.id
+        firstName: allData.firstName,  // ✅ Flattened structure
+        lastName: allData.lastName,
+        fatherName: allData.fatherName,
+        motherName: allData.motherName,
+        dateOfBirth: this.formatDate(allData.dateOfBirth),
+        genderId: allData.genderId,  // ✅ No mapping needed!
+        maritalStatusId: allData.maritalStatusId,  // ✅ No mapping needed!
+        phoneNumber: allData.phoneNumber,
+        email: allData.email,
+        nationalIdPassportNo: allData.nationalIdPassportNo,
 
-        presentAddress: allData.location?.presentAddress,
-        permanentAddress: allData.location?.permanentAddress,
-        city: allData.location?.city,
-        stateProvince: allData.location?.stateOrDistrict,
-        postalCode: allData.location?.postalCode,
-        countryCode: allData.location?.country,
+        presentAddress: allData.presentAddress,
+        permanentAddress: allData.permanentAddress,
+        city: allData.city,
+        stateProvince: allData.stateProvince,
+        postalCode: allData.postalCode,
+        countryCode: allData.countryCode,
 
-        // --- Financial Info ---
-        financialId: allData.financial?.financialId || null,
-        employerTypeId: this.toInt(allData.financial?.employerInfo?.employerType),
-        employerName: allData.financial?.employerInfo?.employerName,
-        employmentStatusId: this.toInt(allData.financial?.employerInfo?.employmentStatus),
-        jobDesignation: allData.financial?.employerInfo?.jobDesignation,
-        jobTenureYears: this.toInt(allData.financial?.employerInfo?.jobTenureYears),
-        monthlyGrossIncome: this.toFloat(allData.financial?.employerInfo?.monthlyGrossIncome),
-        monthlyNetIncome: this.toFloat(allData.financial?.employerInfo?.monthlyNetIncome),
+        // Financial Info
+        financialId: allData.financialId || null,
+        employerTypeId: this.toInt(allData.employerTypeId),
+        employerName: allData.employerName,
+        employmentStatusId: this.toInt(allData.employmentStatusId),
+        jobDesignation: allData.jobDesignation,
+        jobTenureYears: this.toInt(allData.jobTenureYears),
+        monthlyGrossIncome: this.toFloat(allData.monthlyGrossIncome),
+        monthlyNetIncome: this.toFloat(allData.monthlyNetIncome),
 
-        businessName: allData.financial?.businessInfo?.businessName,
-        businessTypeId: this.toInt(allData.financial?.businessInfo?.businessType),
-        industryType: allData.financial?.businessInfo?.industryType,
-        yearsInBusiness: this.toInt(allData.financial?.businessInfo?.yearsInBusiness),
-        monthlyBusinessIncome: this.toFloat(allData.financial?.businessInfo?.monthlyBusinessIncome),
+        businessName: allData.businessName,
+        businessTypeId: this.toInt(allData.businessTypeId),
+        industryType: allData.industryType,
+        yearsInBusiness: this.toInt(allData.yearsInBusiness),
+        monthlyBusinessIncome: this.toFloat(allData.monthlyBusinessIncome),
 
-        requestedLoanAmount: this.toFloat(allData.financial?.creditInfo?.requestedLoanAmount),
-        downPaymentAmount: this.toFloat(allData.financial?.creditInfo?.downPaymentAmount),
-        loanTenureMonths: this.toInt(allData.financial?.creditInfo?.loanTenureMonths),
-        repaymentPreferenceId: this.toInt(allData.financial?.creditInfo?.repaymentPreference),
-        existingLoanDetails: allData.financial?.creditInfo?.existingLoanDetails,
-        creditCardDetails: allData.financial?.creditInfo?.creditCardDetails,
+        requestedLoanAmount: this.toFloat(allData.requestedLoanAmount),
+        downPaymentAmount: this.toFloat(allData.downPaymentAmount),
+        loanTenureMonths: this.toInt(allData.loanTenureMonths),
+        repaymentPreferenceId: this.toInt(allData.repaymentPreferenceId),
+        existingLoanDetails: allData.existingLoanDetails,
+        creditCardDetails: allData.creditCardDetails,
 
-        collateralAvailable: this.toInt(allData.financial?.securityInfo?.collateralAvailable),
-        collateralTypeId: this.toInt(allData.financial?.securityInfo?.collateralType),
-        estimatedCollateralValue: this.toFloat(allData.financial?.securityInfo?.estimatedCollateralValue),
-        guarantorAvailable: this.toInt(allData.financial?.securityInfo?.guarantorAvailable),
-        coApplicantAvailable: this.toInt(allData.financial?.securityInfo?.coApplicantAvailable),
+        collateralAvailable: this.toInt(allData.collateralAvailable),
+        collateralTypeId: this.toInt(allData.collateralTypeId),
+        estimatedCollateralValue: this.toFloat(allData.estimatedCollateralValue),
+        guarantorAvailable: this.toInt(allData.guarantorAvailable),
+        coApplicantAvailable: this.toInt(allData.coApplicantAvailable),
 
-        // --- Arrays for Mappings ---
-        incomeTypeId: allData.financial?.basicInfo?.incomeType ? [this.toInt(allData.financial.basicInfo.incomeType)] : [],
-        creditPurposeId: allData.financial?.basicInfo?.creditPurpose ? [this.toInt(allData.financial.basicInfo.creditPurpose)] : [],
+        incomeTypeId: allData.incomeTypeId || [],
+        creditPurposeId: allData.creditPurposeId || [],
 
-        // --- Document Uploads ---
-        idCopyUrl: allData.uploads?.nationalIdCopy || '',
-        photographUrl: allData.uploads?.photograph || '',
-        salaryCertificateUrl: allData.uploads?.salaryCertificate || '',
-        bankStatementUrl: allData.uploads?.bankStatement || '',
-        incomeTaxReturnUrl: allData.uploads?.incomeTaxReturn || '',
-        cibConsentFormUrl: allData.uploads?.cibConsentForm || ''
+        idCopyUrl: allData.idCopyUrl || '',
+        photographUrl: allData.photographUrl || '',
+        salaryCertificateUrl: allData.salaryCertificateUrl || '',
+        bankStatementUrl: allData.bankStatementUrl || '',
+        incomeTaxReturnUrl: allData.incomeTaxReturnUrl || '',
+        cibConsentFormUrl: allData.cibConsentFormUrl || ''
       }
     };
 
     return this.http.post<IndividualCreditResponse>(`${this.baseUrl}/process`, payload, { headers });
   }
+
+// ✅ DELETE these methods - they're causing the bug!
+// private mapGender(gender: string): number { ... }
+// private mapMaritalStatus(status: string): number { ... }
 
   /**
    * Upload a document file to the backend, which will store it in an individual-specific folder.
@@ -108,19 +109,28 @@ export class IndividualCreditService {
   private toInt(val: any): number | null { return val ? parseInt(val) : null; }
   private toFloat(val: any): number | null { return val ? parseFloat(val) : null; }
 
-  private mapGender(gender: string): number {
-    const map: any = { 'Male': 1, 'Female': 2, 'Other': 3 };
-    return map[gender] || 3;
-  }
 
-  private mapMaritalStatus(status: string): number {
-    const map: any = { 'Single': 1, 'Married': 2, 'Divorced': 3, 'Widowed': 4, 'Separated': 5 };
-    return map[status] || 6;
-  }
 
   private formatDate(date: any): string {
     if (!date) return '';
     const d = new Date(date);
     return d.toISOString().split('T')[0]; // Returns YYYY-MM-DD
   }
+
+  getLatestIndividualId(userId: number): Observable<{ individualId: number | null }> {
+    return this.http.get<{ individualId: number | null }>(
+      `${this.baseUrl}/latest-individual/${userId}`
+    );
+  }
+
+  getIndividualById(individualId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/individual/${individualId}`
+    );
+  }
+
+  getAllConfigurations(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/configurations`);
+  }
+
 }
