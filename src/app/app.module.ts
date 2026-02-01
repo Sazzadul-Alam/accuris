@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Main Components
-import { ComponentsComponent } from './components/components.component';
+
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LandingComponent } from './components/landing/landing.component';
 
@@ -25,15 +26,20 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { SidebarComponent } from './components/dashboard/sidebar/sidebar.component';
 import {HttpClientModule} from "@angular/common/http";
 import { SignUpParentComponent } from './components/login/sign-up-parent/sign-up-parent.component';
-
+import { AuthInterceptor } from "./services/auth.interceptor";
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // Standalone
 import { TwoFactorAuthComponent } from './components/two-factor-auth/two-factor-auth.component';
 import { SignupComponent } from './components/login/signup/signup.component';
+import { BusinessCreditScoringModalComponent } from './components/dashboard/business-credit-scoring-modal/business-credit-scoring-modal.component';
+import { ConfirmationModalComponent } from './components/dashboard/confirmation-modal/confirmation-modal.component';
+import {AlertBannerComponent} from "./components/alert-banner/alert-banner.component";
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    ComponentsComponent,
+
     DashboardComponent,
     LandingComponent,
     LoginComponent,
@@ -51,6 +57,9 @@ import { SignupComponent } from './components/login/signup/signup.component';
     PaymentModalComponent,
     SidebarComponent,
     SignUpParentComponent,
+    BusinessCreditScoringModalComponent,
+    ConfirmationModalComponent,
+    AlertBannerComponent,
 
   ],
     imports: [
@@ -61,7 +70,7 @@ import { SignupComponent } from './components/login/signup/signup.component';
       HttpClientModule
 
     ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
