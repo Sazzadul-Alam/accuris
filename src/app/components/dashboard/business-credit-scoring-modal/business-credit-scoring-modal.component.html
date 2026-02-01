@@ -1,14 +1,25 @@
 <!-- Close Confirmation Modal -->
-<div class="confirmation-overlay" *ngIf="showCloseConfirmation" (click)="cancelClose()">
-  <div class="confirmation-modal" (click)="$event.stopPropagation()">
-    <h3 class="confirmation-title">Are you sure you want to quit?</h3>
-    <p class="confirmation-message">Any unsaved data will be lost</p>
-    <div class="confirmation-buttons">
-      <button class="btn-save" (click)="cancelClose()">No</button>
-      <button class="btn-next" (click)="confirmClose()">Yes</button>
-    </div>
-  </div>
-</div>
+<app-confirmation-modal
+  [show]="showCloseConfirmation"
+  title="You have unsaved data!"
+  message="Quit without saving?"
+  confirmText="Yes"
+  cancelText="No"
+  (confirmed)="confirmClose()"
+  (cancelled)="cancelClose()">
+</app-confirmation-modal>
+
+<!--&lt;!&ndash; Close Confirmation Modal &ndash;&gt;-->
+<!--<div class="confirmation-overlay" *ngIf="showCloseConfirmation" (click)="cancelClose()">-->
+<!--  <div class="confirmation-modal" (click)="$event.stopPropagation()">-->
+<!--    <h3 class="confirmation-title">Are you sure you want to quit?</h3>-->
+<!--    <p class="confirmation-message">Any unsaved data will be lost</p>-->
+<!--    <div class="confirmation-buttons">-->
+<!--      <button class="btn-save" (click)="cancelClose()">No</button>-->
+<!--      <button class="btn-next" (click)="confirmClose()">Yes</button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
 <div class="modal-overlay" (click)="close()">
   <div class="modal-container" (click)="$event.stopPropagation()">

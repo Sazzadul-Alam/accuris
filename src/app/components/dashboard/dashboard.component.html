@@ -51,10 +51,10 @@
 
       <div class="tabs">
         <div class="k-cursor-default" >
-            <button  (click)="changeTable('individual_credit')" class="back-title col-sm-auto"
+            <button  (click)="changeTab('individual_credit')" class="back-title col-sm-auto"
                   [ngClass]="{'text-muted-modified':!tables.individual_credit.selected}">Individual Credit Scoring
             </button>
-            <button  (click)="changeTable('business_credit')" class="back-title col-sm-auto"
+            <button  (click)="changeTab('business_credit')" class="back-title col-sm-auto"
                   [ngClass]="{'text-muted-modified':!tables.business_credit.selected}" >Business Credit Scoring
             </button>
 
@@ -469,7 +469,7 @@
             <div class="run-steps">
 
               <!-- Individual Information -->
-              <div class="run-step-item">
+              <div *ngIf="selectedTab === 0" class="run-step-item">
                 <div
                   class="run-step-icon"
                   [ngClass]="{ clickable: runningProcesses['Individual Information'] }"
@@ -485,9 +485,35 @@
                 <div class="step-info">
                   <p>Individual <br /> Information</p>
                 </div>
-                <button (click)="openBusinessCreditModal()">
-                  Open Business Credit Scoring
-                </button>
+
+                <div
+                  *ngIf="stepStatus['Individual Information'] !== Status.nothing"
+                  class="status"
+                  [ngClass]="{
+          'draft-status': stepStatus['Individual Information'] === Status.draft,
+          'completed-status': stepStatus['Individual Information'] === Status.completed
+        }">
+                  {{ stepStatus['Individual Information'] }}
+                </div>
+              </div>
+
+              <!-- Business Information -->
+              <div *ngIf="selectedTab === 1" class="run-step-item">
+                <div
+                  class="run-step-icon"
+                  [ngClass]="{ clickable: runningProcesses['Individual Information'] }"
+                  (click)="openBusinessCreditModal()">
+                  <img *ngIf="runningProcesses['Individual Information']"
+                       src="assets/images/run_proc_1_icon.svg"
+                       class="step_1_icon" />
+                  <img *ngIf="!runningProcesses['Individual Information']"
+                       src="assets/images/run_proc_1_disabled_icon.svg"
+                       class="step_1_icon" />
+                </div>
+
+                <div class="step-info">
+                  <p>Business <br /> Information</p>
+                </div>
 
                 <div
                   *ngIf="stepStatus['Individual Information'] !== Status.nothing"

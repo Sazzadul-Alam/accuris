@@ -1,0 +1,193 @@
+/* Alert Banner Container */
+.alert-banner {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  animation: slideDown 0.3s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Slide Down Animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Alert Content Layout */
+.alert-banner__content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Icon */
+.alert-banner__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+/* Message */
+.alert-banner__message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Close Button */
+.alert-banner__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.alert-banner__close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.alert-banner__close:active {
+  transform: scale(0.95);
+}
+
+/* Success Variant (Green) */
+.alert-banner--success {
+  background: #D4EDDA;
+  border-left: 4px solid #28A745;
+  color: #155724;
+}
+
+.alert-banner--success .alert-banner__icon {
+  color: #28A745;
+}
+
+.alert-banner--success .alert-banner__close:hover {
+  background: rgba(40, 167, 69, 0.1);
+}
+
+/* Error Variant (Red) */
+.alert-banner--error {
+  background: #F8D7DA;
+  border-left: 4px solid #DC3545;
+  color: #721C24;
+}
+
+.alert-banner--error .alert-banner__icon {
+  color: #DC3545;
+}
+
+.alert-banner--error .alert-banner__close:hover {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+/* Warning Variant (Yellow/Orange) */
+.alert-banner--warning {
+  background: #FFF3CD;
+  border-left: 4px solid #FFC107;
+  color: #856404;
+}
+
+.alert-banner--warning .alert-banner__icon {
+  color: #FFC107;
+}
+
+.alert-banner--warning .alert-banner__close:hover {
+  background: rgba(255, 193, 7, 0.1);
+}
+
+/* Info Variant (Blue) */
+.alert-banner--info {
+  background: #D1ECF1;
+  border-left: 4px solid #17A2B8;
+  color: #0C5460;
+}
+
+.alert-banner--info .alert-banner__icon {
+  color: #17A2B8;
+}
+
+.alert-banner--info .alert-banner__close:hover {
+  background: rgba(23, 162, 184, 0.1);
+}
+
+/* Progress Bar (optional - for auto-dismiss visual feedback) */
+.alert-banner::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.3;
+  animation: shrink 3s linear forwards;
+}
+
+@keyframes shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .alert-banner {
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+
+  .alert-banner__message {
+    font-size: 13px;
+  }
+
+  .alert-banner__content {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .alert-banner {
+    padding: 10px 12px;
+  }
+
+  .alert-banner__message {
+    font-size: 12px;
+  }
+
+  .alert-banner__icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .alert-banner__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}

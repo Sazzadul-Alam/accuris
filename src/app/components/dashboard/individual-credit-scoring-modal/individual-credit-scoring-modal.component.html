@@ -1,14 +1,13 @@
 <!-- Close Confirmation Modal -->
-<div class="confirmation-overlay" *ngIf="showCloseConfirmation" (click)="cancelClose()">
-  <div class="confirmation-modal" (click)="$event.stopPropagation()">
-    <h3 class="confirmation-title">Are you sure you want to quit?</h3>
-    <p class="confirmation-message">Any unsaved data will be lost</p>
-    <div class="confirmation-buttons">
-      <button class="btn-save" (click)="cancelClose()">No</button>
-      <button class="btn-next" (click)="confirmClose()">Yes</button>
-    </div>
-  </div>
-</div>
+<app-confirmation-modal
+  [show]="showCloseConfirmation"
+  title="You have unsaved data!"
+  message="Quit without saving?"
+  confirmText="Yes"
+  cancelText="No"
+  (confirmed)="confirmClose()"
+  (cancelled)="cancelClose()">
+</app-confirmation-modal>
 <div class="modal-overlay" (click)="close()">
   <div class="modal-container" (click)="$event.stopPropagation()">
 
@@ -24,6 +23,16 @@
         </svg>
       </button>
     </div>
+
+    <app-alert-banner
+      [show]="showNotification"
+      [message]="notificationMessage"
+      [type]="notificationType"
+      [autoDismiss]="true"
+      [duration]="3000"
+      (dismissed)="onNotificationDismissed()">
+    </app-alert-banner>
+
 
     <!-- Plan Info -->
     <div class="plan-info">
@@ -125,7 +134,7 @@
 
         <div class="button-row">
           <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
-          <button type="button" class="btn-next" [disabled]="personalInfoForm.invalid" >NEXT</button>
+          <button type="button" class="btn-next" (click)="goToNextStep()" [disabled]="personalInfoForm.invalid" >NEXT</button>
         </div>
       </form>
     </div>
@@ -245,6 +254,7 @@
           <button
             type="button"
             class="btn-next"
+            (click)="goToNextStep()"
             [disabled]="locationForm.invalid"
 
           >
@@ -533,7 +543,7 @@
 
       <div class="button-row financial-buttons">
         <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
-        <button type="button" class="btn-next" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid || securityInfoForm.invalid" >NEXT</button>
+        <button type="button" class="btn-next" (click)="goToNextStep()" [disabled]="basicInfoForm.invalid || employerInfoForm.invalid || businessInfoForm.invalid || creditInfoForm.invalid || securityInfoForm.invalid" >NEXT</button>
       </div>
     </div>
 
@@ -809,7 +819,7 @@
 
         <div class="button-row upload-buttons">
           <button type="button" class="btn-save" (click)="onSaveAll()">SAVE</button>
-          <button type="button" class="btn-next" [disabled]="uploadForm.invalid" >NEXT</button>
+          <button type="button" class="btn-next" (click)="goToNextStep()" [disabled]="uploadForm.invalid" >NEXT</button>
         </div>
       </form>
     </div>

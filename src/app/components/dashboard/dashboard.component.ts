@@ -17,6 +17,9 @@ enum Status {
 })
 export class DashboardComponent {
 
+  selectedTab = 0;
+
+
   showBusinessCreditModal = false;
 
   openBusinessCreditModal() {
@@ -210,8 +213,10 @@ export class DashboardComponent {
     return labels.reverse(); // top to bottom
   }
   openIndividualModal() {
+    if (this.runningProcesses['Individual Information']) {
     console.log('Opening individual modal');
     this.showIndividualModal = true;
+    }
   }
 
   openIndividualCreditScoringModal(selectedPlan: string) {
@@ -255,9 +260,15 @@ export class DashboardComponent {
     this.isSidebarOpen = false;
   }
 
-  changeTable(table: string) {
+  changeTab(tab: string) {
+    if (tab === 'individual_credit') {
+      this.selectedTab = 0;
+    }
+    else {
+      this.selectedTab = 1;
+    }
     this.tables[this.currentTable].selected = false;
-    this.currentTable = table;
+    this.currentTable = tab;
     this.tables[this.currentTable].selected = true;
   }
   onPlanSelected(planName: string) {

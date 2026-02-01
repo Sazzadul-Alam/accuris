@@ -1,54 +1,119 @@
 import {Component, ElementRef, EventEmitter, Output, ViewChild, Input} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { IndividualCreditService } from "./individual-credit-scoring-api-service";
-import { switchMap, tap, catchError } from 'rxjs/operators';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-individual-credit-scoring-modal',
   templateUrl: './individual-credit-scoring-modal.component.html',
-  styleUrls: ['./individual-credit-scoring-modal.component.css']
+  styleUrls: ['./individual-credit-scoring-modal.component.css'],
+  animations: [
+    trigger('slideDown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'translateY(-20px)' }))
+      ])
+    ])
+  ]
 })
 export class IndividualCreditScoringModalComponent {
-  @Input() selectedPlanInput = '';
-  @Input() currentUserId: number = null;  // The logged-in user (bank employee/admin)
-  @Input() currentUserName: string = '';
-  @Output() closeModal= new EventEmitter<void>();
-  @Output() formSubmit= new EventEmitter<any>();
-  @Output() saved= new EventEmitter<any>();
 
-  // Add these ViewChild references with the others:
+  // ==================== INPUTS & OUTPUTS ====================
+  @Input() selectedPlanInput = '';
+  @Input() currentUserId: number = null;
+  @Input() currentUserName: string = '';
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() formSubmit = new EventEmitter<any>();
+  @Output() saved = new EventEmitter<any>();
+
+  // ==================== VIEW CHILDREN (FILE INPUTS) ====================
   @ViewChild('idCopyInput') idCopyInput!: ElementRef<HTMLInputElement>;
   @ViewChild('photographInput') photographInput!: ElementRef<HTMLInputElement>;
   @ViewChild('salaryCertificateInput') salaryCertificateInput!: ElementRef<HTMLInputElement>;
   @ViewChild('bankStatementInput') bankStatementInput!: ElementRef<HTMLInputElement>;
   @ViewChild('incomeTaxReturnInput') incomeTaxReturnInput!: ElementRef<HTMLInputElement>;
   @ViewChild('cibConsentFormInput') cibConsentFormInput!: ElementRef<HTMLInputElement>;
-
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-
-  // Identity & Verification
   @ViewChild('passportInput') passportInput!: ElementRef<HTMLInputElement>;
   @ViewChild('passportPhotoInput') passportPhotoInput!: ElementRef<HTMLInputElement>;
   @ViewChild('utilityInput') utilityInput!: ElementRef<HTMLInputElement>;
   @ViewChild('tinInput') tinInput!: ElementRef<HTMLInputElement>;
-
-  // Employment Document
   @ViewChild('salaryInput') salaryInput!: ElementRef<HTMLInputElement>;
   @ViewChild('employerIdInput') employerIdInput!: ElementRef<HTMLInputElement>;
   @ViewChild('paySlipInput') paySlipInput!: ElementRef<HTMLInputElement>;
   @ViewChild('appointmentInput') appointmentInput!: ElementRef<HTMLInputElement>;
-
-  // Credit Verification
   @ViewChild('cibConsentInput') cibConsentInput!: ElementRef<HTMLInputElement>;
   @ViewChild('loanStatementsInput') loanStatementsInput!: ElementRef<HTMLInputElement>;
   @ViewChild('creditCardInput') creditCardInput!: ElementRef<HTMLInputElement>;
-
-  // Collateral / Asset Verification
   @ViewChild('fdrInput') fdrInput!: ElementRef<HTMLInputElement>;
   @ViewChild('goldInput') goldInput!: ElementRef<HTMLInputElement>;
 
+  // ==================== FORMS ====================
+  personalInfoForm!: FormGroup;
+  locationForm!: FormGroup;
+  basicInfoForm!: FormGroup;
+  employerInfoForm!: FormGroup;
+  businessInfoForm!: FormGroup;
+  creditInfoForm!: FormGroup;
+  securityInfoForm!: FormGroup;
+  uploadForm!: FormGroup;
+
+  // ==================== STATE MANAGEMENT ====================
+  currentStep: number = 1;
+  individualId: number = null;
+  financialInfoId: number = null;
+  hasUnsavedChanges = false;
+  consentAccepted: boolean = false;
+
+  // Step validation control (set to false to disable for testing)
+  enforceStepValidation: boolean = false;
+
+  // ==================== NOTIFICATION STATE ====================
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' | 'warning' | 'info' = 'success';
+
+  // ==================== MODAL STATE ====================
+  showCloseConfirmation: boolean = false;
+
+  // ==================== FILE UPLOAD STATE ====================
+  pendingUploads: { [key: string]: File } = {};
+  uploadedFiles: any = {
+    idCopy: { path: null, filename: null },
+    photograph: { path: null, filename: null },
+    salaryCertificate: { path: null, filename: null },
+    bankStatement: { path: null, filename: null },
+    incomeTaxReturn: { path: null, filename: null },
+    cibConsentForm: { path: null, filename: null }
+  };
+  fileErrorMessage: string = '';
+
+  // ==================== ACCORDION/SECTION STATE ====================
+  expandedSection: string = '';
+  expandedUploadSection: string = '';
+  expandedNestedSection: string = '';
+
+  financialSections = {
+    basicInfo: false,
+    employerInfo: false,
+    businessInfo: false,
+    creditInfo: false,
+    securityInfo: false
+  };
+
+  uploadSections = {
+    identity: false,
+    employment: false,
+    credit: false,
+    declaration: false
+  };
+
+  // ==================== CONFIGURATION DATA ====================
   configurations: any = {
     genders: [],
     maritalStatuses: [],
@@ -61,58 +126,13 @@ export class IndividualCreditScoringModalComponent {
     collateralTypes: []
   };
 
-  // ✅ ADDED: Track the individual being processed (customer/applicant)
-  individualId: number = null;
-  financialInfoId: number = null;
-  pendingUploads: { [key: string]: File } = {};
-
-  personalInfoForm!: FormGroup;
-  locationForm!: FormGroup;
-  basicInfoForm!: FormGroup;
-  employerInfoForm!: FormGroup;
-  businessInfoForm!: FormGroup;
-  creditInfoForm!: FormGroup;
-  securityInfoForm!: FormGroup;
-
-  uploadForm!: FormGroup;
-
-  currentStep: number = 1;
+  // ==================== UI STATE ====================
   selectedFileName: string = '';
   selectedOption: string = 'Select Option';
   isSelectDropdownOpen: boolean = false;
   selectOptions: string[] = ['Individual', 'Business', 'Joint Account', 'Corporate'];
-
-  expandedSection: string = '';
-  financialSections = {
-    basicInfo: false,
-    employerInfo: false,
-    businessInfo: false,
-    creditInfo: false,
-    securityInfo: false
-  };
-
-  expandedUploadSection: string = '';
-  uploadSections = {
-    identity: false,
-    employment: false,
-    credit: false,
-    declaration: false  // Add this
-  };
-
-  expandedNestedSection: string = '';
-
-  uploadedFiles: any = {
-    idCopy: { path: null, filename: null },
-    photograph: { path: null, filename: null },
-    salaryCertificate: { path: null, filename: null },
-    bankStatement: { path: null, filename: null },
-    incomeTaxReturn: { path: null, filename: null },
-    cibConsentForm: { path: null, filename: null }
-  };
-
   isUploadSectionValid: boolean = false;
 
-  // Business Information Form Data
   businessUploadInfo = {
     businessType: '',
     yearsInBusiness: '',
@@ -120,14 +140,6 @@ export class IndividualCreditScoringModalComponent {
     industryType: '',
     businessName: ''
   };
-
-  consentAccepted: boolean = false;
-  notificationMessage: string = '';
-  notificationType: 'success' | 'error' | '' = '';
-  showNotificationFlag: boolean = false;
-  showUnsavedChangesWarning: boolean = false;
-  showCloseConfirmation: boolean = false;
-  fileErrorMessage: string = '';
 
   steps = [
     { id: 1, name: "Person's Info", icon: 'user' },
@@ -137,110 +149,18 @@ export class IndividualCreditScoringModalComponent {
     { id: 5, name: 'User Consent', icon: 'consent' }
   ];
 
+  // ==================== CONSTRUCTOR ====================
   constructor(
     private fb: FormBuilder,
     private creditService: IndividualCreditService
   ) {}
 
-  private uploadPendingFiles(): Observable<{ [key: string]: { path: string; filename: string } }> {
-    const uploadObservables: { [key: string]: Observable<{ path: string; filename: string }> } = {};
-
-    if (Object.keys(this.pendingUploads).length === 0) {
-      return of({});
-    }
-
-    Object.keys(this.pendingUploads).forEach((fieldName) => {
-      const file = this.pendingUploads[fieldName];
-      uploadObservables[fieldName] = this.creditService.uploadDocument(file, this.individualId, fieldName);
-    });
-
-    return forkJoin(uploadObservables).pipe(
-      map((results: { [key: string]: { path: string; filename: string } }) => {
-        return results;
-      })
-    );
-  }
-
-  private getConsolidatedPayload() {
-    const basicInfo = this.basicInfoForm.value;
-
-    return {
-      id: this.individualId || null,
-      firstName: this.personalInfoForm.value.firstName,
-      lastName: this.personalInfoForm.value.lastName,
-      fatherName: this.personalInfoForm.value.fathersName,
-      motherName: this.personalInfoForm.value.mothersName,
-      dateOfBirth: this.personalInfoForm.value.dateOfBirth,
-      genderId: this.personalInfoForm.value.gender,
-      maritalStatusId: this.personalInfoForm.value.maritalStatus,
-      phoneNumber: this.personalInfoForm.value.phoneNumber,
-      email: this.personalInfoForm.value.email,
-      nationalIdPassportNo: this.personalInfoForm.value.idNumber,
-
-      presentAddress: this.locationForm.value.presentAddress,
-      permanentAddress: this.locationForm.value.permanentAddress,
-      city: this.locationForm.value.city,
-      stateProvince: this.locationForm.value.stateOrDistrict,
-      postalCode: this.locationForm.value.postalCode,
-      countryCode: this.locationForm.value.country,
-
-      // ✅ UPLOAD URLS AND FILENAMES
-      idCopyUrl: this.uploadForm.value.idCopy,
-      idCopyFilename: this.uploadForm.value.idCopyFilename,
-      photographUrl: this.uploadForm.value.photograph,
-      photographFilename: this.uploadForm.value.photographFilename,
-      salaryCertificateUrl: this.uploadForm.value.salaryCertificate,
-      salaryCertificateFilename: this.uploadForm.value.salaryCertificateFilename,
-      bankStatementUrl: this.uploadForm.value.bankStatement,
-      bankStatementFilename: this.uploadForm.value.bankStatementFilename,
-      incomeTaxReturnUrl: this.uploadForm.value.incomeTaxReturn,
-      incomeTaxReturnFilename: this.uploadForm.value.incomeTaxReturnFilename,
-      cibConsentFormUrl: this.uploadForm.value.cibConsentForm,
-      cibConsentFormFilename: this.uploadForm.value.cibConsentFormFilename,
-
-      financialId: this.financialInfoId || null,
-
-      employerTypeId: this.employerInfoForm.value.employerType,
-      employerName: this.employerInfoForm.value.employerName,
-      employmentStatusId: this.employerInfoForm.value.employmentStatus,
-      jobDesignation: this.employerInfoForm.value.jobDesignation,
-      jobTenureYears: this.employerInfoForm.value.jobTenureYears,
-      monthlyGrossIncome: this.employerInfoForm.value.monthlyGrossIncome,
-      monthlyNetIncome: this.employerInfoForm.value.monthlyNetIncome,
-
-      businessName: this.businessInfoForm.value.businessName,
-      businessTypeId: this.businessInfoForm.value.businessType,
-      industryType: this.businessInfoForm.value.industryType,
-      yearsInBusiness: this.businessInfoForm.value.yearsInBusiness,
-      monthlyBusinessIncome: this.businessInfoForm.value.monthlyBusinessIncome,
-
-      requestedLoanAmount: this.creditInfoForm.value.requestedLoanAmount,
-      downPaymentAmount: this.creditInfoForm.value.downPaymentAmount,
-      loanTenureMonths: this.creditInfoForm.value.loanTenureMonths,
-      repaymentPreferenceId: this.creditInfoForm.value.repaymentPreference,
-      existingLoanDetails: this.creditInfoForm.value.existingLoanDetails,
-      creditCardDetails: this.creditInfoForm.value.creditCardDetails,
-
-      collateralAvailable: this.securityInfoForm.value.collateralAvailable,
-      collateralTypeId: this.securityInfoForm.value.collateralType,
-      estimatedCollateralValue: this.securityInfoForm.value.estimatedCollateralValue,
-      guarantorAvailable: this.securityInfoForm.value.guarantorAvailable,
-      coApplicantAvailable: this.securityInfoForm.value.coApplicantAvailable,
-
-      incomeTypeId: basicInfo.incomeType ? [basicInfo.incomeType] : [],
-      creditPurposeId: basicInfo.creditPurpose ? [basicInfo.creditPurpose] : []
-    };
-  }
-
+  // ==================== LIFECYCLE HOOKS ====================
   ngOnInit(): void {
-
-
-
     // Load configurations first
     this.creditService.getAllConfigurations().subscribe({
       next: (configs) => {
         this.configurations = configs;
-
 
         // Then load individual data
         this.creditService.getLatestIndividualId(this.currentUserId).subscribe({
@@ -250,11 +170,14 @@ export class IndividualCreditScoringModalComponent {
 
             if (this.individualId) {
               this.loadIndividualData(this.individualId);
+            } else {
+              this.startTrackingChanges();
             }
           },
           error: (error) => {
             console.error('Error fetching latest individual:', error);
             this.individualId = null;
+            this.startTrackingChanges();
           }
         });
       },
@@ -268,7 +191,6 @@ export class IndividualCreditScoringModalComponent {
     this.initializeFinancialForms();
     this.initializeUploadForm();
 
-
     // Track changes to gender and marital status
     this.personalInfoForm.get('gender')?.valueChanges.subscribe(value => {
       console.log('👤 Gender changed to:', value);
@@ -279,15 +201,154 @@ export class IndividualCreditScoringModalComponent {
     });
   }
 
+  // ==================== FORM INITIALIZATION ====================
+  initializeForm(): void {
+    this.personalInfoForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      fathersName: ['', [Validators.required, Validators.minLength(2)]],
+      mothersName: ['', [Validators.required, Validators.minLength(2)]],
+      dateOfBirth: ['', [Validators.required, this.ageValidator]],
+      gender: ['', Validators.required],
+      maritalStatus: ['', Validators.required],
+      idNumber: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      uploadId: [null]
+    });
+
+    this.personalInfoForm.valueChanges.subscribe(() => {
+      this.updateFormState();
+    });
+  }
+
+  initializeLocationForm(): void {
+    this.locationForm = this.fb.group({
+      presentAddress: ['', [Validators.required, Validators.minLength(5)]],
+      permanentAddress: ['', [Validators.required, Validators.minLength(5)]],
+      city: ['', [Validators.required, Validators.minLength(2)]],
+      stateOrDistrict: ['', Validators.required],
+      postalCode: ['', [Validators.required, Validators.pattern(/^[0-9]{4,10}$/)]],
+      country: ['', Validators.required],
+      lengthOfStay: ['', [Validators.required, Validators.min(0)]]
+    });
+
+    this.locationForm.valueChanges.subscribe(() => {
+      this.updateFormState();
+    });
+  }
+
+  initializeFinancialForms(): void {
+    this.basicInfoForm = this.fb.group({
+      creditPurpose: ['', Validators.required],
+      incomeType: ['', Validators.required]
+    });
+
+    this.employerInfoForm = this.fb.group({
+      employerType: ['', Validators.required],
+      employerName: ['', Validators.required],
+      employmentStatus: ['', Validators.required],
+      jobDesignation: ['', Validators.required],
+      jobTenureYears: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      monthlyGrossIncome: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      monthlyNetIncome: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+    });
+
+    this.businessInfoForm = this.fb.group({
+      businessName: ['', Validators.required],
+      businessType: ['', Validators.required],
+      industryType: ['', Validators.required],
+      yearsInBusiness: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      monthlyBusinessIncome: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+    });
+
+    this.creditInfoForm = this.fb.group({
+      requestedLoanAmount: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      downPaymentAmount: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      loanTenureMonths: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      repaymentPreference: ['', Validators.required],
+      existingLoanDetails: ['', Validators.required],
+      creditCardDetails: ['', Validators.required]
+    });
+
+    this.securityInfoForm = this.fb.group({
+      collateralAvailable: ['', Validators.required],
+      collateralType: [''],
+      estimatedCollateralValue: ['', Validators.pattern(/^[0-9]+$/)],
+      guarantorAvailable: ['', Validators.required],
+      coApplicantAvailable: ['', Validators.required]
+    });
+
+    // Form value change subscriptions for validation tracking
+    this.basicInfoForm.valueChanges.subscribe(() => {
+      this.financialSections.basicInfo = this.basicInfoForm.valid;
+    });
+
+    this.employerInfoForm.valueChanges.subscribe(() => {
+      this.financialSections.employerInfo = this.employerInfoForm.valid;
+    });
+
+    this.businessInfoForm.valueChanges.subscribe(() => {
+      this.financialSections.businessInfo = this.businessInfoForm.valid;
+    });
+
+    this.creditInfoForm.valueChanges.subscribe(() => {
+      this.financialSections.creditInfo = this.creditInfoForm.valid;
+    });
+
+    this.securityInfoForm.valueChanges.subscribe(() => {
+      this.financialSections.securityInfo = this.securityInfoForm.valid;
+    });
+  }
+
+  initializeUploadForm(): void {
+    this.uploadForm = this.fb.group({
+      idCopy: ['', Validators.required],
+      idCopyFilename: [''],
+      photograph: ['', Validators.required],
+      photographFilename: [''],
+      salaryCertificate: ['', Validators.required],
+      salaryCertificateFilename: [''],
+      bankStatement: ['', Validators.required],
+      bankStatementFilename: [''],
+      incomeTaxReturn: ['', Validators.required],
+      incomeTaxReturnFilename: [''],
+      cibConsentForm: ['', Validators.required],
+      cibConsentFormFilename: [''],
+      finalDeclaration: [false, Validators.requiredTrue]
+    });
+  }
+
+  // ==================== VALIDATORS ====================
+  ageValidator(control: any) {
+    if (!control.value) return null;
+
+    const birthDate = new Date(control.value);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    return age >= 18 ? null : { underage: true };
+  }
+
+  // ==================== DATA LOADING ====================
   private loadIndividualData(individualId: number): void {
     this.creditService.getIndividualById(individualId).subscribe({
       next: (data) => {
-
         this.populateForms(data);
+
+        setTimeout(() => {
+          this.startTrackingChanges();
+        }, 100);
       },
       error: (error) => {
         console.error('Error loading individual data:', error);
-        this.showNotification('Failed to load existing data', 'error');
+        this.showAlert('Failed to load existing data', 'error');
+        this.startTrackingChanges();
       }
     });
   }
@@ -382,7 +443,7 @@ export class IndividualCreditScoringModalComponent {
       }
     }
 
-    // ✅ Upload Form - Store BOTH path and filename
+    // Upload Form
     if (data.uploads) {
       this.uploadForm.patchValue({
         idCopy: data.uploads.idCopy || '',
@@ -429,14 +490,33 @@ export class IndividualCreditScoringModalComponent {
     console.log('Forms populated successfully');
   }
 
+  // ==================== CHANGE TRACKING ====================
+  private startTrackingChanges(): void {
+    this.personalInfoForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+    this.locationForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+    this.basicInfoForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+    this.employerInfoForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+    this.businessInfoForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+    this.creditInfoForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+    this.securityInfoForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+    this.uploadForm.valueChanges.subscribe(() => this.hasUnsavedChanges = true);
+
+    console.log('✅ Started tracking form changes');
+  }
+
+  updateFormState(): void {
+    // Update any derived state based on form values
+  }
+
+  // ==================== SAVE & SUBMIT ====================
   onSaveAll(isFinalSubmit: boolean = false): void {
     if (isFinalSubmit && !this.consentAccepted) {
-      this.showNotification('Please accept the user consent to submit.', 'error');
+      this.showAlert('Please accept the user consent to submit.', 'error');
       return;
     }
 
     if (!this.currentUserId) {
-      this.showNotification('User session expired. Please log in.', 'error');
+      this.showAlert('User session expired. Please log in.', 'error');
       return;
     }
 
@@ -465,7 +545,7 @@ export class IndividualCreditScoringModalComponent {
         },
         error: (err) => {
           console.error('Error uploading files:', err);
-          this.showNotification('Failed to upload one or more files. Please try again.', 'error');
+          this.showAlert('Failed to upload one or more files. Please try again.', 'error');
         }
       });
     } else {
@@ -498,359 +578,117 @@ export class IndividualCreditScoringModalComponent {
             this.financialInfoId = response.financialInfoId;
           }
 
+          this.hasUnsavedChanges = false;
+
           if (isFinalSubmit) {
-            this.showNotification('Application submitted successfully!', 'success');
+            this.showAlert('Application submitted successfully!', 'success');
             setTimeout(() => this.closeModal.emit(), 1500);
           } else {
-            this.showNotification('Progress saved successfully!', 'success');
+            this.showAlert('Progress saved successfully!', 'success');
           }
         } else {
-          this.showNotification(response.message || 'Failed to save data.', 'error');
+          this.showAlert(response.message || 'Failed to save data.', 'error');
         }
       },
       error: (err) => {
         console.error('Server error during unified save:', err);
-        this.showNotification('A connection error occurred.', 'error');
+        this.showAlert('A connection error occurred.', 'error');
       }
     });
   }
-  initializeForm(): void {
-    this.personalInfoForm = this.fb.group({
-      firstName: [
-        '',
-        [Validators.required, Validators.minLength(2)]
-      ],
-      lastName: [
-        '',
-        [Validators.required, Validators.minLength(2)]
-      ],
-      fathersName: [
-        '',
-        [Validators.required, Validators.minLength(2)]
-      ],
-      mothersName: [
-        '',
-        [Validators.required, Validators.minLength(2)]
-      ],
-      dateOfBirth: [
-        '',
-        [Validators.required, this.ageValidator]
-      ],
-      gender: [
-        '',
-        Validators.required
-      ],
-      maritalStatus: [
-        '',
-        Validators.required
-      ],
-      idNumber: [
-        '',
-        [Validators.required]
-      ],
-      phoneNumber: [
-        '',
-        [Validators.required]
-      ],
-      email: [
-        '',
-        [Validators.required, Validators.email]
-      ],
-      uploadId: [
-        null
-      ]
-    });
 
-    this.personalInfoForm.valueChanges.subscribe(() => {
-      this.updateFormState();
-    });
+  private getConsolidatedPayload() {
+    const basicInfo = this.basicInfoForm.value;
+
+    return {
+      id: this.individualId || null,
+      firstName: this.personalInfoForm.value.firstName,
+      lastName: this.personalInfoForm.value.lastName,
+      fatherName: this.personalInfoForm.value.fathersName,
+      motherName: this.personalInfoForm.value.mothersName,
+      dateOfBirth: this.personalInfoForm.value.dateOfBirth,
+      genderId: this.personalInfoForm.value.gender,
+      maritalStatusId: this.personalInfoForm.value.maritalStatus,
+      phoneNumber: this.personalInfoForm.value.phoneNumber,
+      email: this.personalInfoForm.value.email,
+      nationalIdPassportNo: this.personalInfoForm.value.idNumber,
+
+      presentAddress: this.locationForm.value.presentAddress,
+      permanentAddress: this.locationForm.value.permanentAddress,
+      city: this.locationForm.value.city,
+      stateProvince: this.locationForm.value.stateOrDistrict,
+      postalCode: this.locationForm.value.postalCode,
+      countryCode: this.locationForm.value.country,
+
+      idCopyUrl: this.uploadForm.value.idCopy,
+      idCopyFilename: this.uploadForm.value.idCopyFilename,
+      photographUrl: this.uploadForm.value.photograph,
+      photographFilename: this.uploadForm.value.photographFilename,
+      salaryCertificateUrl: this.uploadForm.value.salaryCertificate,
+      salaryCertificateFilename: this.uploadForm.value.salaryCertificateFilename,
+      bankStatementUrl: this.uploadForm.value.bankStatement,
+      bankStatementFilename: this.uploadForm.value.bankStatementFilename,
+      incomeTaxReturnUrl: this.uploadForm.value.incomeTaxReturn,
+      incomeTaxReturnFilename: this.uploadForm.value.incomeTaxReturnFilename,
+      cibConsentFormUrl: this.uploadForm.value.cibConsentForm,
+      cibConsentFormFilename: this.uploadForm.value.cibConsentFormFilename,
+
+      financialId: this.financialInfoId || null,
+
+      employerTypeId: this.employerInfoForm.value.employerType,
+      employerName: this.employerInfoForm.value.employerName,
+      employmentStatusId: this.employerInfoForm.value.employmentStatus,
+      jobDesignation: this.employerInfoForm.value.jobDesignation,
+      jobTenureYears: this.employerInfoForm.value.jobTenureYears,
+      monthlyGrossIncome: this.employerInfoForm.value.monthlyGrossIncome,
+      monthlyNetIncome: this.employerInfoForm.value.monthlyNetIncome,
+
+      businessName: this.businessInfoForm.value.businessName,
+      businessTypeId: this.businessInfoForm.value.businessType,
+      industryType: this.businessInfoForm.value.industryType,
+      yearsInBusiness: this.businessInfoForm.value.yearsInBusiness,
+      monthlyBusinessIncome: this.businessInfoForm.value.monthlyBusinessIncome,
+
+      requestedLoanAmount: this.creditInfoForm.value.requestedLoanAmount,
+      downPaymentAmount: this.creditInfoForm.value.downPaymentAmount,
+      loanTenureMonths: this.creditInfoForm.value.loanTenureMonths,
+      repaymentPreferenceId: this.creditInfoForm.value.repaymentPreference,
+      existingLoanDetails: this.creditInfoForm.value.existingLoanDetails,
+      creditCardDetails: this.creditInfoForm.value.creditCardDetails,
+
+      collateralAvailable: this.securityInfoForm.value.collateralAvailable,
+      collateralTypeId: this.securityInfoForm.value.collateralType,
+      estimatedCollateralValue: this.securityInfoForm.value.estimatedCollateralValue,
+      guarantorAvailable: this.securityInfoForm.value.guarantorAvailable,
+      coApplicantAvailable: this.securityInfoForm.value.coApplicantAvailable,
+
+      incomeTypeId: basicInfo.incomeType ? [basicInfo.incomeType] : [],
+      creditPurposeId: basicInfo.creditPurpose ? [basicInfo.creditPurpose] : []
+    };
   }
 
-  initializeLocationForm(): void {
-    this.locationForm = this.fb.group({
-      presentAddress: ['', [Validators.required, Validators.minLength(5)]],
-      permanentAddress: ['', [Validators.required, Validators.minLength(5)]],
-      city: ['', [Validators.required, Validators.minLength(2)]],
-      stateOrDistrict: ['', Validators.required],
-      postalCode: ['', [Validators.required, Validators.pattern(/^[0-9]{4,10}$/)]],
-      country: ['', Validators.required],
-      lengthOfStay: ['', [Validators.required, Validators.min(0)]]
-    });
+  // ==================== FILE UPLOAD ====================
+  private uploadPendingFiles(): Observable<{ [key: string]: { path: string; filename: string } }> {
+    const uploadObservables: { [key: string]: Observable<{ path: string; filename: string }> } = {};
 
-    this.locationForm.valueChanges.subscribe(() => {
-      this.updateFormState();
-    });
-  }
-
-  initializeFinancialForms(): void {
-    // Basic Information Form
-    this.basicInfoForm = this.fb.group({
-      creditPurpose: ['', Validators.required],  // 1-6
-      incomeType: ['', Validators.required]      // 1-6
-    });
-
-    // Employment Information Form
-    this.employerInfoForm = this.fb.group({
-      employerType: ['', Validators.required],              // Dropdown (ID to be mapped)
-      employerName: ['', Validators.required],              // Text
-      employmentStatus: ['', Validators.required],          // 1: Permanent, 2: Contract
-      jobDesignation: ['', Validators.required],            // Text
-      jobTenureYears: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],  // Number
-      monthlyGrossIncome: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],  // Number
-      monthlyNetIncome: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]     // Number
-    });
-
-    // Business Information Form
-    this.businessInfoForm = this.fb.group({
-      businessName: ['', Validators.required],              // Text
-      businessType: ['', Validators.required],              // 1: Trading, 2: Service
-      industryType: ['', Validators.required],              // Text
-      yearsInBusiness: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],  // Number
-      monthlyBusinessIncome: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]  // Number
-    });
-
-    // Financial and Credit Information Form
-    this.creditInfoForm = this.fb.group({
-      requestedLoanAmount: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],   // Number
-      downPaymentAmount: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],     // Number
-      loanTenureMonths: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],      // Number
-      repaymentPreference: ['', Validators.required],       // 1: EMI
-      existingLoanDetails: ['', Validators.required],       // Textarea
-      creditCardDetails: ['', Validators.required]          // Textarea
-    });
-
-    // Security / Collateral & Risk Mitigation Form
-    this.securityInfoForm = this.fb.group({
-      collateralAvailable: ['', Validators.required],       // 1: Yes, 0: No
-      collateralType: [''],                                 // 1: Property, 2: FDR (conditional)
-      estimatedCollateralValue: ['', Validators.pattern(/^[0-9]+$/)],  // Number (conditional)
-      guarantorAvailable: ['', Validators.required],        // 1: Yes, 0: No
-      coApplicantAvailable: ['', Validators.required]       // 1: Yes, 0: No
-    });
-
-    // Form value change subscriptions for validation tracking
-    this.basicInfoForm.valueChanges.subscribe(() => {
-      this.financialSections.basicInfo = this.basicInfoForm.valid;
-    });
-
-    this.employerInfoForm.valueChanges.subscribe(() => {
-      this.financialSections.employerInfo = this.employerInfoForm.valid;
-    });
-
-    this.businessInfoForm.valueChanges.subscribe(() => {
-      this.financialSections.businessInfo = this.businessInfoForm.valid;
-    });
-
-    this.creditInfoForm.valueChanges.subscribe(() => {
-      this.financialSections.creditInfo = this.creditInfoForm.valid;
-    });
-
-    this.securityInfoForm.valueChanges.subscribe(() => {
-      this.financialSections.securityInfo = this.securityInfoForm.valid;
-    });
-  }
-
-
-  initializeUploadForm(): void {
-    this.uploadForm = this.fb.group({
-      // File paths
-      idCopy: ['', Validators.required],
-      idCopyFilename: [''],
-      photograph: ['', Validators.required],
-      photographFilename: [''],
-      salaryCertificate: ['', Validators.required],
-      salaryCertificateFilename: [''],
-      bankStatement: ['', Validators.required],
-      bankStatementFilename: [''],
-      incomeTaxReturn: ['', Validators.required],
-      incomeTaxReturnFilename: [''],
-      cibConsentForm: ['', Validators.required],
-      cibConsentFormFilename: [''],
-
-      // Checkbox
-      finalDeclaration: [false, Validators.requiredTrue]
-    });
-  }
-
-  ageValidator(control: any) {
-    if (!control.value) return null;
-
-    const birthDate = new Date(control.value);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
+    if (Object.keys(this.pendingUploads).length === 0) {
+      return of({});
     }
 
-    return age >= 18 ? null : { underage: true };
-  }
+    Object.keys(this.pendingUploads).forEach((fieldName) => {
+      const file = this.pendingUploads[fieldName];
+      uploadObservables[fieldName] = this.creditService.uploadDocument(file, this.individualId, fieldName);
+    });
 
-  updateFormState(): void {
-    // Update any derived state based on form values
-  }
-
-  toggleAccordion(section: string): void {
-    this.expandedSection = this.expandedSection === section ? '' : section;
-  }
-
-  toggleUploadSection(section: string): void {
-    this.expandedUploadSection = this.expandedUploadSection === section ? '' : section;
-  }
-
-  toggleNestedSection(section: string): void {
-    this.expandedNestedSection = this.expandedNestedSection === section ? '' : section;
-  }
-
-  close(): void {
-    this.showCloseConfirmation = true;
-  }
-
-  confirmClose(): void {
-    this.showCloseConfirmation = false;
-    this.closeModal.emit();
-  }
-
-  cancelClose(): void {
-    this.showCloseConfirmation = false;
-  }
-
-  onStepClick(stepId: number): void {
-    this.currentStep = stepId;
-    this.loadStepData(stepId);
-  }
-
-  loadStepData(stepId: number): void {
-    console.log('Loading data for step:', stepId);
-
-    switch(stepId) {
-      case 1:
-        break;
-      case 2:
-        break;
-      case 3:
-        this.loadFinancialData();
-        break;
-      case 4:
-        this.loadUploadData();
-        break;
-      case 5:
-        this.loadConsentData();
-        break;
-    }
-  }
-
-  loadFinancialData(): void {
-    // Financial data already in forms
-  }
-
-  loadUploadData(): void {
-    // Upload data already in component state
-    this.updateUploadSectionStatus();
-    this.validateUploadSection();
-  }
-
-  loadConsentData(): void {
-    // Consent data already in component state
-  }
-
-  updateUploadSectionStatus(): void {
-    // Identity & Verification
-    this.uploadSections.identity = !!(
-      this.uploadForm.get('idCopy')?.value &&
-      this.uploadForm.get('photograph')?.value
+    return forkJoin(uploadObservables).pipe(
+      map((results: { [key: string]: { path: string; filename: string } }) => {
+        return results;
+      })
     );
-
-    // Employment Documents
-    this.uploadSections.employment = !!(
-      this.uploadForm.get('salaryCertificate')?.value
-    );
-
-    // Credit Verification
-    this.uploadSections.credit = !!(
-      this.uploadForm.get('bankStatement')?.value &&
-      this.uploadForm.get('incomeTaxReturn')?.value &&
-      this.uploadForm.get('cibConsentForm')?.value
-    );
-
-    // Declaration
-    this.uploadSections.declaration = this.uploadForm.get('finalDeclaration')?.value || false;
   }
 
-  validateUploadSection(): boolean {
-    // Identity & Verification (passport is optional)
-    const identityValid = !!(
-      this.uploadedFiles.passportPhoto &&
-      this.uploadedFiles.utility &&
-      this.uploadedFiles.tin
-    );
-
-    // Employment Document
-    const employmentValid = !!(
-      this.uploadedFiles.salary &&
-      this.uploadedFiles.employerId &&
-      this.uploadedFiles.paySlip &&
-      this.uploadedFiles.appointment
-    );
-
-    // Business Information
-    const businessValid = !!(
-      this.businessUploadInfo.businessType &&
-      this.businessUploadInfo.yearsInBusiness &&
-      this.businessUploadInfo.businessRevenue &&
-      this.businessUploadInfo.industryType &&
-      this.businessUploadInfo.businessName
-    );
-
-    // Credit Verification
-    const creditValid = !!(
-      this.uploadedFiles.cibConsent &&
-      this.uploadedFiles.loanStatements &&
-      this.uploadedFiles.creditCard
-    );
-
-    // Collateral / Asset Verification
-    const collateralValid = !!(
-      this.uploadedFiles.fdr &&
-      this.uploadedFiles.gold
-    );
-
-    // All sections must be valid
-    this.isUploadSectionValid = identityValid && employmentValid && businessValid && creditValid && collateralValid;
-
-    return this.isUploadSectionValid;
-  }
-
-  validateCurrentStep(): boolean {
-    switch(this.currentStep) {
-      case 1:
-        return this.personalInfoForm.valid;
-      case 2:
-        return this.locationForm.valid;
-      case 3:
-        return this.basicInfoForm.valid && this.employerInfoForm.valid && this.businessInfoForm.valid && this.creditInfoForm.valid && this.securityInfoForm.valid;
-      case 4:
-        return this.validateUploadSection();
-      case 5:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  toggleSelectDropdown(): void {
-    this.isSelectDropdownOpen = !this.isSelectDropdownOpen;
-  }
-
-  selectOption(option: string): void {
-    this.selectedOption = option;
-    this.isSelectDropdownOpen = false;
-    console.log('Selected option:', option);
-  }
   triggerUploadInput(type: string): void {
     switch(type) {
-      // New upload form fields
       case 'idCopy':
         this.idCopyInput?.nativeElement.click();
         break;
@@ -869,8 +707,6 @@ export class IndividualCreditScoringModalComponent {
       case 'cibConsentForm':
         this.cibConsentFormInput?.nativeElement.click();
         break;
-
-      // Old upload fields (Identity & Verification)
       case 'passport':
         this.passportInput?.nativeElement.click();
         break;
@@ -883,8 +719,6 @@ export class IndividualCreditScoringModalComponent {
       case 'tin':
         this.tinInput?.nativeElement.click();
         break;
-
-      // Employment Document
       case 'salary':
         this.salaryInput?.nativeElement.click();
         break;
@@ -897,8 +731,6 @@ export class IndividualCreditScoringModalComponent {
       case 'appointment':
         this.appointmentInput?.nativeElement.click();
         break;
-
-      // Credit Verification
       case 'cibConsent':
         this.cibConsentInput?.nativeElement.click();
         break;
@@ -908,8 +740,6 @@ export class IndividualCreditScoringModalComponent {
       case 'creditCard':
         this.creditCardInput?.nativeElement.click();
         break;
-
-      // Collateral / Asset Verification
       case 'fdr':
         this.fdrInput?.nativeElement.click();
         break;
@@ -952,19 +782,205 @@ export class IndividualCreditScoringModalComponent {
         filename: file.name
       };
 
-      this.showNotification(`File selected: ${file.name}`, 'success');
+      // this.showAlert(`File selected: ${file.name}`, 'success');
       input.value = '';
     }
   }
 
-  private showNotification(message: string, type: 'success' | 'error'): void {
-    this.notificationMessage = message;
-    this.notificationType = type;
-    this.showNotificationFlag = true;
+  // ==================== NAVIGATION & UI ====================
+  onStepClick(stepId: number): void {
+    // Check if step validation is enforced
+    if (this.enforceStepValidation) {
+      // Can only navigate to next step if current step is valid
+      if (stepId > this.currentStep && !this.validateCurrentStep()) {
+        this.showAlert('Please complete the current step before proceeding.', 'warning');
+        return;
+      }
+    }
 
-    setTimeout(() => {
-      this.showNotificationFlag = false;
-    }, 3000);
+    this.currentStep = stepId;
+    this.loadStepData(stepId);
   }
 
+  goToNextStep(): void {
+    // Validate current step before proceeding
+    if (!this.validateCurrentStep()) {
+      this.showAlert('Please complete all required fields in this step.', 'error');
+      return;
+    }
+
+    // Move to next step if not at the end
+    if (this.currentStep < this.steps.length) {
+      this.currentStep++;
+      this.loadStepData(this.currentStep);
+    }
+  }
+
+  goToPreviousStep(): void {
+    // Always allow going back
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      this.loadStepData(this.currentStep);
+    }
+  }
+
+  loadStepData(stepId: number): void {
+    console.log('Loading data for step:', stepId);
+
+    switch(stepId) {
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        this.loadFinancialData();
+        break;
+      case 4:
+        this.loadUploadData();
+        break;
+      case 5:
+        this.loadConsentData();
+        break;
+    }
+  }
+
+  loadFinancialData(): void {
+    // Financial data already in forms
+  }
+
+  loadUploadData(): void {
+    // Upload data already in component state
+    this.updateUploadSectionStatus();
+    this.validateUploadSection();
+  }
+
+  loadConsentData(): void {
+    // Consent data already in component state
+  }
+
+  toggleAccordion(section: string): void {
+    this.expandedSection = this.expandedSection === section ? '' : section;
+  }
+
+  toggleUploadSection(section: string): void {
+    this.expandedUploadSection = this.expandedUploadSection === section ? '' : section;
+  }
+
+  toggleNestedSection(section: string): void {
+    this.expandedNestedSection = this.expandedNestedSection === section ? '' : section;
+  }
+
+  toggleSelectDropdown(): void {
+    this.isSelectDropdownOpen = !this.isSelectDropdownOpen;
+  }
+
+  selectOption(option: string): void {
+    this.selectedOption = option;
+    this.isSelectDropdownOpen = false;
+    console.log('Selected option:', option);
+  }
+
+  // ==================== VALIDATION ====================
+  updateUploadSectionStatus(): void {
+    this.uploadSections.identity = !!(
+      this.uploadForm.get('idCopy')?.value &&
+      this.uploadForm.get('photograph')?.value
+    );
+
+    this.uploadSections.employment = !!(
+      this.uploadForm.get('salaryCertificate')?.value
+    );
+
+    this.uploadSections.credit = !!(
+      this.uploadForm.get('bankStatement')?.value &&
+      this.uploadForm.get('incomeTaxReturn')?.value &&
+      this.uploadForm.get('cibConsentForm')?.value
+    );
+
+    this.uploadSections.declaration = this.uploadForm.get('finalDeclaration')?.value || false;
+  }
+
+  validateUploadSection(): boolean {
+    const identityValid = !!(
+      this.uploadedFiles.passportPhoto &&
+      this.uploadedFiles.utility &&
+      this.uploadedFiles.tin
+    );
+
+    const employmentValid = !!(
+      this.uploadedFiles.salary &&
+      this.uploadedFiles.employerId &&
+      this.uploadedFiles.paySlip &&
+      this.uploadedFiles.appointment
+    );
+
+    const businessValid = !!(
+      this.businessUploadInfo.businessType &&
+      this.businessUploadInfo.yearsInBusiness &&
+      this.businessUploadInfo.businessRevenue &&
+      this.businessUploadInfo.industryType &&
+      this.businessUploadInfo.businessName
+    );
+
+    const creditValid = !!(
+      this.uploadedFiles.cibConsent &&
+      this.uploadedFiles.loanStatements &&
+      this.uploadedFiles.creditCard
+    );
+
+    const collateralValid = !!(
+      this.uploadedFiles.fdr &&
+      this.uploadedFiles.gold
+    );
+
+    this.isUploadSectionValid = identityValid && employmentValid && businessValid && creditValid && collateralValid;
+
+    return this.isUploadSectionValid;
+  }
+
+  validateCurrentStep(): boolean {
+    switch(this.currentStep) {
+      case 1:
+        return this.personalInfoForm.valid;
+      case 2:
+        return this.locationForm.valid;
+      case 3:
+        return this.basicInfoForm.valid && this.employerInfoForm.valid && this.businessInfoForm.valid && this.creditInfoForm.valid && this.securityInfoForm.valid;
+      case 4:
+        return this.validateUploadSection();
+      case 5:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  // ==================== MODAL CONTROLS ====================
+  close(): void {
+    if (this.hasUnsavedChanges) {
+      this.showCloseConfirmation = true;
+    } else {
+      this.confirmClose();
+    }
+  }
+
+  confirmClose(): void {
+    this.showCloseConfirmation = false;
+    this.closeModal.emit();
+  }
+
+  cancelClose(): void {
+    this.showCloseConfirmation = false;
+  }
+
+  // ==================== NOTIFICATIONS ====================
+  showAlert(message: string, type: 'success' | 'error' | 'warning' | 'info'): void {
+    this.notificationMessage = message;
+    this.notificationType = type;
+    this.showNotification = true;
+  }
+
+  onNotificationDismissed(): void {
+    this.showNotification = false;
+  }
 }
