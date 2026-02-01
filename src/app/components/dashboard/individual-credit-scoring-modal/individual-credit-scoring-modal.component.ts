@@ -71,7 +71,7 @@ export class IndividualCreditScoringModalComponent {
   consentAccepted: boolean = false;
 
   // Step validation control (set to false to disable for testing)
-  enforceStepValidation: boolean = false;
+  enforceStepValidation: boolean = true;
 
   // ==================== NOTIFICATION STATE ====================
   showNotification = false;
