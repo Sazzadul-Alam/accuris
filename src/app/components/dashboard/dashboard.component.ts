@@ -36,6 +36,8 @@ export class DashboardComponent implements OnInit{
   selectedPlan = "";
 
   Status = Status;
+  isSidebarOpen = false;
+  showDashboard: boolean=false;
 
   stepStatus: Record<string, Status> = {
     'Individual Information': Status.nothing,
@@ -81,29 +83,11 @@ export class DashboardComponent implements OnInit{
   this_year: any = 2025;
   yAxisTicks = 4;
 
-
-  skipVerification() {
-    this.runningProcesses['Payment Information'] = true;
-    this.stepStatus['Request Verification'] = Status.completed;
-  }
-
-  get growthDashArray(): string {
-    return `${(this.growthPercent / 100) * this.circumference} ${this.circumference}`;
-  }
-
-  get staticDashArray(): string {
-    return `${(this.staticPercent / 100) * this.circumference} ${this.circumference}`;
-  }
-
-  get growthOffset(): number {
-    return -((this.staticPercent / 100) * this.circumference);
-  }
-  dashOffset = this.circumference;
   constructor(
     public router: Router,
     public route: ActivatedRoute,
     private dashboardService: DashboardService,
-    ) {
+  ) {
   }
   ngOnInit() {
     const token = localStorage.getItem('access_token');
@@ -127,6 +111,7 @@ export class DashboardComponent implements OnInit{
                   console.log('Fetched userName:', userName);
                   this.currentUserName = userName; // <-- store in class variable
                   this.fullName = `${userName.firstName} ${userName.lastName}`;
+                  this.showDashboard=userName.dashboardShow;
                 } else {
                   console.log('User name not found');
                 }
@@ -141,6 +126,24 @@ export class DashboardComponent implements OnInit{
     this.dashOffset = this.circumference - (this.progressValue / 100) * this.circumference;
     // this.getData();
   }
+
+  skipVerification() {
+    this.runningProcesses['Payment Information'] = true;
+    this.stepStatus['Request Verification'] = Status.completed;
+  }
+
+  get growthDashArray(): string {
+    return `${(this.growthPercent / 100) * this.circumference} ${this.circumference}`;
+  }
+
+  get staticDashArray(): string {
+    return `${(this.staticPercent / 100) * this.circumference} ${this.circumference}`;
+  }
+
+  get growthOffset(): number {
+    return -((this.staticPercent / 100) * this.circumference);
+  }
+  dashOffset = this.circumference;
 
 
   // getData() {
@@ -249,7 +252,6 @@ export class DashboardComponent implements OnInit{
     // alert('Form submitted successfully!');
     this.closeIndividualModal();
   }
-  isSidebarOpen = false;
 
 
   toggleSidebar() {
@@ -305,4 +307,7 @@ export class DashboardComponent implements OnInit{
     // this.
   }
 
+  handleDashboard(event: any) {
+    this.showDashboard=true;
+  }
 }

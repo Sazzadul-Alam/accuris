@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {DashboardService} from "../../services/dashboard_service/dashboard.service";
 
 @Component({
   selector: 'app-home-page',
@@ -6,5 +8,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent {
+  constructor(
+    public router: Router,
+    public route: ActivatedRoute,
+    private dashboardService: DashboardService,
+  ) {
+  }
+  @Output() setData = new EventEmitter();
 
+  nextPage() {
+    this.setData.emit();
+  }
 }

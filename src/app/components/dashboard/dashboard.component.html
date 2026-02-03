@@ -44,8 +44,12 @@
       </div>
     </header>
 
+    <div class="content-area" *ngIf="showDashboard==false">
+      <app-home-page (setData)="handleDashboard($event)"></app-home-page>
+    </div>
+
     <!-- Content Area -->
-    <div class="content-area">
+    <div class="content-area" *ngIf="showDashboard==true">
       <!-- Tabs -->
 
 

@@ -8,6 +8,7 @@ import { catchError, map } from 'rxjs/operators';
 export interface UserName {
   firstName: string;
   lastName: string;
+  dashboardShow: boolean;
 }
 
 @Injectable({
