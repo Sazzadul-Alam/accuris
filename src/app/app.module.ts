@@ -34,6 +34,7 @@ import { SignupComponent } from './components/login/signup/signup.component';
 import { BusinessCreditScoringModalComponent } from './components/dashboard/business-credit-scoring-modal/business-credit-scoring-modal.component';
 import { ConfirmationModalComponent } from './components/dashboard/confirmation-modal/confirmation-modal.component';
 import {AlertBannerComponent} from "./components/alert-banner/alert-banner.component";
+import { HomePageComponent } from './components/home-page/home-page.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import {AlertBannerComponent} from "./components/alert-banner/alert-banner.compo
     BusinessCreditScoringModalComponent,
     ConfirmationModalComponent,
     AlertBannerComponent,
+    HomePageComponent,
 
   ],
     imports: [

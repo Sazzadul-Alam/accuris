@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DashboardService} from "../../services/dashboard_service/dashboard.service";
 import { UserName } from "../../services/dashboard_service/dashboard.service";
@@ -15,7 +15,7 @@ enum Status {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
 
   selectedTab = 0;
 
