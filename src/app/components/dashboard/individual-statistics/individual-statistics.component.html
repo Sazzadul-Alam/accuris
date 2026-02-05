@@ -1,0 +1,605 @@
+<div class="dashboard-grid">
+  <!-- Left Column -->
+  <div class="left-column">
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="profile-header d-flex align-items-center justify-content-between">
+        <h3>Profile</h3>
+        <button class="edit-profile-btn"></button>
+      </div>
+
+      <div class="profile-header">
+        <div class="profile-avatar" [ngStyle]="{backgroundImage: 'url('+(userImage && userImage!='data:' ? userImage : '/assets/images/avatar.png')+') '}"></div>
+        <div>
+          <h4 class="profile-name">
+            {{ profiles?.name || 'Your name' }}
+          </h4>
+
+          <p class="profile-role">{{ profiles?.role|| 'Your role'}}</p>
+          <p class="profile-company">{{ profiles?.company || 'Your Company'}}</p>
+        </div>
+
+      </div>
+
+      <div class="profile-stats">
+        <h3>Individual Statistics</h3>
+        <div class="stat-items">
+          <!-- LEFT -->
+          <div class="stat-left">
+            <div class="stat-item">
+              <div class="stat-values">
+                <div>
+                  <span class="stat-value">$0</span>
+                </div>
+                <div>
+
+                  <img   src="assets/images/up_icon.svg" alt="Step Icon" style="scale: 0.8" class="step_1_icon" />
+                </div>
+
+              </div>
+
+              <span class="stat-label">Income</span>
+
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-values">
+                <div>
+                  <span class="stat-value">$0</span>
+                </div>
+                <div>
+
+                  <img src="assets/images/down_icon.svg" alt="Step Icon" style="scale: 0.8" class="step_1_icon" />
+                </div>
+
+              </div>
+              <span class="stat-label">Expenses</span>
+
+            </div>
+          </div>
+
+          <!-- DIVIDER -->
+          <div class="stat-divider"></div>
+
+          <!-- RIGHT -->
+          <div class="stat-right">
+            <div class="donut-chart">
+              <div class="progress-circle">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                  <!-- background -->
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r="30"
+                    class="bg">
+                  </circle>
+
+                  <!-- Static -->
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r="30"
+                    class="static"
+                    [attr.stroke-dasharray]="staticDashArray">
+                  </circle>
+
+                  <!-- Growth -->
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r="30"
+                    class="growth"
+                    [attr.stroke-dasharray]="growthDashArray"
+                    [attr.stroke-dashoffset]="growthOffset">
+                  </circle>
+                </svg>
+              </div>
+
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <span class="dot growth"></span>
+                  <span>{{ growthPercent }}% Growth</span>
+                </div>
+                <div class="legend-item">
+                  <span class="dot static"></span>
+                  <span>{{ staticPercent }}% Static</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+
+
+
+        <div class="expense-chart">
+          <div class="chart-header">
+            <span style="font-size: 11px;">Expenses</span>
+            <span style="font-size: 11px;"> < <span style="color: #454545"> {{ last_year }} </span> |  <span style="color: #454545"> {{ this_year }} </span> > </span>
+          </div>
+
+          <div class="line-chart">
+            <svg viewBox="0 0 300 100" class="chart-svg">
+              <g class="y-axis">
+                <ng-container *ngFor="let label of yAxisLabels">
+                  <text
+                    x="0"
+                    [attr.y]="label.y"
+                    dy="4"
+                    class="y-label">
+                    {{ label.value / 1000 }}k
+                  </text>
+
+                  <line
+                    x1="25"
+                    x2="300"
+                    [attr.y1]="label.y"
+                    [attr.y2]="label.y"
+                    class="grid-line">
+                  </line>
+                </ng-container>
+              </g>
+
+              <!-- This year (solid curved line) -->
+              <path
+                [attr.d]="generateCurvePath(thisYearData)"
+                class="line this-year">
+              </path>
+
+              <!-- Last year (dashed curved line) -->
+              <path
+                [attr.d]="generateCurvePath(lastYearData)"
+                class="line last-year">
+              </path>
+
+            </svg>
+
+            <div class="chart-labels">
+                    <span class="label-item">
+                      <span class="dot-this"></span>This year
+                    </span>
+              <span class="label-item">
+                      <span class="dot-last"></span>Last year
+                    </span>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+    <br>
+
+    <!-- Choose a Plan -->
+    <div class="plans-card">
+      <div class="plans-header">
+        <h3>Plans</h3>
+        <span class="running-process">Running Process: 3</span>
+      </div>
+
+      <div class="plans-grid">
+        <div class="plan-items">
+          <div class="plan-item">
+            <div class="plan-icon">
+              <img src="assets/images/basic_score.svg" alt="Step Icon" class="step_1_icon" />
+            </div>
+            <h4>Basic Scoring</h4>
+
+          </div>
+          <p class="plan-price">USD: 75</p>
+          <p class="plan-hours">6 Hours</p>
+        </div>
+
+
+        <div class="plan-items">
+          <div class="plan-item">
+            <div class="plan-icon">
+              <img src="assets/images/advance_score.svg" alt="Step Icon" class="step_1_icon" />
+            </div>
+            <h4>Advanced Scoring</h4>
+
+          </div>
+          <p class="plan-price">USD: 145</p>
+          <p class="plan-hours">10 Hours</p>
+        </div>
+
+
+        <div class="plan-items">
+          <div class="plan-item">
+            <div class="plan-icon">
+              <img src="assets/images/holistic_score.svg" alt="Step Icon" class="step_1_icon" />
+            </div>
+            <h4>Holistic Scoring</h4>
+
+          </div>
+          <p class="plan-price">USD: 245</p>
+          <p class="plan-hours">25 Hours</p>
+        </div>
+
+      </div>
+      <div class="select-plan">
+        <h3 class="select-plan-btn">Select Plans</h3>
+
+      </div>
+
+      <!-- See Plans Button -->
+      <button class="see-plans-button" (click)="openPricingModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="9" x2="15" y2="9"></line>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+        See All Plans
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column -->
+  <div class="right-column">
+    <!-- Process Steps -->
+    <div class="process-header">
+      <div >
+        <div class="process-title">
+          <h3 style="padding-right: 4px;">Individual Credit Scoring</h3>
+          <h3 class="process-duration">|</h3>
+          <h3 class="process-duration">6 - 25 Hours</h3>
+          <h3 class="process-duration">|</h3>
+          <h3 class="process-price">$ 75 - 245</h3>
+        </div>
+      </div>
+
+      <div class="steps-timeline">
+        <div class="step-item">
+          <h5>Step 1</h5>
+          <div class="step-icon">
+            <img src="assets/images/step_1_icon.svg" alt="Step Icon" class="step_1_icon" />
+
+          </div>
+          <div class="step-info">
+            <!--                  <h5>Step 1</h5>-->
+            <p class="">Fill up <br> Information</p>
+          </div>
+          <div class="step-bar step-bar-red"></div>
+          <span class="step-time">5 Minutes<br />5 Documents</span>
+        </div>
+
+        <div class="step-item">
+          <h5>Step 2</h5>
+          <div class="step-icon">
+            <img src="assets/images/step_2_icon.svg" alt="Step Icon" class="step_1_icon" />
+          </div>
+          <div class="step-info">
+
+            <p>Wait for <br> Verification</p>
+
+          </div>
+          <div class="step-bar step-bar-orange"></div>
+          <span class="step-time">12 Hours</span>
+        </div>
+
+        <div class="step-item">
+          <h5>Step 3</h5>
+          <div class="step-icon">
+            <img src="assets/images/step_3_icon.svg" alt="Step Icon" class="step_1_icon" />
+          </div>
+          <div class="step-info">
+
+            <p>Make Digital Payment</p>
+
+          </div>
+          <div class="step-bar step-bar-yellow"></div>
+          <span class="step-time">5 Minutes<br />Payment Credential</span>
+        </div>
+
+        <div class="step-item">
+          <h5>Step 4</h5>
+          <div class="step-icon">
+            <img src="assets/images/step_4_icon.svg" alt="Step Icon" class="step_1_icon" />
+          </div>
+          <div class="step-info">
+
+            <p>Wait for AI Engine Analysis</p>
+
+          </div>
+          <div class="step-bar step-bar-green"></div>
+          <span class="step-time">2 Hours</span>
+        </div>
+
+        <div class="step-item">
+          <h5>Step 5</h5>
+          <div class="step-icon">
+            <img src="assets/images/step_5_icon.svg" alt="Step Icon" class="step_1_icon" />
+          </div>
+          <div class="step-info">
+
+            <p>Check the <br> Report on System</p>
+
+          </div>
+          <div class="step-bar step-bar-blue"></div>
+          <span class="step-time">20 Minutes</span>
+        </div>
+
+        <div class="step-item">
+          <h5>Step 6</h5>
+          <div class="step-icon">
+            <img src="assets/images/step_6_icon.svg" alt="Step Icon" class="step_1_icon" />
+          </div>
+          <div class="step-info">
+
+            <p>Download Report from System</p>
+
+          </div>
+          <div class="step-bar step-bar-purple"></div>
+          <span class="step-time">20 Minutes</span>
+        </div>
+
+        <div class="step-item">
+          <h5>Step 7</h5>
+          <div class="step-icon">
+            <img src="assets/images/step_7_icon.svg" alt="Step Icon" class="step_1_icon" />
+          </div>
+          <div class="step-info">
+
+            <p>Apply a New Request</p>
+
+          </div>
+          <div class="step-bar step-bar-pink"></div>
+          <span class="step-time">15 Minutes<br />5 Documents</span>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Steps Timeline -->
+
+    <br>
+
+    <!-- Credit Score Board -->
+    <div class="credit-score-board">
+      <h3>Credit Score Board</h3>
+      <p class="credit-subtitle">See your current stage in the Credit Rating Board.</p>
+
+      <div class="score-scale">
+        <div class="score-labels">
+          <span>Very Poor</span>
+          <span>Poor</span>
+          <span>Fair</span>
+          <span>Good</span>
+          <span>Exceptional</span>
+        </div>
+
+        <div class="score-bar">
+          <div class="progress score-progress">
+            <div class="progress-bar bg-danger" style="width: 20%"></div>
+            <div class="progress-bar bg-warning" style="width: 20%"></div>
+            <div class="progress-bar bg-yellow" style="width: 20%"></div>
+            <div class="progress-bar bg-light-green" style="width: 20%"></div>
+            <div class="progress-bar bg-success" style="width: 20%"></div>
+          </div>
+        </div>
+
+        <div class="score-ranges">
+          <span>300-579</span>
+          <span>580-669</span>
+          <span>670-739</span>
+          <span>740-799</span>
+          <span>800-850</span>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <!-- Running Process -->
+    <div class="running-process-card">
+      <h3>Running Process</h3>
+      <p class="process-subtitle">
+        The block shows the running process and their state. Please click on block if you have to complete the
+        process.
+      </p>
+
+      <div class="run-steps">
+
+        <!-- Individual Information -->
+        <div *ngIf="selectedTab === 0" class="run-step-item">
+          <div
+            class="run-step-icon"
+            [ngClass]="{ clickable: runningProcesses['Individual Information'] }"
+            (click)="openIndividualCreditScoringModal(selectedPlan)">
+            <img *ngIf="runningProcesses['Individual Information']"
+                 src="assets/images/run_proc_1_icon.svg"
+                 class="step_1_icon" />
+            <img *ngIf="!runningProcesses['Individual Information']"
+                 src="assets/images/run_proc_1_disabled_icon.svg"
+                 class="step_1_icon" />
+          </div>
+
+          <div class="step-info">
+            <p>Individual <br /> Information</p>
+          </div>
+
+          <div
+            *ngIf="stepStatus['Individual Information'] !== Status.nothing"
+            class="status"
+            [ngClass]="{
+          'draft-status': stepStatus['Individual Information'] === Status.draft,
+          'completed-status': stepStatus['Individual Information'] === Status.completed
+        }">
+            {{ stepStatus['Individual Information'] }}
+          </div>
+        </div>
+
+        <!-- Business Information -->
+        <div *ngIf="selectedTab === 1" class="run-step-item">
+          <div
+            class="run-step-icon"
+            [ngClass]="{ clickable: runningProcesses['Individual Information'] }"
+            (click)="openBusinessCreditModal()">
+            <img *ngIf="runningProcesses['Individual Information']"
+                 src="assets/images/run_proc_1_icon.svg"
+                 class="step_1_icon" />
+            <img *ngIf="!runningProcesses['Individual Information']"
+                 src="assets/images/run_proc_1_disabled_icon.svg"
+                 class="step_1_icon" />
+          </div>
+
+          <div class="step-info">
+            <p>Business <br /> Information</p>
+          </div>
+
+          <div
+            *ngIf="stepStatus['Individual Information'] !== Status.nothing"
+            class="status"
+            [ngClass]="{
+          'draft-status': stepStatus['Individual Information'] === Status.draft,
+          'completed-status': stepStatus['Individual Information'] === Status.completed
+        }">
+            {{ stepStatus['Individual Information'] }}
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="run-step-item">
+          <div class="run-step-icon">
+            <img src="assets/images/arrow_right.svg" class="arrow_icon" />
+          </div>
+        </div>
+
+        <!-- Request Verification -->
+        <div class="run-step-item">
+          <div
+            class="run-step-icon"
+            [ngClass]="{ clickable: runningProcesses['Request Verification'] }">
+            <img *ngIf="runningProcesses['Request Verification']"
+                 src="assets/images/run_proc_2_icon.svg"
+                 class="step_1_icon" />
+            <img *ngIf="!runningProcesses['Request Verification']"
+                 src="assets/images/run_proc_2_disabled_icon.svg"
+                 class="step_1_icon" />
+          </div>
+
+          <div class="step-info">
+            <p>Request <br /> Verification</p>
+          </div>
+
+          <div
+            *ngIf="stepStatus['Request Verification'] !== Status.nothing"
+            class="status"
+            [ngClass]="{
+          'in-progress-status': stepStatus['Request Verification'] === Status.in_progress,
+          'completed-status': stepStatus['Request Verification'] === Status.completed
+        }">
+            {{ stepStatus['Request Verification'] }}
+          </div>
+        </div>
+
+        <!-- Arrow (Skip Verification) -->
+        <div class="run-step-item">
+          <div
+            class="run-step-icon"
+            style="cursor: pointer"
+            (click)="skipVerification()">
+            <img src="assets/images/arrow_right.svg" class="arrow_icon" />
+          </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="run-step-item">
+          <div
+            class="run-step-icon"
+            [ngClass]="{ clickable: runningProcesses['Payment Information'] }"
+            (click)="openPaymentModal()">
+            <img *ngIf="runningProcesses['Payment Information']"
+                 src="assets/images/run_proc_3_icon.svg"
+                 class="step_1_icon" />
+            <img *ngIf="!runningProcesses['Payment Information']"
+                 src="assets/images/run_proc_3_disabled_icon.svg"
+                 class="step_1_icon" />
+          </div>
+
+          <div class="step-info">
+            <p>Payment <br /> Information</p>
+          </div>
+          <div
+            *ngIf="stepStatus['Payment Information'] !== Status.nothing"
+            class="status"
+            [ngClass]="{
+          'in-progress-status': stepStatus['Payment Information'] === Status.in_progress,
+          'completed-status': stepStatus['Payment Information'] === Status.completed
+        }">
+            {{ stepStatus['Payment Information'] }}
+          </div>
+
+        </div>
+
+        <!-- Arrow -->
+        <div class="run-step-item">
+          <div class="run-step-icon">
+            <img src="assets/images/arrow_right.svg" class="arrow_icon" />
+          </div>
+        </div>
+
+        <!-- AI Engine Process -->
+        <div class="run-step-item">
+          <div
+            class="run-step-icon"
+            [ngClass]="{ clickable: runningProcesses['AI Engine Process'] }"
+            (click)="clicked_ai_engine()">
+            <img *ngIf="runningProcesses['AI Engine Process']"
+                 src="assets/images/run_proc_4_icon.svg"
+                 class="step_1_icon" />
+            <img *ngIf="!runningProcesses['AI Engine Process']"
+                 src="assets/images/run_proc_4_disabled_icon.svg"
+                 class="step_1_icon" />
+          </div>
+
+          <div class="step-info">
+            <p>AI Engine <br /> Process</p>
+          </div>
+          <div
+            *ngIf="stepStatus['AI Engine Process'] !== Status.nothing"
+            class="status"
+            [ngClass]="{
+          'in-progress-status': stepStatus['AI Engine Process'] === Status.in_progress,
+          'completed-status': stepStatus['AI Engine Process'] === Status.completed
+        }">
+            {{ stepStatus['AI Engine Process'] }}
+          </div>
+
+        </div>
+
+        <!-- Arrow -->
+        <div style="cursor: pointer" class="run-step-item" (click)="stepStatus['AI Engine Process'] = Status.completed; runningProcesses['Credit Certificate'] = true; ">
+          <div class="run-step-icon">
+            <img src="assets/images/arrow_right.svg" class="arrow_icon" />
+          </div>
+        </div>
+
+        <!-- Credit Certificate -->
+        <div class="run-step-item">
+          <div
+            class="run-step-icon"
+            [ngClass]="{ clickable: runningProcesses['Credit Certificate'] }">
+            <img *ngIf="runningProcesses['Credit Certificate']"
+                 src="assets/images/run_proc_5_icon.svg"
+                 class="step_1_icon" />
+            <img *ngIf="!runningProcesses['Credit Certificate']"
+                 src="assets/images/run_proc_5_disabled_icon.svg"
+                 class="step_1_icon" />
+          </div>
+
+          <div class="step-info">
+            <p>Credit <br /> Certificate</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+</div>

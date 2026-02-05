@@ -28,6 +28,7 @@ export class SidebarComponent implements OnInit {
     this.showIndividualModal = true;
   }
   @Output() closeSidebar = new EventEmitter<void>();
+  userImage: any;
 
   logout() {
     this.authService.revokeToke().subscribe()
