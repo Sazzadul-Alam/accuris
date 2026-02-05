@@ -86,3 +86,11 @@
     align-items: flex-start;
   }
 }
+.footer-new{
+  background-color:#EFEFF1;
+  border-radius:4px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 14px;
+}

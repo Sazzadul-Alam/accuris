@@ -77,14 +77,14 @@
             </div>
 
             <div class="profile-header">
-              <img src="assets/images/profile-avatar.png" alt="Profile" class="profile-avatar" />
+              <div class="profile-avatar" [ngStyle]="{backgroundImage: 'url('+(userImage && userImage!='data:' ? userImage : '/assets/images/avatar.png')+') '}"></div>
               <div>
                 <h4 class="profile-name">
-                  {{ currentUserName?.firstName }} {{ currentUserName?.lastName }}
+                  {{ profiles?.name || 'Your name' }}
                 </h4>
 
-                <p class="profile-role">Business Analyst</p>
-                <p class="profile-company">DataSoft</p>
+                <p class="profile-role">{{ profiles?.role|| 'Your role'}}</p>
+                <p class="profile-company">{{ profiles?.company || 'Your Company'}}</p>
               </div>
 
             </div>
@@ -97,7 +97,7 @@
                   <div class="stat-item">
                     <div class="stat-values">
                       <div>
-                        <span class="stat-value">$100000</span>
+                        <span class="stat-value">$1</span>
                       </div>
                       <div>
 

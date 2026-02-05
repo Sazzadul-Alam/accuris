@@ -17,6 +17,21 @@ export class HomePageComponent {
   @Output() setData = new EventEmitter();
 
   nextPage() {
-    this.setData.emit();
+    const formData = new FormData();
+    formData.append('userId', localStorage.getItem('user_id') || '');
+
+    this.dashboardService.isDashBoardShow(formData)
+      .subscribe(
+        response => {
+          this.setData.emit();
+        },
+        error => {
+          console.error(error);
+          // handle error
+        }
+      );
+
+
+
   }
 }

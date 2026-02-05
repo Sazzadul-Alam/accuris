@@ -76,7 +76,7 @@ export class LoginComponent {
   }
 
   navigateToLogin(): void {
-    console.log('Navigate to login clicked');
+    this.router.navigate(['/signup']);
   }
 
   loginWithGoogle(): void {

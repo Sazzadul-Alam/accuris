@@ -120,3 +120,66 @@ button:hover {
    background-position: -2px 0px;
  }
 
+/* ---------- Mobile & Tablet Improvements ---------- */
+
+/* Tablet */
+@media (max-width: 900px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .card,
+  .card.reverse {
+    flex-direction: column;
+  }
+
+  .card-text {
+    padding: 24px;
+  }
+
+  .card-image {
+    height: 220px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+  .card,
+  .card.reverse {
+    flex-direction: column;
+  }
+
+  /* Image on top */
+  .card-image {
+    order: 1;
+    height: 200px;
+  }
+
+  /* Text below */
+  .card-text {
+    order: 2;
+    padding: 20px;
+    text-align: center;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .home-page-1,
+  .home-page-2 {
+    background-position: center;
+    background-size: contain;
+  }
+}
+
+

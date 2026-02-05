@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit{
 
   selectedTab = 0;
 
-
+  userImage: any;
   showBusinessCreditModal = false;
 
   openBusinessCreditModal() {
@@ -30,14 +30,15 @@ export class DashboardComponent implements OnInit{
     this.showBusinessCreditModal = false;
   }
 
-  currentUserId: number = null;
-  currentUserName: UserName;
+  currentUserId: any = null;
+  currentUserName: any;
   fullName = '';
   selectedPlan = "";
 
   Status = Status;
   isSidebarOpen = false;
   showDashboard: boolean=false;
+  user:any;
 
   stepStatus: Record<string, Status> = {
     'Individual Information': Status.nothing,
@@ -82,6 +83,7 @@ export class DashboardComponent implements OnInit{
   last_year: any = 2024;
   this_year: any = 2025;
   yAxisTicks = 4;
+  profiles: any=[];
 
   constructor(
     public router: Router,
@@ -90,36 +92,10 @@ export class DashboardComponent implements OnInit{
   ) {
   }
   ngOnInit() {
-    const token = localStorage.getItem('access_token');
-
-    if (token) {
-      const payload = token.split('.')[1];
-      const decodedPayload = JSON.parse(atob(payload));
-      console.log('JWT sub:', decodedPayload.sub);
-
-      // Step 1: Get userId from email
-      this.dashboardService.getUserIdFromEmail(decodedPayload.sub)
-        .subscribe(currentUserId => {
-          console.log('Fetched userId:', currentUserId);
-          this.currentUserId = currentUserId;
-
-          if (currentUserId) {
-            // Step 2: Get username from userId
-            this.dashboardService.getUserNameFromId(currentUserId)
-              .subscribe(userName => {
-                if (userName) {
-                  console.log('Fetched userName:', userName);
-                  this.currentUserName = userName; // <-- store in class variable
-                  this.fullName = `${userName.firstName} ${userName.lastName}`;
-                  this.showDashboard=userName.dashboardShow;
-                } else {
-                  console.log('User name not found');
-                }
-              });
-          }
-        });
-    }
-
+    this.currentUserId =localStorage.getItem('currentUserId')
+    this.currentUserName = localStorage.getItem('userName');
+    this.user= JSON.parse(localStorage.getItem('user'));
+    this.showDashboard=this.user.dashboardShow;
     // Dashboard setup
     this.currentTable = 'individual_credit';
     this.tables[this.currentTable].selected = true;
@@ -158,6 +134,7 @@ export class DashboardComponent implements OnInit{
   //     );
   //
   // }
+
 
   get progressColor() {
     if (this.progressValue < 40) return '#ef4444';

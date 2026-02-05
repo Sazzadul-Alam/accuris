@@ -3,14 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import ApiEndpoint from "./ApiEndpoint";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private webBackendUrl = 'http://localhost:8181/web-backend';
-  private oauthUrl = 'http://localhost:2002'; // OAuth server
-
   constructor(private http: HttpClient) {}
 
   // ===== Token Storage =====
@@ -39,7 +37,7 @@ export class AuthService {
 
   // ===== PHASE 1: Web-backend Login =====
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.webBackendUrl}/auth/login`, {
+    return this.http.post(`${ApiEndpoint.baseURL}/auth/login`, {
       email,
       password,
       rememberMe: false
@@ -48,7 +46,7 @@ export class AuthService {
 
   // ===== PHASE 2: Request OTP =====
   requestOtp(email: string, otpMethod: string = 'EMAIL'): Observable<any> {
-    return this.http.post(`${this.webBackendUrl}/auth/request-otp`, {
+    return this.http.post(`${ApiEndpoint.baseURL}/auth/request-otp`, {
       email,
       otpMethod: otpMethod.toUpperCase()
     });
@@ -56,7 +54,7 @@ export class AuthService {
 
   // ===== PHASE 3: Verify OTP =====
   verifyOtp(email: string, otp: string, rememberMe: boolean = false): Observable<any> {
-    return this.http.post(`${this.webBackendUrl}/auth/verify-otp`, {
+    return this.http.post(`${ApiEndpoint.baseURL}/auth/verify-otp`, {
       email,
       otp,
       rememberMe
@@ -73,7 +71,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post(`${this.oauthUrl}/authenticate`, {
+    return this.http.post(`${ApiEndpoint.oauthBaseURL}/authenticate`, {
       email,
       password_hash: password
     }, { headers });
@@ -88,7 +86,7 @@ export class AuthService {
       return of(false);
     }
 
-    return this.http.post<any>(`${this.oauthUrl}/validate?token=${tokenToValidate}`, {})
+    return this.http.post<any>(`${ApiEndpoint.oauthBaseURL}/validate?token=${tokenToValidate}`, {})
       .pipe(
         map(res => {
         console.log(`Token is valid!!!`);// if backend says token is valid
@@ -112,20 +110,20 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       // optionally call backend /logout/revoke-token
-      this.http.get(`${this.oauthUrl}/logout/revoke-token`).subscribe();
+      this.http.get(`${ApiEndpoint.oauthBaseURL}/logout/revoke-token`).subscribe();
       this.removeToken();
     }
   }
 
   // ===== SIGNUP PHASE 1: Register new user =====
   signup(signupData: any): Observable<any> {
-    return this.http.post(`${this.webBackendUrl}/auth/signup`, signupData);
+    return this.http.post(`${ApiEndpoint.baseURL}/auth/signup`, signupData);
   }
 
 
   // ===== SIGNUP PHASE 2: Request OTP for email verification =====
   requestEmailOtp(otpRequest: any): Observable<any> {
-    return this.http.post(`${this.webBackendUrl}/auth/signup/email-otp`, {
+    return this.http.post(`${ApiEndpoint.baseURL}/auth/signup/email-otp`, {
       primaryEmail: otpRequest.primaryEmail,
       email2fa: otpRequest.email2fa  // lowercase 'f'
     });
@@ -133,10 +131,14 @@ export class AuthService {
 
 // ===== SIGNUP PHASE 3: Verify OTP and activate account =====
   verifySignupOtp(verifyRequest: any): Observable<any> {
-    return this.http.post(`${this.webBackendUrl}/auth/signup/verify-otp`, {
+    return this.http.post(`${ApiEndpoint.baseURL}/auth/signup/verify-otp`, {
       primaryEmail: verifyRequest.primaryEmail,
       otp: verifyRequest.otp
     });
   }
 
+  revokeToke() {
+    return this.http.get(`${ApiEndpoint.oauthBaseURL}/logout/revoke-token`,
+      {responseType: 'text'})
+  }
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthService } from "../../../services/auth-service";
 import { HttpErrorResponse } from "@angular/common/http";
+import {DashboardService, UserName} from "../../../services/dashboard_service/dashboard.service";
 
 @Component({
   selector: 'app-two-step-verification',
@@ -16,11 +17,16 @@ export class TwoStepVerificationComponent {
   email: string;
   password: string; // Store password for OAuth
   rememberMe: boolean;
+  currentUserId: any = null;
+  currentUserName: UserName;
+  fullName = '';
+  showDashboard: boolean;
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private dashboardService: DashboardService
   ) {
     const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as { email: string; password: string; rememberMe: boolean };
@@ -60,7 +66,6 @@ export class TwoStepVerificationComponent {
 
         if (res.status === 'OTP_SENT') {
           this.codeSent = true;
-          alert(res.message || 'Verification code sent successfully!');
         } else {
           alert(res.message || 'Failed to send verification code');
         }
@@ -129,11 +134,38 @@ export class TwoStepVerificationComponent {
         if (res.refresh_token) {
           this.authService.setRefreshToken(res.refresh_token);
         }
+        const payload = res.access_token.split('.')[1];
+        const decodedPayload = JSON.parse(atob(payload));
+        this.dashboardService.getUserIdFromEmail(decodedPayload.sub)
+          .subscribe(currentUserId => {
+            console.log('Fetched userId:', currentUserId);
+            this.currentUserId = currentUserId;
+
+            if (currentUserId) {
+              // Step 2: Get username from userId
+              this.dashboardService.getUserNameFromId(currentUserId)
+                .subscribe(user => {
+                  if (user) {
+                    console.log('Fetched userName:', user);
+                    this.currentUserName = user; // <-- store in class variable
+                    this.fullName = `${user.firstName} ${user.lastName}`;
+                    this.showDashboard=user.dashboardShow;
+                    localStorage.setItem('user', JSON.stringify(this.currentUserName));
+                    localStorage.setItem('currentUserId', this.currentUserId);
+                    localStorage.setItem('email', this.email);
+                    localStorage.setItem('userName',this.fullName);
+                    this.router.navigate(['/dashboard']);
+                  } else {
+                    console.log('User name not found');
+                  }
+                });
+            }
+          });
 
         // Mark as verified and show success
         this.codeVerified = true;
         console.log('Authentication complete!');
-        this.router.navigate(['/dashboard']);
+
       },
       error: (err: HttpErrorResponse) => {
         console.error('Failed to get OAuth tokens:', err);
