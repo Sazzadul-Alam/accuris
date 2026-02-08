@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
+import {CreditCertificateModalComponent} from "../credit-certificate-modal/credit-certificate-modal.component";
 
 
 enum Status {
@@ -12,7 +14,7 @@ enum Status {
   templateUrl: './individual-statistics.component.html',
   styleUrls: ['./individual-statistics.component.css']
 })
-export class IndividualStatisticsComponent {
+export class IndividualStatisticsComponent implements OnInit {
   Status = Status;
   isPaymentModalOpen = false;
   runningProcesses: Record<string, boolean> = {
@@ -49,10 +51,22 @@ export class IndividualStatisticsComponent {
   showBusinessCreditModal = false;
   selectedTab = 0;
   showIndividualModal = false;
+  showCreditCerModal = false;
   padding = 10;
   selectedPlan = "";
   isPricingModalOpen = false;
   userImage: any;
+  currentUserId: any = null;
+  fullName = '';
+  bsModalRef: BsModalRef;
+
+  constructor(
+    private modalService: BsModalService) {
+  }
+
+  ngOnInit() {
+    this.fullName = localStorage.getItem('userName');
+  }
 
   get growthDashArray(): string {
     return `${(this.growthPercent / 100) * this.circumference} ${this.circumference}`;
@@ -151,5 +165,59 @@ export class IndividualStatisticsComponent {
   openPricingModal() {
     this.isPricingModalOpen = true;
     document.body.style.overflow = 'hidden';
+  }
+  closePricingModal() {
+    this.isPricingModalOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+  onPlanSelected(planName: string) {
+    // this.selectedPlanForPayment = planName;
+    this.isPricingModalOpen = false;
+    this.runningProcesses['Individual Information'] = true;
+    this.openIndividualModal();
+    this.selectedPlan = planName;
+    // setTimeout(() => {
+    //   this.isPaymentModalOpen = true;
+    //   document.body.style.overflow = 'hidden';
+    // }, 200);
+  }
+  openIndividualModal() {
+    if (this.runningProcesses['Individual Information']) {
+      console.log('Opening individual modal');
+      this.showIndividualModal = true;
+    }
+  }
+  closeIndividualModal() {
+    console.log('Closing individual modal');
+    this.showIndividualModal = false;
+  }
+  handleFormSubmit(formData: any) {
+    console.log('Form submitted:', formData);
+    this.runningProcesses["Request Verification"] = true;
+
+    this.stepStatus['Individual Information'] = Status.completed;
+    this.stepStatus['Request Verification'] = Status.in_progress;
+    // You can add API call here to save the data
+    // alert('Form submitted successfully!');
+    this.closeIndividualModal();
+  }
+  closePaymentModal() {
+    this.isPaymentModalOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+  onPaymentComplete(paymentData: any) {
+    console.log('Payment completed:', paymentData);
+    this.selectedPlan = paymentData.plan;
+    this.runningProcesses['AI Engine Process'] = true;
+    this.stepStatus['Payment Information'] = Status.completed;
+    this.stepStatus['AI Engine Process'] = Status.in_progress;
+  }
+
+  openCreditModal() {
+    this.bsModalRef = this.modalService.show(CreditCertificateModalComponent, {
+      class: 'modal-dialog modal-dialog-centered modal-sm',
+      backdrop: 'static',
+      keyboard: false,
+    });
   }
 }

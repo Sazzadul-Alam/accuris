@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import ApiEndpoint from "../../../services/ApiEndpoint";
 
 export interface IndividualCreditResponse {
   status: string;
@@ -23,7 +24,7 @@ export class IndividualCreditService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<{ path: string; filename: string }>(
-      `${this.baseUrl}/upload/${individualId}/${fieldName}`,
+      `${ApiEndpoint.baseURL}/api/individual-credit-scoring-form/upload/${individualId}/${fieldName}`,
       formData
     );
   }
@@ -101,7 +102,7 @@ export class IndividualCreditService {
       }
     };
 
-    return this.http.post<IndividualCreditResponse>(`${this.baseUrl}/process`, payload, { headers });
+    return this.http.post<IndividualCreditResponse>(`${ApiEndpoint.baseURL}/api/individual-credit-scoring-form/process`, payload, { headers });
   }
 
   // --- Helpers ---
@@ -118,18 +119,18 @@ export class IndividualCreditService {
 
   getLatestIndividualId(userId: number): Observable<{ individualId: number | null }> {
     return this.http.get<{ individualId: number | null }>(
-      `${this.baseUrl}/latest-individual/${userId}`
+      `${ApiEndpoint.baseURL}/api/individual-credit-scoring-form/latest-individual/${userId}`
     );
   }
 
   getIndividualById(individualId: number): Observable<any> {
     return this.http.get<any>(
-      `${this.baseUrl}/individual/${individualId}`
+      `${ApiEndpoint.baseURL}/api/individual-credit-scoring-form/individual/${individualId}`
     );
   }
 
   getAllConfigurations(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/configurations`);
+    return this.http.get<any>(`${ApiEndpoint.baseURL}/api/individual-credit-scoring-form/configurations`);
   }
 
 }

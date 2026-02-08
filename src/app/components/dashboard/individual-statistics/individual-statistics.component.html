@@ -583,7 +583,8 @@
         <div class="run-step-item">
           <div
             class="run-step-icon"
-            [ngClass]="{ clickable: runningProcesses['Credit Certificate'] }">
+            [ngClass]="{ clickable: runningProcesses['Credit Certificate'] }"
+            (click)="openCreditModal()">
             <img *ngIf="runningProcesses['Credit Certificate']"
                  src="assets/images/run_proc_5_icon.svg"
                  class="step_1_icon" />
@@ -603,3 +604,30 @@
 
   </div>
 </div>
+<app-individual-credit-scoring-modal
+  *ngIf="showIndividualModal"
+  [selectedPlanInput]="selectedPlan"
+  [currentUserId]="currentUserId"
+  [currentUserName]="fullName"
+  (closeModal)="closeIndividualModal()"
+  (saved)="stepStatus['Individual Information'] = Status.draft"
+  (formSubmit)="handleFormSubmit($event)">
+</app-individual-credit-scoring-modal>
+
+<!-- Pricing Plans Modal -->
+<app-pricing-plans-modal
+  *ngIf="isPricingModalOpen"
+  (closeModal)="closePricingModal()"
+  (planSelected)="onPlanSelected($event)">
+</app-pricing-plans-modal>
+
+<!-- Payment Modal - ADD THIS SECTION -->
+<app-payment-modal
+  *ngIf="isPaymentModalOpen"
+  [isOpen]="isPaymentModalOpen"
+  [selectedPlan]="selectedPlan"
+  [userName]="fullName"
+  (closeModal)="closePaymentModal()"
+  (paymentComplete)="onPaymentComplete($event)">
+</app-payment-modal>
+

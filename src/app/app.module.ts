@@ -39,6 +39,9 @@ import {BusinessStatisticsComponent} from "./components/dashboard/business-stati
 import {
   IndividualStatisticsComponent
 } from "./components/dashboard/individual-statistics/individual-statistics.component";
+import { CreditCertificateModalComponent } from './components/dashboard/credit-certificate-modal/credit-certificate-modal.component';
+import {ModalModule} from "ngx-bootstrap/modal";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
@@ -68,6 +71,7 @@ import {
     HomePageComponent,
     BusinessStatisticsComponent,
     IndividualStatisticsComponent,
+    CreditCertificateModalComponent,
 
   ],
     imports: [
@@ -75,6 +79,8 @@ import {
         AppRoutingModule,
         ReactiveFormsModule,
         FormsModule,
+      BrowserAnimationsModule,
+      ModalModule.forRoot(),
       HttpClientModule
 
     ],

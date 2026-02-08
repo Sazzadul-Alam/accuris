@@ -25,7 +25,7 @@ export class IndividualCreditScoringModalComponent {
 
   // ==================== INPUTS & OUTPUTS ====================
   @Input() selectedPlanInput = '';
-  @Input() currentUserId: number = null;
+  @Input() currentUserId: any = null;
   @Input() currentUserName: string = '';
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();
@@ -158,6 +158,8 @@ export class IndividualCreditScoringModalComponent {
   // ==================== LIFECYCLE HOOKS ====================
   ngOnInit(): void {
     // Load configurations first
+
+    this.currentUserId=localStorage.getItem('currentUserId')
     this.creditService.getAllConfigurations().subscribe({
       next: (configs) => {
         this.configurations = configs;
@@ -216,21 +218,17 @@ export class IndividualCreditScoringModalComponent {
       email: ['', [Validators.required, Validators.email]],
       uploadId: [null]
     });
-
-    this.personalInfoForm.valueChanges.subscribe(() => {
-      this.updateFormState();
-    });
   }
 
   initializeLocationForm(): void {
     this.locationForm = this.fb.group({
-      presentAddress: ['', [Validators.required, Validators.minLength(5)]],
-      permanentAddress: ['', [Validators.required, Validators.minLength(5)]],
-      city: ['', [Validators.required, Validators.minLength(2)]],
+      presentAddress: ['', [Validators.required]],
+      permanentAddress: ['', [Validators.required]],
+      city: ['', [Validators.required]],
       stateOrDistrict: ['', Validators.required],
       postalCode: ['', [Validators.required, Validators.pattern(/^[0-9]{4,10}$/)]],
       country: ['', Validators.required],
-      lengthOfStay: ['', [Validators.required, Validators.min(0)]]
+      lengthOfStay: ['', [Validators.required]]
     });
 
     this.locationForm.valueChanges.subscribe(() => {
@@ -778,7 +776,7 @@ export class IndividualCreditScoringModalComponent {
 
       // Update uploadedFiles for display
       this.uploadedFiles[fieldName] = {
-        path: null,
+        path: '',
         filename: file.name
       };
 
@@ -804,10 +802,10 @@ export class IndividualCreditScoringModalComponent {
 
   goToNextStep(): void {
     // Validate current step before proceeding
-    if (!this.validateCurrentStep()) {
-      this.showAlert('Please complete all required fields in this step.', 'error');
-      return;
-    }
+    // if (!this.validateCurrentStep()) {
+    //   this.showAlert('Please complete all required fields in this step.', 'error');
+    //   return;
+    // }
 
     // Move to next step if not at the end
     if (this.currentStep < this.steps.length) {

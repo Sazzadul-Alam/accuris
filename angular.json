@@ -25,9 +25,22 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/assets/css/bootstrap.min.css",
+              "src/styles.css",
+              "src/assets/css/adminlte.css",
+              "src/assets/fontawesome-free/css/all.min.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/assets/css/daterangepicker.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.min.js",
+              "src/assets/js/jquery-ui.min.js",
+              "src/assets/js/popper.min1147.js",
+              "src/assets/bootstrap/js/bootstrap.js",
+              "src/assets/js/moment.min.js",
+              "src/assets/js/adminlte.js",
+              "src/assets/js/daterangepicker.min.js"
+            ]
           },
           "configurations": {
             "production": {
