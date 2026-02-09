@@ -1,83 +1,56 @@
 <div class="modal-backdrop">
   <div class="modal-container">
-
     <!-- Header -->
     <div class="modal-header">
-      <h2>Credit Scores</h2>
-      <button class="close-btn">✕</button>
+      <div>
+        <h2>Credit Scores</h2>
+        <p class="subtitle">Your credit score</p>
+      </div>
+      <button class="close-btn" (click)="onClose()">✕</button>
     </div>
 
-    <p class="subtitle">Your credit score</p>
-
-    <!-- Card -->
-    <div class="score-card">
+    <!-- Credit Score Cards -->
+    <div class="score-card" *ngFor="let score of creditScores">
       <div class="card-header">
         <div>
-          <strong>Sanjit Ara Kabir</strong>
-          <div class="plan">Plan : Advance</div>
+          <strong>{{ score.name }}</strong>
+          <div class="plan">Plan : {{ score.plan }}</div>
         </div>
-        <span class="badge">New</span>
+        <span class="badge" *ngIf="score.isNew">New</span>
       </div>
 
       <div class="card-body">
+        <!-- Dynamic Gauge -->
         <div class="gauge">
-          <div class="arc good"></div>
+          <div class="arc" [ngClass]="getMeterClass(score.creditRating)">
+            <div class="needle" [style.transform]="getNeedleRotation(score.creditRating)"></div>
+          </div>
           <span class="gauge-label">Credit Risk</span>
         </div>
 
         <div class="details">
-          <div>
+          <!-- Rating Details -->
+          <div class="rating-details">
             <h4>Rating Details</h4>
             <ul>
-              <li>• Credit Rating is Good</li>
-              <li>• Credit Risk is Low</li>
+              <li *ngFor="let detail of score.ratingDetails">• {{ detail }}</li>
             </ul>
           </div>
 
+          <!-- Credit Rating -->
           <div class="rating">
-            <span>Credit Rating</span>
-            <strong class="good-text">Good</strong>
+            <span class="rating-label">{{ score.individualCreditScoring }}</span>
+            <div class="rating-value">
+              <span>Credit Rating</span>
+              <strong [ngClass]="getRatingClass(score.creditRating)">
+                {{ score.creditRating }}
+              </strong>
+            </div>
           </div>
         </div>
 
-        <div class="see-more">See More</div>
+        <button class="see-more" (click)="onSeeMore(score)">See More</button>
       </div>
     </div>
-
-    <!-- Another card -->
-    <div class="score-card">
-      <div class="card-header">
-        <div>
-          <strong>Sanjit Ara Kabir</strong>
-          <div class="plan">Plan : Basic</div>
-        </div>
-        <span class="badge">New</span>
-      </div>
-
-      <div class="card-body">
-        <div class="gauge">
-          <div class="arc bad"></div>
-          <span class="gauge-label">Credit Risk</span>
-        </div>
-
-        <div class="details">
-          <div>
-            <h4>Rating Details</h4>
-            <ul>
-              <li>• Credit Rating is Bad</li>
-              <li>• Credit Risk is High</li>
-            </ul>
-          </div>
-
-          <div class="rating">
-            <span>Credit Rating</span>
-            <strong class="bad-text">Bad</strong>
-          </div>
-        </div>
-
-        <div class="see-more">See More</div>
-      </div>
-    </div>
-
   </div>
 </div>
